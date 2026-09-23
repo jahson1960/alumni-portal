@@ -18,7 +18,7 @@ function asset(string $path): string
 function versioned_asset(string $path): string
 {
     $relative = ltrim($path, '/');
-    $absolute = ROOT_PATH . '/public/assets/' . $relative;
+    $absolute = ROOT_PATH . '/assets/' . $relative;
     $version = is_file($absolute) ? (string) filemtime($absolute) : '1';
     return asset($relative) . '?v=' . $version;
 }

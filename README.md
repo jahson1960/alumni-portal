@@ -26,9 +26,9 @@ A PHP MVC (custom, no framework) alumni portal for Rome Business School Nigeria,
    npm install
    npm run build
    ```
-   While actively changing view markup/classes, run `npm run watch` instead to rebuild `public/assets/css/app.css` automatically.
+   While actively changing view markup/classes, run `npm run watch` instead to rebuild `assets/css/app.css` automatically.
 
-4. **Visit the site** — `http://localhost/alumni%20portal/` (redirects to `public/`), or go straight to `http://localhost/alumni%20portal/public/`.
+4. **Visit the site** — `http://localhost/alumni%20portal/`. `index.php` is the front controller and lives at the project root (not in a `public/` subfolder), so on a real deploy the domain's document root should point straight at this folder.
 
 ## Seeded Accounts
 
@@ -45,11 +45,17 @@ Generate a hash with: `C:\xampp\php\php.exe -r "echo password_hash('yourNewPassw
 
 ## Admin Panel
 
-`http://localhost/alumni%20portal/public/admin/login` — manage:
+`http://localhost/alumni%20portal/admin/login` — manage:
 - **Site Settings** — homepage hero text, mentorship CTA banner, footer metrics bar
 - **News & Blog**, **Jobs**, **Events**, **Resources** — full CRUD, with image upload or external image URL for news
 - **Alumni** — view profiles, suspend/activate/delete accounts
 
 ## Project Layout
 
-See `app/` for MVC code, `routes/web.php` for the route table, `database/schema.sql` for the schema + seed data, and `resources/css/app.css` / `tailwind.config.js` for the Tailwind source.
+`index.php` (project root) is the front controller — everything is routed through it via `.htaccess`. `assets/` is the web-servable build output + uploads folder (`npm run build` writes `assets/css/app.css`; user uploads land under `assets/uploads/`). See `app/` for MVC code, `routes/web.php` for the route table, `database/schema.sql` for the schema + seed data, and `resources/css/app.css` / `tailwind.config.js` for the Tailwind source.
+
+## Deployment
+
+The document root should be this project's root folder itself (not a `public/` subfolder — there isn't one). `.htaccess` routes all requests through `index.php` and explicitly blocks direct access to `app/`, `config/`, `database/`, `routes/`, `resources/`, `node_modules/`, `.git/`, and common non-web file extensions (`.sql`, `.md`, `.json`, `.lock`, `.env`, `.log`), so those stay safe to leave alongside `index.php` even though they're technically inside the served folder.
+
+On Hostinger (or similar) using Git-based deploys: point the site/subdomain at wherever the repo gets cloned to, with no extra subfolder in the path. Remember to also create `config/config.php` on the server (copy from `config/config.example.php` — it's gitignored and won't arrive via git) with the production DB credentials, and run `database/schema.sql` against the production database before first use.

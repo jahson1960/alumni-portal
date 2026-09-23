@@ -10,6 +10,6 @@ return [
         'pass' => '',
         'charset' => 'utf8mb4',
     ],
-    'upload_dir' => __DIR__ . '/../public/assets/uploads',
+    'upload_dir' => __DIR__ . '/../assets/uploads',
     'upload_url' => 'assets/uploads',
 ];

@@ -44,8 +44,8 @@ abstract class Controller
 
     /**
      * Decoded path of the HTTP Referer, if present and same-origin as this app — or null otherwise.
-     * HTTP_REFERER is always an absolute, percent-encoded URL (e.g. "http://host/alumni%20portal/public/jobs"),
-     * while BASE_URL is a raw, unencoded path (e.g. "/alumni portal/public"); comparing them directly with
+     * HTTP_REFERER is always an absolute, percent-encoded URL (e.g. "http://host/alumni%20portal/jobs"),
+     * while BASE_URL is a raw, unencoded path (e.g. "/alumni portal"); comparing them directly with
      * str_starts_with() never matches, so both the host and the decoded path must be checked explicitly.
      */
     protected function refererPath(): ?string

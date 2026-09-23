@@ -1,8 +1,16 @@
 RewriteEngine On
-RewriteBase "/alumni portal/"
 
-# Redirect any URL that isn't already under /public/ so it lands there.
-# This makes the app work whether you type ".../alumni portal/admin"
-# or ".../alumni portal/public/admin" - both end up serving public/index.php.
-RewriteCond %{REQUEST_URI} !/public/
-RewriteRule ^(.*)$ public/$1 [R=302,L]
+# The document root now doubles as this repo's root (needed for hosts, like Hostinger's Git
+# deploy, that always serve whatever folder the repo lands in and don't offer a way to point
+# the docroot at a public/ subfolder instead). These directories/files are source, config and
+# tooling only — never meant to be fetched directly — so block them outright before anything
+# else runs.
+RewriteRule ^(app|config|database|routes|resources|node_modules|\.git)(/|$) - [F,L]
+
+<FilesMatch "\.(sql|md|lock|json|ya?ml|log|env)$">
+  Require all denied
+</FilesMatch>
+
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^ index.php [QSA,L]
