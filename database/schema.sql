@@ -1,8 +1,17 @@
 -- Alumni Portal database schema + seed data
--- Import with: C:\xampp\mysql\bin\mysql.exe -u root < database/schema.sql
-
-CREATE DATABASE IF NOT EXISTS alumni_portal CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
-USE alumni_portal;
+--
+-- This file does NOT create or select a database - run it against a database
+-- that already exists (most hosts, including Hostinger's managed MySQL, don't
+-- grant the app's DB user CREATE DATABASE privileges).
+--
+-- Local XAMPP (creates the DB first, since the root user can):
+--   C:\xampp\mysql\bin\mysql.exe -u root -e "CREATE DATABASE IF NOT EXISTS alumni_portal CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;"
+--   C:\xampp\mysql\bin\mysql.exe -u root alumni_portal < database/schema.sql
+--
+-- Hostinger / shared hosting (phpMyAdmin): create the database in hPanel first,
+-- then in phpMyAdmin select that database from the left sidebar before using
+-- Import - the tables below will be created inside whichever database is
+-- currently selected.
 
 -- ---------------------------------------------------------------------
 -- users  (single table for both admin and alumni accounts)

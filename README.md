@@ -13,9 +13,10 @@ A PHP MVC (custom, no framework) alumni portal for Rome Business School Nigeria,
 
 0. **Config** — Copy `config/config.example.php` to `config/config.php` and adjust the `db` credentials/port for your environment. `config/config.php` is gitignored since it holds local DB settings.
 
-1. **Database** — Import the schema:
+1. **Database** — Create the database, then import the schema into it (`database/schema.sql` doesn't create/select a database itself — see the note at its top — since most hosts, Hostinger included, don't grant the app's DB user permission to create databases):
    ```
-   C:\xampp\mysql\bin\mysql.exe -u root -h 127.0.0.1 -P 3307 < database/schema.sql
+   C:\xampp\mysql\bin\mysql.exe -u root -h 127.0.0.1 -P 3307 -e "CREATE DATABASE IF NOT EXISTS alumni_portal CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;"
+   C:\xampp\mysql\bin\mysql.exe -u root -h 127.0.0.1 -P 3307 alumni_portal < database/schema.sql
    ```
    > **Note on the port:** this machine already has a separate MySQL 8.0 Windows service (`MySQL80`) occupying the default port 3306. XAMPP's bundled MariaDB has been configured (see `C:\xampp\mysql\bin\my.ini`, `[mysqld]` section) to listen on **3307** instead, and `config/config.php` points there. If you later free up 3306 (or you're deploying somewhere without that conflict), change both `my.ini`'s `[mysqld] port` and `config/config.php`'s `db.port` back to `3306` (or remove the `port` key entirely for the default).
 
