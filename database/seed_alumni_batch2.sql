@@ -1,7 +1,8 @@
 -- 30 additional sample alumni. Safe to re-run (guarded by NOT EXISTS on email).
 -- Shares the same sample password as every other seeded alumni: ChangeMe@123.
-
-USE alumni_portal;
+-- Run against an already-selected database (phpMyAdmin) or on the command line
+-- as `mysql ... your_db_name < seed_alumni_batch2.sql` - no USE/CREATE DATABASE
+-- here, since most hosts don't grant the app's DB user that permission.
 
 SET @pw := (SELECT password_hash FROM users WHERE email = 'chidi.okonkwo@example.com' LIMIT 1);
 

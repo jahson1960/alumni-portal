@@ -1,4 +1,6 @@
-USE alumni_portal;
+-- Run against an already-selected database (phpMyAdmin) or on the command line
+-- as `mysql ... your_db_name < seed_giving_causes.sql` - no USE/CREATE DATABASE
+-- here, since most hosts don't grant the app's DB user that permission.
 
 INSERT INTO giving_causes (column_group, slug, title, description, body, icon, sort_order) VALUES
 ('support','make-a-donation','Make a Donation','Contribute to initiatives that transform lives.','<p>Every gift, no matter the size, helps RBSN expand access to world-class business education. Unrestricted donations are directed to the areas of greatest need each academic year — from financial aid to campus resources.</p>','fa-solid fa-heart',1),

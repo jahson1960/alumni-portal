@@ -4,8 +4,9 @@
 -- field, so running this twice will not create duplicates.
 -- All seeded alumni share the same sample password as the original seed
 -- users: ChangeMe@123 (bcrypt hash copied from users.id = 2).
-
-USE alumni_portal;
+-- Run against an already-selected database (phpMyAdmin) or on the command line
+-- as `mysql ... your_db_name < seed_bulk.sql` - no USE/CREATE DATABASE here,
+-- since most hosts don't grant the app's DB user that permission.
 
 SET @pw := (SELECT password_hash FROM users WHERE email = 'chidi.okonkwo@example.com' LIMIT 1);
 

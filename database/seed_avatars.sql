@@ -1,10 +1,11 @@
 -- Assigns placeholder avatar illustrations to the seeded alumni that don't have one yet.
 -- Illustrated (DiceBear avataaars, dark skin tones) rather than stock photos, since free
 -- photo-placeholder services do not offer reliable ethnicity filtering.
--- Image files live in public/assets/uploads/avatars/ alongside this repo copy.
+-- Image files live in assets/uploads/avatars/ alongside this repo copy.
 -- Safe to re-run: only touches rows whose avatar is still empty.
-
-USE alumni_portal;
+-- Run against an already-selected database (phpMyAdmin) or on the command line
+-- as `mysql ... your_db_name < seed_avatars.sql` - no USE/CREATE DATABASE here,
+-- since most hosts don't grant the app's DB user that permission.
 
 UPDATE users SET avatar = 'avatars/seed_alumni_3.png' WHERE email = 'amaka.eze@example.com' AND (avatar IS NULL OR avatar = '');
 UPDATE users SET avatar = 'avatars/seed_alumni_4.png' WHERE email = 'tunde.bakare@example.com' AND (avatar IS NULL OR avatar = '');

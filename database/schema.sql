@@ -134,6 +134,20 @@ CREATE TABLE follows (
 ) ENGINE=InnoDB;
 
 -- ---------------------------------------------------------------------
+-- messages  (private alumni-to-alumni direct messages)
+-- ---------------------------------------------------------------------
+CREATE TABLE messages (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  sender_id INT NOT NULL,
+  recipient_id INT NOT NULL,
+  body TEXT NOT NULL,
+  read_at TIMESTAMP NULL,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (sender_id) REFERENCES users(id) ON DELETE CASCADE,
+  FOREIGN KEY (recipient_id) REFERENCES users(id) ON DELETE CASCADE
+) ENGINE=InnoDB;
+
+-- ---------------------------------------------------------------------
 -- posts / post_likes / post_comments  (alumni community feed)
 -- ---------------------------------------------------------------------
 CREATE TABLE posts (
@@ -298,6 +312,15 @@ CREATE TABLE saved_events (
   CONSTRAINT fk_saved_events_event FOREIGN KEY (event_id) REFERENCES events(id) ON DELETE CASCADE
 ) ENGINE=InnoDB;
 
+CREATE TABLE event_rsvps (
+  event_id INT NOT NULL,
+  user_id INT NOT NULL,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (event_id, user_id),
+  FOREIGN KEY (event_id) REFERENCES events(id) ON DELETE CASCADE,
+  FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+) ENGINE=InnoDB;
+
 -- ---------------------------------------------------------------------
 -- resources
 -- ---------------------------------------------------------------------
@@ -326,6 +349,34 @@ CREATE TABLE saved_resources (
   PRIMARY KEY (user_id, resource_id),
   CONSTRAINT fk_saved_resources_user FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
   CONSTRAINT fk_saved_resources_resource FOREIGN KEY (resource_id) REFERENCES resources(id) ON DELETE CASCADE
+) ENGINE=InnoDB;
+
+-- ---------------------------------------------------------------------
+-- articles  (alumni-submitted Knowledge Hub articles, awaiting/published via Admin > Article Review)
+-- ---------------------------------------------------------------------
+CREATE TABLE articles (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  user_id INT NOT NULL,
+  title VARCHAR(255) NOT NULL,
+  category ENUM('article','research','case_study','white_paper') NOT NULL DEFAULT 'article',
+  body MEDIUMTEXT NOT NULL,
+  status ENUM('pending','published') NOT NULL DEFAULT 'pending',
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  published_at TIMESTAMP NULL,
+  FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+) ENGINE=InnoDB;
+
+-- ---------------------------------------------------------------------
+-- benefits  (alumni perks/discounts listed on the Benefits page)
+-- ---------------------------------------------------------------------
+CREATE TABLE benefits (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  title VARCHAR(200) NOT NULL,
+  description VARCHAR(500) NULL,
+  category VARCHAR(100) NULL,
+  link VARCHAR(255) NULL,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 ) ENGINE=InnoDB;
 
 -- ---------------------------------------------------------------------
