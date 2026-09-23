@@ -107,7 +107,6 @@ class AuthController extends Controller
         $password = (string) $this->input('password', '');
 
         if (Auth::attempt($email, $password)) {
-            $this->flash('success', 'Welcome back!');
             $this->redirect(Auth::isAdmin() ? 'admin/dashboard' : '/');
         }
 
