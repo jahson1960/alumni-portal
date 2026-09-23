@@ -1,0 +1,21 @@
+<h1 class="text-xl font-extrabold text-primary-navy mb-1">Welcome Back</h1>
+<p class="text-sm text-slate-500 mb-6">Log in to your RBSN Alumni account.</p>
+
+<?php require dirname(__DIR__) . '/partials/errors.php'; ?>
+
+<form method="POST" action="<?= e(url('login')) ?>" class="space-y-4">
+  <?= csrf_field() ?>
+  <div>
+    <label class="form-label" for="email">Email Address</label>
+    <input type="email" id="email" name="email" class="form-input" value="<?= old('email') ?>" required>
+  </div>
+  <div>
+    <label class="form-label" for="password">Password</label>
+    <input type="password" id="password" name="password" class="form-input" required>
+  </div>
+  <button type="submit" class="btn-gold w-full">Log In</button>
+</form>
+
+<p class="text-center text-sm text-slate-500 mt-6">
+  Don't have an account? <a href="<?= e(url('register')) ?>" class="text-gold font-semibold hover:underline">Join Now</a>
+</p>

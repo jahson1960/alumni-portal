@@ -1,0 +1,8 @@
+RewriteEngine On
+RewriteBase "/alumni portal/"
+
+# Redirect any URL that isn't already under /public/ so it lands there.
+# This makes the app work whether you type ".../alumni portal/admin"
+# or ".../alumni portal/public/admin" - both end up serving public/index.php.
+RewriteCond %{REQUEST_URI} !/public/
+RewriteRule ^(.*)$ public/$1 [R=302,L]

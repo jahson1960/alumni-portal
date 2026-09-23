@@ -1,0 +1,41 @@
+<?php
+
+namespace App\Models;
+
+use App\Core\Model;
+
+class UserEducation extends Model
+{
+    protected static string $table = 'user_education';
+
+    public static function forUser(int $userId): array
+    {
+        $stmt = static::db()->prepare('SELECT * FROM user_education WHERE user_id = ? ORDER BY end_year DESC, start_year DESC, sort_order ASC');
+        $stmt->execute([$userId]);
+        return $stmt->fetchAll();
+    }
+
+    public static function create(array $data): int
+    {
+        return static::insertRow('user_education', $data);
+    }
+
+    public static function update(int $id, array $data): bool
+    {
+        return static::updateRow('user_education', $id, $data);
+    }
+
+    /** Deletes a row only if it belongs to the acting user. */
+    public static function deleteAsOwner(int $id, int $userId): bool
+    {
+        $stmt = static::db()->prepare('DELETE FROM user_education WHERE id = ? AND user_id = ?');
+        return $stmt->execute([$id, $userId]);
+    }
+
+    public static function findAsOwner(int $id, int $userId): array|false
+    {
+        $stmt = static::db()->prepare('SELECT * FROM user_education WHERE id = ? AND user_id = ?');
+        $stmt->execute([$id, $userId]);
+        return $stmt->fetch();
+    }
+}

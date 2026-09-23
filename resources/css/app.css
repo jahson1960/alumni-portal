@@ -1,0 +1,125 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply font-sans text-slate-800 bg-slate-50;
+  }
+}
+
+@layer components {
+  .btn { @apply inline-block px-6 py-3 rounded font-semibold text-sm text-center transition-colors; }
+  .btn-gold { @apply btn bg-gold text-white hover:bg-gold-hover; }
+  .btn-outline-white { @apply btn bg-transparent text-white border border-white hover:bg-white/10; }
+  .btn-dark { @apply btn w-full block bg-primary-navy text-white mt-4 hover:bg-slate-800; }
+
+  .card { @apply bg-white border border-slate-200 rounded-lg shadow-sm; }
+
+  .nav-link { @apply text-sm font-semibold uppercase text-primary-navy hover:text-gold transition-colors flex items-center gap-1; }
+  .nav-link.active { @apply text-gold; }
+
+  .top-pill { @apply relative flex flex-col items-center justify-center gap-0.5 px-3.5 mx-0.5 rounded-lg text-[0.68rem] font-semibold text-slate-300 hover:text-white transition-colors; }
+  .top-pill i { @apply text-base; }
+  .top-pill.active, .group:hover > .top-pill { @apply text-gold; }
+
+  /* Hovering a dropdown trigger that isn't the current page: a highlighted pill background. */
+  .group:hover > .top-pill:not(.active) { @apply bg-white/10; }
+
+  /* Selected menu (current page): a full-width underline flush with the header's bottom edge. */
+  .top-pill.active::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 14px;
+    right: 14px;
+    height: 2px;
+    border-radius: 9999px 9999px 0 0;
+    background-color: #d49326;
+  }
+
+  .mega-col-title { @apply text-xs font-extrabold text-primary-navy uppercase tracking-wide; }
+  .mega-col-rule { @apply w-6 h-0.5 bg-gold mt-1.5 mb-4; }
+  .mega-item { @apply flex items-start gap-3 py-1.5 -mx-2 px-2 rounded-lg transition-colors; }
+  .mega-item:hover { background-color: var(--menu-accent-50); }
+  .mega-item-icon { @apply w-9 h-9 rounded-lg flex items-center justify-center flex-shrink-0 text-sm transition-colors; background-color: var(--menu-accent-50); color: var(--menu-accent-600); }
+  .mega-item:hover .mega-item-icon { background-color: var(--menu-accent-600); color: #fff; }
+  .mega-item-title { @apply block text-sm font-bold text-primary-navy leading-tight; }
+  .mega-item-desc { @apply block text-xs text-slate-500 leading-snug mt-0.5; }
+
+  .mega-panel-footer { @apply px-6 py-4 flex flex-wrap items-center justify-between gap-4 border-t; background-color: var(--menu-accent-50); border-color: var(--menu-accent-100); }
+  .mega-side-card { @apply bg-slate-50 rounded-lg p-4; }
+
+  .mega-scroll { scrollbar-width: thin; scrollbar-color: theme('colors.slate.300') transparent; }
+  .mega-scroll::-webkit-scrollbar { width: 6px; }
+  .mega-scroll::-webkit-scrollbar-track { background: transparent; }
+  .mega-scroll::-webkit-scrollbar-thumb { background-color: theme('colors.slate.300'); border-radius: 9999px; }
+
+  .mobile-menu-link { @apply flex items-center gap-2 text-sm text-slate-200 hover:text-gold py-2 border-b border-white/5; }
+  .mobile-menu-heading { @apply text-[0.65rem] font-bold text-gold uppercase tracking-wide pt-3 pb-1; }
+
+  .section-header { @apply flex justify-between items-center mb-4 border-b-2 border-gold pb-1; }
+  .section-title { @apply text-sm font-extrabold text-primary-navy uppercase tracking-wide; }
+  .section-link { @apply text-xs text-sky-600 font-semibold hover:underline; }
+
+  .badge { @apply inline-block px-2 py-0.5 text-[10px] font-bold uppercase rounded; }
+  .badge-gold { @apply badge bg-amber-100 text-amber-700; }
+  .badge-blue { @apply badge bg-sky-100 text-sky-700; }
+  .badge-green { @apply badge bg-emerald-100 text-emerald-700; }
+
+  .form-label { @apply block text-sm font-semibold text-primary-navy mb-1; }
+  .form-input { @apply w-full rounded border border-slate-300 px-3 py-2 text-sm focus:border-gold focus:ring-gold; }
+  .form-textarea { @apply form-input; }
+  .form-error { @apply text-xs text-red-600 mt-1; }
+
+  .admin-nav-link { @apply flex items-center gap-3 px-4 py-2.5 rounded text-sm font-medium text-slate-300 hover:bg-white/10 hover:text-white transition-colors; }
+  .admin-nav-link.active { @apply bg-gold text-white hover:bg-gold; }
+
+  .table-base { @apply w-full text-sm text-left border-collapse; }
+  .table-base th { @apply bg-slate-50 text-xs font-bold uppercase text-slate-500 px-4 py-3 border-b border-slate-200; }
+  .table-base td { @apply px-4 py-3 border-b border-slate-100 align-middle; }
+}
+
+/* ------------------------------------------------------------------ */
+/* Hero carousel transitions                                          */
+/* Each [data-transition] value defines a "hidden" resting state for  */
+/* .hero-slide and a "shown" state for .hero-slide.is-active; the JS  */
+/* carousel just toggles the is-active class and the CSS animates it. */
+/* ------------------------------------------------------------------ */
+#hero-carousel {
+  max-height: 90vh;
+}
+
+@media (max-width: 768px) {
+  #hero-carousel {
+    height: min(var(--hero-height, 480px), 420px) !important;
+  }
+}
+
+.hero-slide {
+  z-index: 0;
+  transition: opacity 800ms ease, transform 800ms ease, clip-path 900ms ease;
+}
+
+.hero-slide.is-active {
+  z-index: 10;
+}
+
+[data-transition="fade"] .hero-slide { opacity: 0; }
+[data-transition="fade"] .hero-slide.is-active { opacity: 1; }
+
+[data-transition="slide"] .hero-slide { opacity: 0; transform: translateX(6%); }
+[data-transition="slide"] .hero-slide.is-active { opacity: 1; transform: translateX(0); }
+
+[data-transition="slide-vertical"] .hero-slide { opacity: 0; transform: translateY(8%); }
+[data-transition="slide-vertical"] .hero-slide.is-active { opacity: 1; transform: translateY(0); }
+
+[data-transition="zoom"] .hero-slide { opacity: 0; transform: scale(1.15); }
+[data-transition="zoom"] .hero-slide.is-active { opacity: 1; transform: scale(1); }
+
+[data-transition="flip"] { perspective: 1800px; }
+[data-transition="flip"] .hero-slide { opacity: 0; transform: rotateY(18deg) scale(0.96); }
+[data-transition="flip"] .hero-slide.is-active { opacity: 1; transform: rotateY(0) scale(1); }
+
+[data-transition="wipe"] .hero-slide { opacity: 1; clip-path: inset(0 100% 0 0); }
+[data-transition="wipe"] .hero-slide.is-active { clip-path: inset(0 0 0 0); }
