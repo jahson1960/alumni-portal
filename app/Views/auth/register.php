@@ -34,11 +34,17 @@
   </div>
   <div>
     <label class="form-label" for="password">Password</label>
-    <input type="password" id="password" name="password" class="form-input" required minlength="8">
+    <div class="relative">
+      <input type="password" id="password" name="password" class="form-input !pr-10" required minlength="8">
+      <button type="button" class="password-toggle absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600" data-target="password" tabindex="-1"><i class="fa-regular fa-eye"></i></button>
+    </div>
   </div>
   <div>
     <label class="form-label" for="password_confirmation">Confirm Password</label>
-    <input type="password" id="password_confirmation" name="password_confirmation" class="form-input" required minlength="8">
+    <div class="relative">
+      <input type="password" id="password_confirmation" name="password_confirmation" class="form-input !pr-10" required minlength="8">
+      <button type="button" class="password-toggle absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600" data-target="password_confirmation" tabindex="-1"><i class="fa-regular fa-eye"></i></button>
+    </div>
   </div>
   <button type="submit" class="btn-gold w-full">Create Account</button>
 </form>

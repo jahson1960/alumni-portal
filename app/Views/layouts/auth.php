@@ -26,5 +26,19 @@
       <?= $content ?>
     </div>
   </div>
+
+  <script>
+    document.querySelectorAll('.password-toggle').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        var input = document.getElementById(btn.dataset.target);
+        if (!input) return;
+        var icon = btn.querySelector('i');
+        var show = input.type === 'password';
+        input.type = show ? 'text' : 'password';
+        icon.classList.toggle('fa-eye', !show);
+        icon.classList.toggle('fa-eye-slash', show);
+      });
+    });
+  </script>
 </body>
 </html>
