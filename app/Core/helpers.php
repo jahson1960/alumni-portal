@@ -94,24 +94,20 @@ function valid_align(?string $value, array $allowed, string $default): string
 }
 
 /**
- * Absolute-position horizontal classes for the hero slide CTA buttons, mobile default + a
- * "lg:" override for desktop, each combination fully spelled out (rather than built from
- * interpolated fragments) since Tailwind's build only sees classes that appear as literal
- * text in a scanned file - a dynamically-concatenated string would compile to nothing.
+ * Absolute-position horizontal classes for the hero slide CTA buttons. Mobile is always
+ * full-bleed width (left-4 right-4) - a comfortable full-width tap target, not a small
+ * compact cluster - so "left/center/right" only applies once the buttons stop being
+ * full-width, at the "lg:" desktop breakpoint. Each branch is fully spelled out (rather than
+ * built from interpolated fragments) since Tailwind's build only sees classes that appear as
+ * literal text in a scanned file - a dynamically-concatenated string would compile to nothing.
  */
-function hero_btn_h_classes(string $mobile, string $desktop): string
+function hero_btn_h_classes(string $desktop): string
 {
-    return match ($mobile . '|' . $desktop) {
-        'left|left' => 'left-4 right-auto translate-x-0 lg:left-8 lg:right-auto lg:translate-x-0',
-        'left|center' => 'left-4 right-auto translate-x-0 lg:left-1/2 lg:right-auto lg:-translate-x-1/2',
-        'left|right' => 'left-4 right-auto translate-x-0 lg:left-auto lg:right-8 lg:translate-x-0',
-        'center|left' => 'left-1/2 right-auto -translate-x-1/2 lg:left-8 lg:right-auto lg:translate-x-0',
-        'center|center' => 'left-1/2 right-auto -translate-x-1/2 lg:left-1/2 lg:right-auto lg:-translate-x-1/2',
-        'center|right' => 'left-1/2 right-auto -translate-x-1/2 lg:left-auto lg:right-8 lg:translate-x-0',
-        'right|left' => 'left-auto right-4 translate-x-0 lg:left-8 lg:right-auto lg:translate-x-0',
-        'right|center' => 'left-auto right-4 translate-x-0 lg:left-1/2 lg:right-auto lg:-translate-x-1/2',
-        'right|right' => 'left-auto right-4 translate-x-0 lg:left-auto lg:right-8 lg:translate-x-0',
-        default => 'left-4 right-auto translate-x-0 lg:left-8 lg:right-auto lg:translate-x-0',
+    return match ($desktop) {
+        'left' => 'left-4 right-4 lg:left-8 lg:right-auto lg:translate-x-0',
+        'center' => 'left-4 right-4 lg:left-1/2 lg:right-auto lg:-translate-x-1/2',
+        'right' => 'left-4 right-4 lg:left-auto lg:right-8 lg:translate-x-0',
+        default => 'left-4 right-4 lg:left-8 lg:right-auto lg:translate-x-0',
     };
 }
 

@@ -11,7 +11,6 @@ $alignClasses = [
 ];
 
 $heroBtnHClasses = hero_btn_h_classes(
-    valid_align($settings['hero_btn_h_align_mobile'] ?? null, ['left', 'center', 'right'], 'left'),
     valid_align($settings['hero_btn_h_align_desktop'] ?? null, ['left', 'center', 'right'], 'left')
 );
 $heroBtnVClasses = hero_btn_v_classes(
@@ -45,12 +44,12 @@ $heroBtnVClasses = hero_btn_v_classes(
         </div>
       </div>
       <?php if (!empty($slide['btn1_show']) || !empty($slide['btn2_show'])): ?>
-        <div class="absolute z-10 <?= $heroBtnHClasses ?> <?= $heroBtnVClasses ?> flex flex-col sm:flex-row gap-3">
+        <div class="absolute z-10 <?= $heroBtnHClasses ?> <?= $heroBtnVClasses ?> flex flex-col lg:flex-row gap-3">
           <?php if (!empty($slide['btn1_show'])): ?>
-            <a href="<?= e(str_starts_with($btn1Link, 'http') ? $btn1Link : url($btn1Link)) ?>" class="btn-gold text-center whitespace-nowrap"><?= e($slide['btn1_text'] ?: 'Explore Opportunities') ?></a>
+            <a href="<?= e(str_starts_with($btn1Link, 'http') ? $btn1Link : url($btn1Link)) ?>" class="btn-gold text-center whitespace-nowrap w-full lg:w-auto"><?= e($slide['btn1_text'] ?: 'Explore Opportunities') ?></a>
           <?php endif; ?>
           <?php if (!empty($slide['btn2_show'])): ?>
-            <a href="<?= e(str_starts_with($btn2Link, 'http') ? $btn2Link : url($btn2Link)) ?>" class="btn-outline-white text-center whitespace-nowrap"><?= e($slide['btn2_text'] ?: 'Update Your Profile') ?></a>
+            <a href="<?= e(str_starts_with($btn2Link, 'http') ? $btn2Link : url($btn2Link)) ?>" class="btn-outline-white text-center whitespace-nowrap w-full lg:w-auto"><?= e($slide['btn2_text'] ?: 'Update Your Profile') ?></a>
           <?php endif; ?>
         </div>
       <?php endif; ?>

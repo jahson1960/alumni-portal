@@ -328,7 +328,7 @@
 
     <div class="pt-4 border-t border-slate-100">
       <h4 class="text-xs font-extrabold text-slate-500 uppercase tracking-wide mb-1">CTA Button Position</h4>
-      <p class="text-xs text-slate-400 mb-3">Where the "Explore Opportunities" / "Update Your Profile" buttons sit within the hero, independent of the slide's own text alignment. Note: a "Bottom" position may overlap the slide navigation dots.</p>
+      <p class="text-xs text-slate-400 mb-3">On mobile the buttons are always full-width, stacked (for a comfortable tap target), so only their vertical position is configurable there. On desktop they're a compact side-by-side pair you can place anywhere. Note: a "Bottom" position may overlap the slide navigation dots.</p>
       <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div>
           <h5 class="text-xs font-extrabold text-slate-500 uppercase tracking-wide mb-2">Desktop</h5>
@@ -353,23 +353,13 @@
         </div>
         <div>
           <h5 class="text-xs font-extrabold text-slate-500 uppercase tracking-wide mb-2">Mobile</h5>
-          <div class="grid grid-cols-2 gap-4">
-            <div>
-              <label class="form-label" for="hero_btn_h_align_mobile">Horizontal</label>
-              <select id="hero_btn_h_align_mobile" name="hero_btn_h_align_mobile" class="form-input">
-                <?php foreach (['left' => 'Left', 'center' => 'Center', 'right' => 'Right'] as $value => $label): ?>
-                  <option value="<?= e($value) ?>" <?= ($settings['hero_btn_h_align_mobile'] ?? 'left') === $value ? 'selected' : '' ?>><?= e($label) ?></option>
-                <?php endforeach; ?>
-              </select>
-            </div>
-            <div>
-              <label class="form-label" for="hero_btn_v_align_mobile">Vertical</label>
-              <select id="hero_btn_v_align_mobile" name="hero_btn_v_align_mobile" class="form-input">
-                <?php foreach (['top' => 'Top', 'center' => 'Center', 'bottom' => 'Bottom'] as $value => $label): ?>
-                  <option value="<?= e($value) ?>" <?= ($settings['hero_btn_v_align_mobile'] ?? 'bottom') === $value ? 'selected' : '' ?>><?= e($label) ?></option>
-                <?php endforeach; ?>
-              </select>
-            </div>
+          <div class="max-w-[calc(50%-0.5rem)]">
+            <label class="form-label" for="hero_btn_v_align_mobile">Vertical</label>
+            <select id="hero_btn_v_align_mobile" name="hero_btn_v_align_mobile" class="form-input">
+              <?php foreach (['top' => 'Top', 'center' => 'Center', 'bottom' => 'Bottom'] as $value => $label): ?>
+                <option value="<?= e($value) ?>" <?= ($settings['hero_btn_v_align_mobile'] ?? 'bottom') === $value ? 'selected' : '' ?>><?= e($label) ?></option>
+              <?php endforeach; ?>
+            </select>
           </div>
         </div>
       </div>

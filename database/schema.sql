@@ -527,7 +527,6 @@ INSERT INTO settings (setting_key, setting_value) VALUES
 ('hero_interval', '6'),
 ('hero_transition', 'fade'),
 ('hero_btn_h_align_desktop', 'left'),
-('hero_btn_h_align_mobile', 'left'),
 ('hero_btn_v_align_desktop', 'bottom'),
 ('hero_btn_v_align_mobile', 'bottom'),
 

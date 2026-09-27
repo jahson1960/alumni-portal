@@ -48,7 +48,6 @@ class SettingsController extends AdminController
         $data['hero_transition'] = in_array($transition, self::TRANSITIONS, true) ? $transition : 'fade';
 
         $data['hero_btn_h_align_desktop'] = valid_align($this->input('hero_btn_h_align_desktop'), ['left', 'center', 'right'], 'left');
-        $data['hero_btn_h_align_mobile'] = valid_align($this->input('hero_btn_h_align_mobile'), ['left', 'center', 'right'], 'left');
         $data['hero_btn_v_align_desktop'] = valid_align($this->input('hero_btn_v_align_desktop'), ['top', 'center', 'bottom'], 'bottom');
         $data['hero_btn_v_align_mobile'] = valid_align($this->input('hero_btn_v_align_mobile'), ['top', 'center', 'bottom'], 'bottom');
 
