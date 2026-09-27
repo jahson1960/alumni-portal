@@ -18,7 +18,7 @@ $alignClasses = [
   ?>
     <div class="hero-slide absolute inset-0 bg-cover bg-center <?= $i === 0 ? 'is-active' : '' ?>"
          style="background-image: linear-gradient(90deg, rgba(9,26,46,1) 0%, rgba(9,26,46,1) 30%, rgba(9,26,46,0.7) 50%, rgba(9,26,46,0.3) 100%), url('<?= e($slide['image']) ?>');">
-      <div class="max-w-[1280px] mx-auto px-4 md:px-8 py-16 md:py-20 h-full flex <?= $justify ?>">
+      <div class="max-w-[1280px] mx-auto px-4 md:px-8 py-8 md:py-20 h-full flex <?= $justify ?>">
         <div class="max-w-xl flex flex-col <?= $itemsAlign ?> <?= $textAlign ?>">
           <h1 class="text-3xl md:text-4xl font-bold leading-tight mb-4">
             <?= e($slide['title']) ?>
@@ -26,12 +26,12 @@ $alignClasses = [
           </h1>
           <p class="font-medium mb-2"><?= e($slide['subtitle']) ?></p>
           <p class="text-sm text-slate-300 mb-8"><?= e($slide['description']) ?></p>
-          <div class="flex flex-wrap gap-4">
+          <div class="flex flex-col sm:flex-row gap-3 w-full sm:w-auto">
             <?php if (!empty($slide['btn1_show'])): ?>
-              <a href="<?= e(str_starts_with($btn1Link, 'http') ? $btn1Link : url($btn1Link)) ?>" class="btn-gold"><?= e($slide['btn1_text'] ?: 'Explore Opportunities') ?></a>
+              <a href="<?= e(str_starts_with($btn1Link, 'http') ? $btn1Link : url($btn1Link)) ?>" class="btn-gold text-center w-full sm:w-auto"><?= e($slide['btn1_text'] ?: 'Explore Opportunities') ?></a>
             <?php endif; ?>
             <?php if (!empty($slide['btn2_show'])): ?>
-              <a href="<?= e(str_starts_with($btn2Link, 'http') ? $btn2Link : url($btn2Link)) ?>" class="btn-outline-white"><?= e($slide['btn2_text'] ?: 'Update Your Profile') ?></a>
+              <a href="<?= e(str_starts_with($btn2Link, 'http') ? $btn2Link : url($btn2Link)) ?>" class="btn-outline-white text-center w-full sm:w-auto"><?= e($slide['btn2_text'] ?: 'Update Your Profile') ?></a>
             <?php endif; ?>
           </div>
         </div>
@@ -89,46 +89,46 @@ $alignClasses = [
 
 <main class="max-w-[1280px] mx-auto px-4 md:px-8 py-8">
 
-  <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 mb-10">
-    <a href="<?= e(url('directory')) ?>" class="card p-5 flex items-center gap-4 hover:-translate-y-0.5 hover:shadow-md transition-all">
+  <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3 md:gap-4 mb-10">
+    <a href="<?= e(url('directory')) ?>" class="card p-4 md:p-5 flex flex-col md:flex-row items-center md:items-center text-center md:text-left gap-2 md:gap-4 hover:-translate-y-0.5 hover:shadow-md transition-all">
       <div class="w-11 h-11 rounded-lg bg-slate-100 text-primary-navy flex items-center justify-center text-xl flex-shrink-0"><i class="fa-solid fa-user-group"></i></div>
       <div class="flex-1 min-w-0">
         <h4 class="text-sm font-bold text-primary-navy">Alumni Directory</h4>
         <p class="text-xs text-slate-500">Connect with alumni like you</p>
       </div>
-      <i class="fa-solid fa-chevron-right text-slate-400 text-xs"></i>
+      <i class="hidden md:block fa-solid fa-chevron-right text-slate-400 text-xs"></i>
     </a>
-    <a href="<?= e(url('jobs')) ?>" class="card p-5 flex items-center gap-4 hover:-translate-y-0.5 hover:shadow-md transition-all">
+    <a href="<?= e(url('jobs')) ?>" class="card p-4 md:p-5 flex flex-col md:flex-row items-center md:items-center text-center md:text-left gap-2 md:gap-4 hover:-translate-y-0.5 hover:shadow-md transition-all">
       <div class="w-11 h-11 rounded-lg bg-slate-100 text-primary-navy flex items-center justify-center text-xl flex-shrink-0"><i class="fa-solid fa-briefcase"></i></div>
       <div class="flex-1 min-w-0">
         <h4 class="text-sm font-bold text-primary-navy">Job Portal</h4>
         <p class="text-xs text-slate-500">Browse latest job opportunities</p>
       </div>
-      <i class="fa-solid fa-chevron-right text-slate-400 text-xs"></i>
+      <i class="hidden md:block fa-solid fa-chevron-right text-slate-400 text-xs"></i>
     </a>
-    <a href="<?= e(url('mentorship')) ?>" class="card p-5 flex items-center gap-4 hover:-translate-y-0.5 hover:shadow-md transition-all">
+    <a href="<?= e(url('mentorship')) ?>" class="card p-4 md:p-5 flex flex-col md:flex-row items-center md:items-center text-center md:text-left gap-2 md:gap-4 hover:-translate-y-0.5 hover:shadow-md transition-all">
       <div class="w-11 h-11 rounded-lg bg-slate-100 text-primary-navy flex items-center justify-center text-xl flex-shrink-0"><i class="fa-solid fa-people-arrows"></i></div>
       <div class="flex-1 min-w-0">
         <h4 class="text-sm font-bold text-primary-navy">Mentorship</h4>
         <p class="text-xs text-slate-500">Find a mentor or become one</p>
       </div>
-      <i class="fa-solid fa-chevron-right text-slate-400 text-xs"></i>
+      <i class="hidden md:block fa-solid fa-chevron-right text-slate-400 text-xs"></i>
     </a>
-    <a href="<?= e(url('events')) ?>" class="card p-5 flex items-center gap-4 hover:-translate-y-0.5 hover:shadow-md transition-all">
+    <a href="<?= e(url('events')) ?>" class="card p-4 md:p-5 flex flex-col md:flex-row items-center md:items-center text-center md:text-left gap-2 md:gap-4 hover:-translate-y-0.5 hover:shadow-md transition-all">
       <div class="w-11 h-11 rounded-lg bg-slate-100 text-primary-navy flex items-center justify-center text-xl flex-shrink-0"><i class="fa-solid fa-calendar-days"></i></div>
       <div class="flex-1 min-w-0">
         <h4 class="text-sm font-bold text-primary-navy">Events</h4>
         <p class="text-xs text-slate-500">Join upcoming events and reunions</p>
       </div>
-      <i class="fa-solid fa-chevron-right text-slate-400 text-xs"></i>
+      <i class="hidden md:block fa-solid fa-chevron-right text-slate-400 text-xs"></i>
     </a>
-    <a href="<?= e(url('resources')) ?>" class="card p-5 flex items-center gap-4 hover:-translate-y-0.5 hover:shadow-md transition-all">
+    <a href="<?= e(url('resources')) ?>" class="card p-4 md:p-5 flex flex-col md:flex-row items-center md:items-center text-center md:text-left gap-2 md:gap-4 hover:-translate-y-0.5 hover:shadow-md transition-all">
       <div class="w-11 h-11 rounded-lg bg-slate-100 text-primary-navy flex items-center justify-center text-xl flex-shrink-0"><i class="fa-solid fa-file-lines"></i></div>
       <div class="flex-1 min-w-0">
         <h4 class="text-sm font-bold text-primary-navy">Resources</h4>
         <p class="text-xs text-slate-500">Access career tools and materials</p>
       </div>
-      <i class="fa-solid fa-chevron-right text-slate-400 text-xs"></i>
+      <i class="hidden md:block fa-solid fa-chevron-right text-slate-400 text-xs"></i>
     </a>
   </div>
 
@@ -162,7 +162,7 @@ $alignClasses = [
         </a>
       <?php endif; ?>
 
-      <div class="space-y-4 flex-1">
+      <div class="space-y-4 flex-1 <?= $featuredNews ? 'hidden md:block' : '' ?>">
         <?php foreach ($newsList as $post): $postCat = \App\Models\Category::forNews((int) $post['id'])[0] ?? null; ?>
           <a href="<?= e(url('news/' . $post['slug'])) ?>" class="card overflow-hidden flex items-stretch gap-0 min-h-[76px] shadow hover:shadow-lg hover:-translate-y-0.5 transition-all group">
             <img src="<?= e($post['image']) ?>" alt="<?= e($post['title']) ?>" class="w-[76px] flex-shrink-0 object-cover">
