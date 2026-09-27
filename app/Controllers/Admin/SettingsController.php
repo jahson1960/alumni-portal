@@ -23,6 +23,7 @@ class SettingsController extends AdminController
             'title' => 'Site Settings',
             'activeNav' => 'settings',
             'settings' => Setting::all(),
+            'availableFonts' => available_fonts(),
         ]);
     }
 
@@ -69,6 +70,24 @@ class SettingsController extends AdminController
 
         $dropdownOffset = (int) $this->input('dropdown_offset', 4);
         $data['dropdown_offset'] = (string) max(-20, min(40, $dropdownOffset));
+
+        $data['font_family_desktop'] = valid_font_family($this->input('font_family_desktop'));
+        $data['font_family_mobile'] = valid_font_family($this->input('font_family_mobile'));
+        $data['font_size_desktop'] = (string) max(12, min(20, (int) $this->input('font_size_desktop', 16) ?: 16));
+        $data['font_size_mobile'] = (string) max(12, min(20, (int) $this->input('font_size_mobile', 15) ?: 15));
+
+        foreach ([
+            'header_bg_desktop' => '#091a2e',
+            'header_bg_mobile' => '#ffffff',
+            'header_text_desktop' => '#ffffff',
+            'header_text_mobile' => '#091a2e',
+            'menu_panel_bg_desktop' => '#ffffff',
+            'menu_panel_bg_mobile' => '#091a2e',
+            'menu_item_text_desktop' => '#091a2e',
+            'menu_item_text_mobile' => '#ffffff',
+        ] as $key => $default) {
+            $data[$key] = valid_hex_color($this->input($key), $default);
+        }
 
         $errors = [];
         $favicon = null;

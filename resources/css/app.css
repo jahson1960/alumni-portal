@@ -3,6 +3,11 @@
 @tailwind utilities;
 
 @layer base {
+  html {
+    /* Rescales every rem-based Tailwind text-* utility site-wide, so this one admin-configured
+       value (see theme_style() in app/Core/helpers.php) adjusts all text sizes proportionally. */
+    font-size: var(--app-font-size, 16px);
+  }
   body {
     @apply font-sans text-slate-800 bg-slate-50;
   }
@@ -38,13 +43,13 @@
     background-color: #d49326;
   }
 
-  .mega-col-title { @apply text-xs font-extrabold text-primary-navy uppercase tracking-wide; }
+  .mega-col-title { @apply text-xs font-extrabold uppercase tracking-wide; color: var(--menu-item-text); }
   .mega-col-rule { @apply w-6 h-0.5 bg-gold mt-1.5 mb-4; }
   .mega-item { @apply flex items-start gap-3 py-1.5 -mx-2 px-2 rounded-lg transition-colors; }
   .mega-item:hover { background-color: var(--menu-accent-50); }
   .mega-item-icon { @apply w-9 h-9 rounded-lg flex items-center justify-center flex-shrink-0 text-sm transition-colors; background-color: var(--menu-accent-50); color: var(--menu-accent-600); }
   .mega-item:hover .mega-item-icon { background-color: var(--menu-accent-600); color: #fff; }
-  .mega-item-title { @apply block text-sm font-bold text-primary-navy leading-tight; }
+  .mega-item-title { @apply block text-sm font-bold leading-tight; color: var(--menu-item-text); }
   .mega-item-desc { @apply block text-xs text-slate-500 leading-snug mt-0.5; }
 
   .mega-panel-footer { @apply px-6 py-4 flex flex-wrap items-center justify-between gap-4 border-t; background-color: var(--menu-accent-50); border-color: var(--menu-accent-100); }

@@ -57,7 +57,14 @@ if ($authUser && $authUser['program']) {
   <?php endif; ?>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <?php
+    $headFonts = array_unique([
+        valid_font_family($footerSettings['font_family_mobile'] ?? null),
+        valid_font_family($footerSettings['font_family_desktop'] ?? null),
+    ]);
+    $headFontQuery = implode('&', array_map(fn ($f) => 'family=' . str_replace(' ', '+', $f) . ':wght@300;400;500;600;700;800', $headFonts));
+  ?>
+  <link href="https://fonts.googleapis.com/css2?<?= $headFontQuery ?>&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="<?= e(versioned_asset('css/app.css')) ?>">
   <style><?= theme_style(
     $footerSettings,
@@ -73,13 +80,13 @@ if ($authUser && $authUser['program']) {
 </head>
 <body class="pb-16 lg:pb-0 flex flex-col min-h-screen">
 
-  <header class="bg-white lg:bg-primary-navy border-b border-slate-100 lg:border-0 sticky top-0 z-50">
+  <header class="bg-[var(--header-bg)] border-b border-black/5 sticky top-0 z-50">
     <div class="max-w-[1400px] mx-auto px-4 md:px-8">
       <div class="flex items-center justify-between h-[var(--header-height)] gap-4">
         <a href="<?= e(url('/')) ?>" class="flex items-center gap-3 flex-shrink-0 min-w-0">
           <img src="<?= e(upload_url('branding/rbs-logo.png')) ?>" alt="Rome Business School Logo" class="w-9 h-9 object-contain flex-shrink-0">
           <div class="leading-tight min-w-0">
-            <div class="text-primary-navy lg:text-white font-extrabold text-[0.65rem] lg:text-sm tracking-wide uppercase lg:truncate max-w-[130px] lg:max-w-[220px]"><?= e(Setting::get('site_name', 'Rome Business School Nigeria')) ?></div>
+            <div class="text-[var(--header-text)] font-extrabold text-[0.65rem] lg:text-sm tracking-wide uppercase lg:truncate max-w-[130px] lg:max-w-[220px]"><?= e(Setting::get('site_name', 'Rome Business School Nigeria')) ?></div>
             <div class="text-gold text-[0.6rem] lg:text-[0.62rem] font-bold tracking-[0.15em] uppercase">Alumni Portal</div>
           </div>
         </a>
@@ -97,7 +104,7 @@ if ($authUser && $authUser['program']) {
 
             <div class="fixed left-0 right-0 top-[var(--header-height)] hidden z-[60]" data-mega-panel>
               <div data-mega-caret class="absolute -top-2 -translate-x-1/2 translate-y-[var(--dropdown-offset)] z-[61] w-0 h-0 border-l-[8px] border-l-transparent border-r-[8px] border-r-transparent border-b-[8px] border-b-white" style="left:50%"></div>
-              <div data-mega-box class="mx-auto bg-white shadow-2xl rounded-xl border border-slate-100 overflow-hidden w-[min(94vw,1100px)] max-h-[calc(100vh-var(--header-height)-1rem)] flex flex-col translate-y-[var(--dropdown-offset)]">
+              <div data-mega-box class="mx-auto bg-[var(--menu-panel-bg)] shadow-2xl rounded-xl border border-slate-100 overflow-hidden w-[min(94vw,1100px)] max-h-[calc(100vh-var(--header-height)-1rem)] flex flex-col translate-y-[var(--dropdown-offset)]">
                 <div class="p-6 grid grid-cols-1 md:grid-cols-[220px_repeat(4,1fr)] gap-6 overflow-y-auto min-h-0 mega-scroll">
 
                   <div class="pr-6 md:border-r border-slate-100">
@@ -192,7 +199,7 @@ if ($authUser && $authUser['program']) {
 
             <div class="fixed left-0 right-0 top-[var(--header-height)] hidden z-[60]" data-mega-panel>
               <div data-mega-caret class="absolute -top-2 -translate-x-1/2 translate-y-[var(--dropdown-offset)] z-[61] w-0 h-0 border-l-[8px] border-l-transparent border-r-[8px] border-r-transparent border-b-[8px] border-b-white" style="left:50%"></div>
-              <div data-mega-box class="mx-auto bg-white shadow-2xl rounded-xl border border-slate-100 overflow-hidden w-[min(94vw,1080px)] max-h-[calc(100vh-var(--header-height)-1rem)] flex flex-col translate-y-[var(--dropdown-offset)]">
+              <div data-mega-box class="mx-auto bg-[var(--menu-panel-bg)] shadow-2xl rounded-xl border border-slate-100 overflow-hidden w-[min(94vw,1080px)] max-h-[calc(100vh-var(--header-height)-1rem)] flex flex-col translate-y-[var(--dropdown-offset)]">
                 <div class="p-6 grid grid-cols-1 md:grid-cols-[repeat(3,1fr)_300px] gap-8 overflow-y-auto min-h-0 mega-scroll">
 
                   <div>
@@ -316,7 +323,7 @@ if ($authUser && $authUser['program']) {
 
             <div class="fixed left-0 right-0 top-[var(--header-height)] hidden z-[60]" data-mega-panel>
               <div data-mega-caret class="absolute -top-2 -translate-x-1/2 translate-y-[var(--dropdown-offset)] z-[61] w-0 h-0 border-l-[8px] border-l-transparent border-r-[8px] border-r-transparent border-b-[8px] border-b-white" style="left:50%"></div>
-              <div data-mega-box class="mx-auto bg-white shadow-2xl rounded-xl border border-slate-100 overflow-hidden w-[min(94vw,1080px)] max-h-[calc(100vh-var(--header-height)-1rem)] flex flex-col translate-y-[var(--dropdown-offset)]">
+              <div data-mega-box class="mx-auto bg-[var(--menu-panel-bg)] shadow-2xl rounded-xl border border-slate-100 overflow-hidden w-[min(94vw,1080px)] max-h-[calc(100vh-var(--header-height)-1rem)] flex flex-col translate-y-[var(--dropdown-offset)]">
                 <div class="p-6 grid grid-cols-1 md:grid-cols-[repeat(3,1fr)_300px] gap-8 overflow-y-auto min-h-0 mega-scroll">
 
                   <div>
@@ -436,7 +443,7 @@ if ($authUser && $authUser['program']) {
 
             <div class="fixed left-0 right-0 top-[var(--header-height)] hidden z-[60]" data-mega-panel>
               <div data-mega-caret class="absolute -top-2 -translate-x-1/2 translate-y-[var(--dropdown-offset)] z-[61] w-0 h-0 border-l-[8px] border-l-transparent border-r-[8px] border-r-transparent border-b-[8px] border-b-white" style="left:50%"></div>
-              <div data-mega-box class="mx-auto bg-white shadow-2xl rounded-xl border border-slate-100 overflow-hidden w-[min(94vw,1080px)] max-h-[calc(100vh-var(--header-height)-1rem)] flex flex-col translate-y-[var(--dropdown-offset)]">
+              <div data-mega-box class="mx-auto bg-[var(--menu-panel-bg)] shadow-2xl rounded-xl border border-slate-100 overflow-hidden w-[min(94vw,1080px)] max-h-[calc(100vh-var(--header-height)-1rem)] flex flex-col translate-y-[var(--dropdown-offset)]">
                 <div class="p-6 grid grid-cols-1 md:grid-cols-[repeat(3,1fr)_300px] gap-8 overflow-y-auto min-h-0 mega-scroll">
 
                   <div>
@@ -533,7 +540,7 @@ if ($authUser && $authUser['program']) {
 
             <div class="fixed left-0 right-0 top-[var(--header-height)] hidden z-[60]" data-mega-panel>
               <div data-mega-caret class="absolute -top-2 -translate-x-1/2 translate-y-[var(--dropdown-offset)] z-[61] w-0 h-0 border-l-[8px] border-l-transparent border-r-[8px] border-r-transparent border-b-[8px] border-b-white" style="left:50%"></div>
-              <div data-mega-box class="mx-auto bg-white shadow-2xl rounded-xl border border-slate-100 overflow-hidden w-[min(94vw,1080px)] max-h-[calc(100vh-var(--header-height)-1rem)] flex flex-col translate-y-[var(--dropdown-offset)]">
+              <div data-mega-box class="mx-auto bg-[var(--menu-panel-bg)] shadow-2xl rounded-xl border border-slate-100 overflow-hidden w-[min(94vw,1080px)] max-h-[calc(100vh-var(--header-height)-1rem)] flex flex-col translate-y-[var(--dropdown-offset)]">
                 <div class="p-6 grid grid-cols-1 md:grid-cols-[repeat(3,1fr)_300px] gap-8 overflow-y-auto min-h-0 mega-scroll">
 
                   <div>
@@ -640,7 +647,7 @@ if ($authUser && $authUser['program']) {
               <?php if (false): // Give Back mega menu suspended — flip to true to re-enable ?>
               <div class="fixed left-0 right-0 top-[var(--header-height)] hidden z-[60]" data-mega-panel>
               <div data-mega-caret class="absolute -top-2 -translate-x-1/2 translate-y-[var(--dropdown-offset)] z-[61] w-0 h-0 border-l-[8px] border-l-transparent border-r-[8px] border-r-transparent border-b-[8px] border-b-white" style="left:50%"></div>
-                <div data-mega-box class="mx-auto bg-white shadow-2xl rounded-xl border border-slate-100 overflow-hidden w-[min(94vw,1080px)] max-h-[calc(100vh-var(--header-height)-1rem)] flex flex-col translate-y-[var(--dropdown-offset)]">
+                <div data-mega-box class="mx-auto bg-[var(--menu-panel-bg)] shadow-2xl rounded-xl border border-slate-100 overflow-hidden w-[min(94vw,1080px)] max-h-[calc(100vh-var(--header-height)-1rem)] flex flex-col translate-y-[var(--dropdown-offset)]">
                   <div class="p-6 grid grid-cols-1 md:grid-cols-[repeat(3,1fr)_300px] gap-8 overflow-y-auto min-h-0 mega-scroll">
 
                     <div>
@@ -761,18 +768,18 @@ if ($authUser && $authUser['program']) {
 
         <div class="flex items-center gap-4 flex-shrink-0">
           <?php if ($authUser): ?>
-            <a href="<?= e(url('notifications')) ?>" class="relative text-primary-navy lg:text-slate-300 hover:text-gold lg:hover:text-white" id="notification-bell">
+            <a href="<?= e(url('notifications')) ?>" class="relative text-[var(--header-text)] hover:text-gold" id="notification-bell">
               <i class="fa-regular fa-bell text-lg"></i>
               <span id="notification-badge" class="absolute -top-1.5 -right-2 bg-gold text-white text-[0.6rem] font-bold w-4 h-4 rounded-full flex items-center justify-center <?= $unreadNotificationCount > 0 ? '' : 'hidden' ?>"><?= min(9, $unreadNotificationCount) ?><?= $unreadNotificationCount > 9 ? '+' : '' ?></span>
             </a>
             <div class="relative group">
               <button class="flex items-center gap-2.5">
-                <?= avatar_html($authUser, 'w-9 h-9 border-2 border-slate-200 lg:border-white/20') ?>
+                <?= avatar_html($authUser, 'w-9 h-9 border-2 border-[var(--header-text)]') ?>
                 <span class="hidden md:block text-left leading-tight">
-                  <span class="block text-primary-navy lg:text-white text-xs font-bold truncate max-w-[110px]"><?= e($authUser['name']) ?></span>
+                  <span class="block text-[var(--header-text)] text-xs font-bold truncate max-w-[110px]"><?= e($authUser['name']) ?></span>
                   <?php if ($cohortBadge): ?><span class="block text-gold text-[0.65rem] font-semibold"><?= e($cohortBadge) ?></span><?php endif; ?>
                 </span>
-                <i class="fa-solid fa-angle-down text-[0.65rem] text-slate-400"></i>
+                <i class="fa-solid fa-angle-down text-[0.65rem] text-[var(--header-text)] opacity-60"></i>
               </button>
               <div class="absolute right-0 top-full pt-2 hidden group-hover:block z-40">
                 <div class="bg-white min-w-[180px] shadow-lg rounded-md border border-slate-200 py-2">
@@ -792,10 +799,10 @@ if ($authUser && $authUser['program']) {
               </div>
             </div>
           <?php else: ?>
-            <a href="<?= e(url('login')) ?>" class="text-xs font-semibold text-primary-navy lg:text-slate-200 hover:text-gold uppercase hidden sm:inline">Login</a>
+            <a href="<?= e(url('login')) ?>" class="text-xs font-semibold text-[var(--header-text)] hover:text-gold uppercase hidden sm:inline">Login</a>
             <a href="<?= e(url('register')) ?>" class="btn-gold !px-4 !py-2 text-xs hidden sm:inline-block">Join Now</a>
           <?php endif; ?>
-          <button type="button" id="mobile-menu-open" class="lg:hidden text-primary-navy text-xl cursor-pointer">
+          <button type="button" id="mobile-menu-open" class="lg:hidden text-[var(--header-text)] text-xl cursor-pointer">
             <i class="fa-solid fa-bars"></i>
           </button>
         </div>
@@ -826,13 +833,13 @@ if ($authUser && $authUser['program']) {
         <details class="group" name="mobile-menu-accordion">
           <summary class="flex items-center gap-3 py-3 cursor-pointer list-none marker:hidden [&::-webkit-details-marker]:hidden">
             <i class="<?= e($icon) ?> text-gold w-5 text-center flex-shrink-0"></i>
-            <span class="flex-1 text-sm font-semibold text-white/90"><?= e($title) ?></span>
-            <i class="fa-solid fa-chevron-down text-white/40 text-xs flex-shrink-0 transition-transform group-open:rotate-180"></i>
+            <span class="flex-1 text-sm font-semibold text-[var(--menu-item-text)] opacity-90"><?= e($title) ?></span>
+            <i class="fa-solid fa-chevron-down text-[var(--menu-item-text)] opacity-40 text-xs flex-shrink-0 transition-transform group-open:rotate-180"></i>
           </summary>
           <div class="pl-8 pb-2 space-y-0.5">
             <?php foreach ($items as $item): ?>
-              <a href="<?= e($item['href']) ?>" class="flex items-center gap-2.5 py-2 text-white/60 hover:text-white">
-                <span class="w-1 h-1 rounded-full bg-white/30 flex-shrink-0"></span>
+              <a href="<?= e($item['href']) ?>" class="flex items-center gap-2.5 py-2 text-[var(--menu-item-text)] opacity-60 hover:opacity-100">
+                <span class="w-1 h-1 rounded-full bg-[var(--menu-item-text)] opacity-30 flex-shrink-0"></span>
                 <i class="<?= e($item['icon']) ?> text-xs w-4 text-center flex-shrink-0"></i>
                 <span class="text-sm"><?= e($item['label']) ?></span>
               </a>
@@ -843,8 +850,8 @@ if ($authUser && $authUser['program']) {
         <?php
     };
     ?>
-    <div id="mobile-menu-overlay" class="hidden lg:!hidden fixed inset-0 z-[100] bg-primary-navy flex-col">
-      <div class="bg-primary-navy text-white px-4 py-3.5 flex items-center justify-between flex-shrink-0 border-b border-white/10">
+    <div id="mobile-menu-overlay" class="hidden lg:!hidden fixed inset-0 z-[100] bg-[var(--menu-panel-bg)] flex-col">
+      <div class="bg-[var(--menu-panel-bg)] text-[var(--menu-item-text)] px-4 py-3.5 flex items-center justify-between flex-shrink-0 border-b border-white/10">
         <a href="<?= e(url('/')) ?>" class="flex items-center gap-2.5 min-w-0">
           <i class="fa-solid fa-building-columns text-gold text-lg flex-shrink-0"></i>
           <span class="min-w-0">
@@ -852,7 +859,7 @@ if ($authUser && $authUser['program']) {
             <span class="block text-[0.65rem] text-gold font-bold tracking-wide uppercase">Alumni Portal</span>
           </span>
         </a>
-        <button type="button" id="mobile-menu-close" class="text-white text-xl cursor-pointer flex-shrink-0 px-1"><i class="fa-solid fa-xmark"></i></button>
+        <button type="button" id="mobile-menu-close" class="text-[var(--menu-item-text)] text-xl cursor-pointer flex-shrink-0 px-1"><i class="fa-solid fa-xmark"></i></button>
       </div>
 
       <div class="flex-1 overflow-y-auto px-4 py-3">
@@ -860,27 +867,27 @@ if ($authUser && $authUser['program']) {
           <a href="<?= e(url('profile/edit')) ?>" class="flex items-center gap-3 py-3 border-b border-white/10 mb-1">
             <?= avatar_html($authUser, 'w-11 h-11') ?>
             <div class="min-w-0 flex-1">
-              <p class="text-xs text-white/50">Welcome back,</p>
-              <p class="text-sm font-extrabold text-white truncate"><?= e($authUser['name']) ?></p>
+              <p class="text-xs text-[var(--menu-item-text)] opacity-50">Welcome back,</p>
+              <p class="text-sm font-extrabold text-[var(--menu-item-text)] truncate"><?= e($authUser['name']) ?></p>
             </div>
-            <i class="fa-solid fa-chevron-right text-white/40 text-sm flex-shrink-0"></i>
+            <i class="fa-solid fa-chevron-right text-[var(--menu-item-text)] opacity-40 text-sm flex-shrink-0"></i>
           </a>
         <?php endif; ?>
 
         <a href="<?= e(url('/')) ?>" class="flex items-center gap-3 py-3<?= $activeNav === 'home' ? ' border-l-2 border-gold bg-white/5 -mx-4 px-4' : '' ?>">
-          <i class="fa-solid fa-house <?= $activeNav === 'home' ? 'text-gold' : 'text-white/70' ?> w-5 text-center flex-shrink-0"></i>
-          <span class="text-sm font-semibold <?= $activeNav === 'home' ? 'text-white' : 'text-white/90' ?>">Home</span>
+          <i class="fa-solid fa-house <?= $activeNav === 'home' ? 'text-gold' : 'text-[var(--menu-item-text)] opacity-70' ?> w-5 text-center flex-shrink-0"></i>
+          <span class="text-sm font-semibold text-[var(--menu-item-text)] <?= $activeNav === 'home' ? '' : 'opacity-90' ?>">Home</span>
         </a>
         <div class="border-t border-white/10"></div>
         <?php if (!$authUser): ?>
           <a href="<?= e(url('login')) ?>" class="flex items-center gap-3 py-3">
-            <i class="fa-solid fa-right-to-bracket text-white/70 w-5 text-center flex-shrink-0"></i>
-            <span class="text-sm font-semibold text-white/90">Login</span>
+            <i class="fa-solid fa-right-to-bracket text-[var(--menu-item-text)] opacity-70 w-5 text-center flex-shrink-0"></i>
+            <span class="text-sm font-semibold text-[var(--menu-item-text)] opacity-90">Login</span>
           </a>
           <div class="border-t border-white/10"></div>
           <a href="<?= e(url('register')) ?>" class="flex items-center gap-3 py-3">
-            <i class="fa-solid fa-user-plus text-white/70 w-5 text-center flex-shrink-0"></i>
-            <span class="text-sm font-semibold text-white/90">Join Now</span>
+            <i class="fa-solid fa-user-plus text-[var(--menu-item-text)] opacity-70 w-5 text-center flex-shrink-0"></i>
+            <span class="text-sm font-semibold text-[var(--menu-item-text)] opacity-90">Join Now</span>
           </a>
           <div class="border-t border-white/10"></div>
         <?php endif; ?>
@@ -941,23 +948,23 @@ if ($authUser && $authUser['program']) {
         <?php if ($authUser): ?>
           <?php if ($isAdmin): ?>
             <a href="<?= e(url('admin/dashboard')) ?>" class="flex items-center gap-3 py-3">
-              <i class="fa-solid fa-gauge text-white/70 w-5 text-center flex-shrink-0"></i>
-              <span class="text-sm font-semibold text-white/90">Admin Panel</span>
+              <i class="fa-solid fa-gauge text-[var(--menu-item-text)] opacity-70 w-5 text-center flex-shrink-0"></i>
+              <span class="text-sm font-semibold text-[var(--menu-item-text)] opacity-90">Admin Panel</span>
             </a>
             <div class="border-t border-white/10"></div>
           <?php endif; ?>
           <?php if ($isAdmin || $authUser['role'] === 'editor'): ?>
             <a href="<?= e(url('admin/register-alumni')) ?>" class="flex items-center gap-3 py-3">
-              <i class="fa-solid fa-user-plus text-white/70 w-5 text-center flex-shrink-0"></i>
-              <span class="text-sm font-semibold text-white/90">Register Alumni</span>
+              <i class="fa-solid fa-user-plus text-[var(--menu-item-text)] opacity-70 w-5 text-center flex-shrink-0"></i>
+              <span class="text-sm font-semibold text-[var(--menu-item-text)] opacity-90">Register Alumni</span>
             </a>
             <div class="border-t border-white/10"></div>
           <?php endif; ?>
           <form method="POST" action="<?= e(url('logout')) ?>">
             <?= csrf_field() ?>
             <button type="submit" class="w-full flex items-center gap-3 py-3 text-left">
-              <i class="fa-solid fa-right-from-bracket text-white/70 w-5 text-center flex-shrink-0"></i>
-              <span class="text-sm font-semibold text-white/90">Logout</span>
+              <i class="fa-solid fa-right-from-bracket text-[var(--menu-item-text)] opacity-70 w-5 text-center flex-shrink-0"></i>
+              <span class="text-sm font-semibold text-[var(--menu-item-text)] opacity-90">Logout</span>
             </button>
           </form>
         <?php endif; ?>
@@ -967,8 +974,8 @@ if ($authUser && $authUser['program']) {
         <div class="flex items-center gap-3 min-w-0">
           <div class="w-10 h-10 rounded-full bg-white/10 text-gold flex items-center justify-center flex-shrink-0"><i class="fa-solid fa-user-group"></i></div>
           <div class="min-w-0">
-            <p class="text-xs font-extrabold text-white leading-tight">Grow Your Network. Build Your Future.</p>
-            <p class="text-[0.68rem] text-white/50 mt-0.5">Connect with alumni making an impact worldwide.</p>
+            <p class="text-xs font-extrabold text-[var(--menu-item-text)] leading-tight">Grow Your Network. Build Your Future.</p>
+            <p class="text-[0.68rem] text-[var(--menu-item-text)] opacity-50 mt-0.5">Connect with alumni making an impact worldwide.</p>
           </div>
         </div>
         <a href="<?= e(url('directory')) ?>" class="btn-gold !px-4 !py-2.5 text-xs flex items-center gap-1.5 flex-shrink-0 whitespace-nowrap">View Directory <i class="fa-solid fa-arrow-right"></i></a>

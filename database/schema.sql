@@ -548,7 +548,20 @@ INSERT INTO settings (setting_key, setting_value) VALUES
 ('theme_mode', 'unified'),
 ('theme_accent_color', '#d49326'),
 ('theme_button_color', '#d49326'),
-('theme_map_color', '#d49326');
+('theme_map_color', '#d49326'),
+
+('font_family_desktop', 'Inter'),
+('font_family_mobile', 'Inter'),
+('font_size_desktop', '16'),
+('font_size_mobile', '15'),
+('header_bg_desktop', '#091a2e'),
+('header_bg_mobile', '#ffffff'),
+('header_text_desktop', '#ffffff'),
+('header_text_mobile', '#091a2e'),
+('menu_panel_bg_desktop', '#ffffff'),
+('menu_panel_bg_mobile', '#091a2e'),
+('menu_item_text_desktop', '#091a2e'),
+('menu_item_text_mobile', '#ffffff');
 
 -- ---------------------------------------------------------------------
 -- page_visibility  (per-page audience controlled by admin: public / any

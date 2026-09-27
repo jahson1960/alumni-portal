@@ -109,12 +109,29 @@ function hex_to_rgb_triplet(string $hex): string
     return hexdec(substr($hex, 0, 2)) . ' ' . hexdec(substr($hex, 2, 2)) . ' ' . hexdec(substr($hex, 4, 2));
 }
 
+/** Curated Google Fonts selectable for site typography — kept short and whitelisted since the chosen name is emitted directly into CSS. */
+function available_fonts(): array
+{
+    return ['Inter', 'Roboto', 'Open Sans', 'Lato', 'Montserrat', 'Poppins', 'Nunito', 'Raleway', 'Source Sans 3', 'Merriweather'];
+}
+
+function valid_font_family(?string $value, string $default = 'Inter'): string
+{
+    return in_array($value, available_fonts(), true) ? $value : $default;
+}
+
 /**
  * Builds the :root CSS custom-property block for the whole admin-configurable theme:
- * header/dropdown geometry, plus color ramps for the three themeable surfaces (menu accents,
- * buttons/CTAs, the alumni map). In "unified" mode all three surfaces share one base color;
- * in "custom" mode each has its own. Buttons are exposed as an RGB triplet so Tailwind's
- * `gold`/`gold-hover` tokens (see tailwind.config.js) can support opacity modifiers like bg-gold/10.
+ * header/dropdown geometry, color ramps for the three themeable surfaces (menu accents,
+ * buttons/CTAs, the alumni map), and the responsive typography + header/menu color pairs
+ * below. In "unified" mode all three ramp surfaces share one base color; in "custom" mode
+ * each has its own. Buttons are exposed as an RGB triplet so Tailwind's `gold`/`gold-hover`
+ * tokens (see tailwind.config.js) can support opacity modifiers like bg-gold/10.
+ *
+ * Typography and header/menu colors are exposed as plain custom properties (--app-font-family,
+ * --header-bg, --menu-panel-bg, etc.) with a mobile-first value at :root, redefined inside a
+ * "min-width: 1024px" media query for desktop — the same breakpoint (lg) the header/menu
+ * markup already switches its responsive Tailwind classes at.
  */
 function theme_style(array $settings, int $headerHeight = 64, int $dropdownOffset = 4): string
 {
@@ -151,6 +168,37 @@ function theme_style(array $settings, int $headerHeight = 64, int $dropdownOffse
         $css .= $name . ':' . $value . ';';
     }
     $css .= '}';
+
+    // Typography + header/menu colors: mobile value at :root, desktop value inside the media query.
+    $fontFamilyMobile = valid_font_family($settings['font_family_mobile'] ?? null);
+    $fontFamilyDesktop = valid_font_family($settings['font_family_desktop'] ?? null);
+    $fontSizeMobile = max(12, min(20, (int) ($settings['font_size_mobile'] ?? 15)));
+    $fontSizeDesktop = max(12, min(20, (int) ($settings['font_size_desktop'] ?? 16)));
+    $headerBgMobile = valid_hex_color($settings['header_bg_mobile'] ?? null, '#ffffff');
+    $headerBgDesktop = valid_hex_color($settings['header_bg_desktop'] ?? null, '#091a2e');
+    $headerTextMobile = valid_hex_color($settings['header_text_mobile'] ?? null, '#091a2e');
+    $headerTextDesktop = valid_hex_color($settings['header_text_desktop'] ?? null, '#ffffff');
+    $menuPanelBgMobile = valid_hex_color($settings['menu_panel_bg_mobile'] ?? null, '#091a2e');
+    $menuPanelBgDesktop = valid_hex_color($settings['menu_panel_bg_desktop'] ?? null, '#ffffff');
+    $menuItemTextMobile = valid_hex_color($settings['menu_item_text_mobile'] ?? null, '#ffffff');
+    $menuItemTextDesktop = valid_hex_color($settings['menu_item_text_desktop'] ?? null, '#091a2e');
+
+    $css .= ':root{'
+        . "--app-font-family:'{$fontFamilyMobile}',sans-serif;"
+        . "--app-font-size:{$fontSizeMobile}px;"
+        . "--header-bg:{$headerBgMobile};"
+        . "--header-text:{$headerTextMobile};"
+        . "--menu-panel-bg:{$menuPanelBgMobile};"
+        . "--menu-item-text:{$menuItemTextMobile};"
+        . '}';
+    $css .= '@media(min-width:1024px){:root{'
+        . "--app-font-family:'{$fontFamilyDesktop}',sans-serif;"
+        . "--app-font-size:{$fontSizeDesktop}px;"
+        . "--header-bg:{$headerBgDesktop};"
+        . "--header-text:{$headerTextDesktop};"
+        . "--menu-panel-bg:{$menuPanelBgDesktop};"
+        . "--menu-item-text:{$menuItemTextDesktop};"
+        . '}}';
 
     return $css;
 }

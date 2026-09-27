@@ -16,7 +16,10 @@ module.exports = {
         "gold-hover": "rgb(var(--btn-700-rgb, 184 126 29) / <alpha-value>)",
       },
       fontFamily: {
-        sans: ["Inter", "sans-serif"],
+        // Driven by --app-font-family, injected per-request from the admin theme settings
+        // (see theme_style() in app/Core/helpers.php) - the literal fallback keeps text looking
+        // right before that <style> block loads.
+        sans: ["var(--app-font-family, Inter)", "sans-serif"],
       },
     },
   },

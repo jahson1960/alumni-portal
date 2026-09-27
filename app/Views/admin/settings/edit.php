@@ -107,6 +107,114 @@
   </div>
 
   <div class="card p-6">
+    <h3 class="section-title text-xs mb-1">Typography</h3>
+    <p class="text-xs text-slate-400 mb-4">Font and base text size, set separately for desktop and mobile.</p>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div>
+        <h4 class="text-xs font-extrabold text-slate-500 uppercase tracking-wide mb-3">Desktop</h4>
+        <div class="space-y-3">
+          <div>
+            <label class="form-label" for="font_family_desktop">Font</label>
+            <select id="font_family_desktop" name="font_family_desktop" class="form-input">
+              <?php foreach ($availableFonts as $font): ?>
+                <option value="<?= e($font) ?>" <?= ($settings['font_family_desktop'] ?? 'Inter') === $font ? 'selected' : '' ?>><?= e($font) ?></option>
+              <?php endforeach; ?>
+            </select>
+          </div>
+          <div>
+            <label class="form-label" for="font_size_desktop">Base Font Size (px)</label>
+            <input type="number" id="font_size_desktop" name="font_size_desktop" min="12" max="20" class="form-input" value="<?= e($settings['font_size_desktop'] ?? '16') ?>">
+          </div>
+        </div>
+      </div>
+      <div>
+        <h4 class="text-xs font-extrabold text-slate-500 uppercase tracking-wide mb-3">Mobile</h4>
+        <div class="space-y-3">
+          <div>
+            <label class="form-label" for="font_family_mobile">Font</label>
+            <select id="font_family_mobile" name="font_family_mobile" class="form-input">
+              <?php foreach ($availableFonts as $font): ?>
+                <option value="<?= e($font) ?>" <?= ($settings['font_family_mobile'] ?? 'Inter') === $font ? 'selected' : '' ?>><?= e($font) ?></option>
+              <?php endforeach; ?>
+            </select>
+          </div>
+          <div>
+            <label class="form-label" for="font_size_mobile">Base Font Size (px)</label>
+            <input type="number" id="font_size_mobile" name="font_size_mobile" min="12" max="20" class="form-input" value="<?= e($settings['font_size_mobile'] ?? '15') ?>">
+          </div>
+        </div>
+      </div>
+    </div>
+    <p class="text-xs text-slate-400 mt-4">Applies below the 1024px breakpoint (mobile) vs at/above it (desktop) — the same breakpoint where the layout itself switches to the mobile menu.</p>
+  </div>
+
+  <div class="card p-6">
+    <h3 class="section-title text-xs mb-1">Header Bar Colors</h3>
+    <p class="text-xs text-slate-400 mb-4">Background and text color of the top navigation bar, set separately for desktop and mobile.</p>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div>
+        <h4 class="text-xs font-extrabold text-slate-500 uppercase tracking-wide mb-3">Desktop</h4>
+        <div class="grid grid-cols-2 gap-4">
+          <div>
+            <label class="form-label" for="header_bg_desktop">Background</label>
+            <input type="color" id="header_bg_desktop" name="header_bg_desktop" class="w-full h-10 rounded border border-slate-300 cursor-pointer" value="<?= e($settings['header_bg_desktop'] ?? '#091a2e') ?>">
+          </div>
+          <div>
+            <label class="form-label" for="header_text_desktop">Text</label>
+            <input type="color" id="header_text_desktop" name="header_text_desktop" class="w-full h-10 rounded border border-slate-300 cursor-pointer" value="<?= e($settings['header_text_desktop'] ?? '#ffffff') ?>">
+          </div>
+        </div>
+      </div>
+      <div>
+        <h4 class="text-xs font-extrabold text-slate-500 uppercase tracking-wide mb-3">Mobile</h4>
+        <div class="grid grid-cols-2 gap-4">
+          <div>
+            <label class="form-label" for="header_bg_mobile">Background</label>
+            <input type="color" id="header_bg_mobile" name="header_bg_mobile" class="w-full h-10 rounded border border-slate-300 cursor-pointer" value="<?= e($settings['header_bg_mobile'] ?? '#ffffff') ?>">
+          </div>
+          <div>
+            <label class="form-label" for="header_text_mobile">Text</label>
+            <input type="color" id="header_text_mobile" name="header_text_mobile" class="w-full h-10 rounded border border-slate-300 cursor-pointer" value="<?= e($settings['header_text_mobile'] ?? '#091a2e') ?>">
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card p-6">
+    <h3 class="section-title text-xs mb-1">Menu Colors</h3>
+    <p class="text-xs text-slate-400 mb-4">Background and item text color of the desktop dropdown menus and the mobile menu drawer.</p>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div>
+        <h4 class="text-xs font-extrabold text-slate-500 uppercase tracking-wide mb-3">Desktop (dropdown menus)</h4>
+        <div class="grid grid-cols-2 gap-4">
+          <div>
+            <label class="form-label" for="menu_panel_bg_desktop">Background</label>
+            <input type="color" id="menu_panel_bg_desktop" name="menu_panel_bg_desktop" class="w-full h-10 rounded border border-slate-300 cursor-pointer" value="<?= e($settings['menu_panel_bg_desktop'] ?? '#ffffff') ?>">
+          </div>
+          <div>
+            <label class="form-label" for="menu_item_text_desktop">Item Text</label>
+            <input type="color" id="menu_item_text_desktop" name="menu_item_text_desktop" class="w-full h-10 rounded border border-slate-300 cursor-pointer" value="<?= e($settings['menu_item_text_desktop'] ?? '#091a2e') ?>">
+          </div>
+        </div>
+      </div>
+      <div>
+        <h4 class="text-xs font-extrabold text-slate-500 uppercase tracking-wide mb-3">Mobile (menu drawer)</h4>
+        <div class="grid grid-cols-2 gap-4">
+          <div>
+            <label class="form-label" for="menu_panel_bg_mobile">Background</label>
+            <input type="color" id="menu_panel_bg_mobile" name="menu_panel_bg_mobile" class="w-full h-10 rounded border border-slate-300 cursor-pointer" value="<?= e($settings['menu_panel_bg_mobile'] ?? '#091a2e') ?>">
+          </div>
+          <div>
+            <label class="form-label" for="menu_item_text_mobile">Item Text</label>
+            <input type="color" id="menu_item_text_mobile" name="menu_item_text_mobile" class="w-full h-10 rounded border border-slate-300 cursor-pointer" value="<?= e($settings['menu_item_text_mobile'] ?? '#ffffff') ?>">
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card p-6">
     <h3 class="section-title text-xs mb-1">Alumni Job Postings</h3>
     <p class="text-xs text-slate-400 mb-4">Controls what happens when an alumnus submits a job through "Post a Job" on the public site.</p>
     <div class="space-y-2">

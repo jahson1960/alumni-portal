@@ -1,4 +1,12 @@
-<?php $pageTitle = $title ?? 'Rome Business School Nigeria - Alumni Network'; ?>
+<?php
+$pageTitle = $title ?? 'Rome Business School Nigeria - Alumni Network';
+$authSettings = \App\Models\Setting::all();
+$authFonts = array_unique([
+    valid_font_family($authSettings['font_family_mobile'] ?? null),
+    valid_font_family($authSettings['font_family_desktop'] ?? null),
+]);
+$authFontQuery = implode('&', array_map(fn ($f) => 'family=' . str_replace(' ', '+', $f) . ':wght@300;400;500;600;700;800', $authFonts));
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -6,8 +14,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title><?= e($pageTitle) ?></title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?<?= $authFontQuery ?>&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="<?= e(versioned_asset('css/app.css')) ?>">
+  <style><?= theme_style($authSettings) ?></style>
 </head>
 <body class="font-sans bg-primary-navy min-h-screen flex items-center justify-center p-4">
   <div class="w-full max-w-md">
