@@ -137,8 +137,70 @@ $alignClasses = [
         <a href="<?= e(url('news')) ?>" class="section-link">View all articles &rarr;</a>
       </div>
 
+      <?php $mobileNewsSlides = array_merge($featuredNews ? [$featuredNews] : [], $newsList); ?>
+      <?php if ($mobileNewsSlides): ?>
+        <div class="md:hidden mb-4">
+          <div id="news-carousel" class="flex overflow-x-auto snap-x snap-mandatory scroll-smooth gap-4 no-scrollbar">
+            <?php foreach ($mobileNewsSlides as $i => $post): $slideCat = \App\Models\Category::forNews((int) $post['id'])[0] ?? null; $isFeaturedSlide = $featuredNews && (int) $post['id'] === (int) $featuredNews['id']; ?>
+              <a href="<?= e(url('news/' . $post['slug'])) ?>" class="news-slide snap-center shrink-0 w-full card overflow-hidden shadow">
+                <div class="relative">
+                  <img src="<?= e($post['image']) ?>" alt="<?= e($post['title']) ?>" class="w-full h-40 object-cover">
+                  <?php if ($isFeaturedSlide): ?>
+                    <span class="badge-gold absolute top-3 left-3 flex items-center gap-1"><i class="fa-solid fa-star text-[0.6rem]"></i> FEATURED</span>
+                  <?php endif; ?>
+                </div>
+                <div class="p-4">
+                  <?php if ($slideCat): ?><span class="<?= $isFeaturedSlide ? 'badge-gold' : 'badge-blue' ?> mb-2 inline-block"><?= e(strtoupper($slideCat['name'])) ?></span><?php endif; ?>
+                  <h4 class="text-sm font-bold leading-snug mb-2 text-primary-navy line-clamp-2"><?= e($post['title']) ?></h4>
+                  <p class="text-[0.68rem] text-slate-400 mb-2"><?= e(format_date($post['published_at'])) ?> &bull; By <?= e($post['author']) ?></p>
+                  <p class="text-xs text-slate-500 line-clamp-2"><?= e($post['excerpt']) ?></p>
+                </div>
+              </a>
+            <?php endforeach; ?>
+          </div>
+          <?php if (count($mobileNewsSlides) > 1): ?>
+            <div class="flex items-center justify-center gap-2 mt-3">
+              <?php foreach ($mobileNewsSlides as $i => $post): ?>
+                <button type="button" class="news-dot w-2 h-2 rounded-full transition-colors <?= $i === 0 ? 'bg-gold' : 'bg-slate-300' ?>" data-index="<?= $i ?>" aria-label="Go to news slide <?= $i + 1 ?>"></button>
+              <?php endforeach; ?>
+            </div>
+          <?php endif; ?>
+        </div>
+        <script>
+          (function () {
+            var carousel = document.getElementById('news-carousel');
+            if (!carousel) return;
+            var slides = carousel.querySelectorAll('.news-slide');
+            var dots = document.querySelectorAll('.news-dot');
+            if (!slides.length) return;
+
+            function setActive(index) {
+              dots.forEach(function (dot, i) {
+                dot.classList.toggle('bg-gold', i === index);
+                dot.classList.toggle('bg-slate-300', i !== index);
+              });
+            }
+
+            dots.forEach(function (dot) {
+              dot.addEventListener('click', function () {
+                slides[parseInt(dot.dataset.index, 10)].scrollIntoView({ behavior: 'smooth', inline: 'start', block: 'nearest' });
+              });
+            });
+
+            var scrollTimeout;
+            carousel.addEventListener('scroll', function () {
+              clearTimeout(scrollTimeout);
+              scrollTimeout = setTimeout(function () {
+                var index = Math.round(carousel.scrollLeft / carousel.clientWidth);
+                setActive(Math.max(0, Math.min(slides.length - 1, index)));
+              }, 100);
+            });
+          })();
+        </script>
+      <?php endif; ?>
+
       <?php if ($featuredNews): $featCat = \App\Models\Category::forNews((int) $featuredNews['id'])[0] ?? null; ?>
-        <a href="<?= e(url('news/' . $featuredNews['slug'])) ?>" class="card overflow-hidden block mb-4 shadow hover:shadow-lg hover:-translate-y-0.5 transition-all group">
+        <a href="<?= e(url('news/' . $featuredNews['slug'])) ?>" class="hidden md:block card overflow-hidden mb-4 shadow hover:shadow-lg hover:-translate-y-0.5 transition-all group">
           <div class="relative">
             <img src="<?= e($featuredNews['image']) ?>" alt="<?= e($featuredNews['title']) ?>" class="w-full h-40 object-cover">
             <span class="badge-gold absolute top-3 left-3 flex items-center gap-1"><i class="fa-solid fa-star text-[0.6rem]"></i> FEATURED</span>
@@ -158,7 +220,7 @@ $alignClasses = [
         </a>
       <?php endif; ?>
 
-      <div class="space-y-4 flex-1 <?= $featuredNews ? 'hidden md:block' : '' ?>">
+      <div class="space-y-4 flex-1 hidden md:block">
         <?php foreach ($newsList as $post): $postCat = \App\Models\Category::forNews((int) $post['id'])[0] ?? null; ?>
           <a href="<?= e(url('news/' . $post['slug'])) ?>" class="card overflow-hidden flex items-stretch gap-0 min-h-[76px] shadow hover:shadow-lg hover:-translate-y-0.5 transition-all group">
             <img src="<?= e($post['image']) ?>" alt="<?= e($post['title']) ?>" class="w-[76px] flex-shrink-0 object-cover">
@@ -176,6 +238,9 @@ $alignClasses = [
           <p class="text-sm text-slate-400">No news posts yet.</p>
         <?php endif; ?>
       </div>
+      <?php if (empty($mobileNewsSlides)): ?>
+        <p class="text-sm text-slate-400 md:hidden">No news posts yet.</p>
+      <?php endif; ?>
 
       <a href="<?= e(url('news')) ?>" class="btn-dark !rounded-full flex items-center justify-center gap-2"><i class="fa-solid fa-list-ul"></i> Browse All News <i class="fa-solid fa-arrow-right"></i></a>
     </div>

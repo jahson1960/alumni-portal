@@ -55,6 +55,9 @@
   .mega-scroll::-webkit-scrollbar-track { background: transparent; }
   .mega-scroll::-webkit-scrollbar-thumb { background-color: theme('colors.slate.300'); border-radius: 9999px; }
 
+  .no-scrollbar { scrollbar-width: none; -ms-overflow-style: none; }
+  .no-scrollbar::-webkit-scrollbar { display: none; }
+
   .mobile-menu-link { @apply flex items-center gap-2 text-sm text-slate-200 hover:text-gold py-2 border-b border-white/5; }
   .mobile-menu-heading { @apply text-[0.65rem] font-bold text-gold uppercase tracking-wide pt-3 pb-1; }
 
