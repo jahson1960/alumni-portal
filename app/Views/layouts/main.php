@@ -86,7 +86,7 @@ if ($authUser && $authUser['program']) {
         <a href="<?= e(url('/')) ?>" class="flex items-center gap-3 flex-shrink-0 min-w-0">
           <img src="<?= e(upload_url('branding/rbs-logo.png')) ?>" alt="Rome Business School Logo" class="w-9 h-9 object-contain flex-shrink-0">
           <div class="leading-tight min-w-0">
-            <div class="text-[var(--header-text)] font-extrabold text-[0.65rem] lg:text-sm tracking-wide uppercase lg:truncate max-w-[130px] lg:max-w-[220px]"><?= e(Setting::get('site_name', 'Rome Business School Nigeria')) ?></div>
+            <div class="text-[var(--header-text)] font-extrabold text-[0.65rem] lg:text-sm tracking-wide uppercase lg:truncate max-w-[130px] lg:max-w-[300px]"><?= e(Setting::get('site_name', 'Rome Business School Nigeria')) ?></div>
             <div class="text-gold text-[0.6rem] lg:text-[0.62rem] font-bold tracking-[0.15em] uppercase">Alumni Portal</div>
           </div>
         </a>
