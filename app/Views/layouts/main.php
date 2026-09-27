@@ -73,14 +73,14 @@ if ($authUser && $authUser['program']) {
 </head>
 <body class="pb-16 lg:pb-0 flex flex-col min-h-screen">
 
-  <header class="bg-primary-navy sticky top-0 z-50">
+  <header class="bg-white lg:bg-primary-navy border-b border-slate-100 lg:border-0 sticky top-0 z-50">
     <div class="max-w-[1400px] mx-auto px-4 md:px-8">
       <div class="flex items-center justify-between h-[var(--header-height)] gap-4">
-        <a href="<?= e(url('/')) ?>" class="flex items-center gap-3 flex-shrink-0">
+        <a href="<?= e(url('/')) ?>" class="flex items-center gap-3 flex-shrink-0 min-w-0">
           <img src="<?= e(upload_url('branding/rbs-logo.png')) ?>" alt="Rome Business School Logo" class="w-9 h-9 object-contain flex-shrink-0">
-          <div class="hidden sm:block leading-tight">
-            <div class="text-white font-extrabold text-sm tracking-wide uppercase truncate max-w-[220px]"><?= e(Setting::get('site_name', 'Rome Business School Nigeria')) ?></div>
-            <div class="text-gold text-[0.62rem] font-bold tracking-[0.15em] uppercase">Alumni Portal</div>
+          <div class="leading-tight min-w-0">
+            <div class="text-primary-navy lg:text-white font-extrabold text-[0.65rem] lg:text-sm tracking-wide uppercase lg:truncate max-w-[130px] lg:max-w-[220px]"><?= e(Setting::get('site_name', 'Rome Business School Nigeria')) ?></div>
+            <div class="text-gold text-[0.6rem] lg:text-[0.62rem] font-bold tracking-[0.15em] uppercase">Alumni Portal</div>
           </div>
         </a>
 
@@ -761,15 +761,15 @@ if ($authUser && $authUser['program']) {
 
         <div class="flex items-center gap-4 flex-shrink-0">
           <?php if ($authUser): ?>
-            <a href="<?= e(url('notifications')) ?>" class="relative text-slate-300 hover:text-white" id="notification-bell">
+            <a href="<?= e(url('notifications')) ?>" class="relative text-primary-navy lg:text-slate-300 hover:text-gold lg:hover:text-white" id="notification-bell">
               <i class="fa-regular fa-bell text-lg"></i>
               <span id="notification-badge" class="absolute -top-1.5 -right-2 bg-gold text-white text-[0.6rem] font-bold w-4 h-4 rounded-full flex items-center justify-center <?= $unreadNotificationCount > 0 ? '' : 'hidden' ?>"><?= min(9, $unreadNotificationCount) ?><?= $unreadNotificationCount > 9 ? '+' : '' ?></span>
             </a>
             <div class="relative group">
               <button class="flex items-center gap-2.5">
-                <?= avatar_html($authUser, 'w-9 h-9 border-2 border-white/20') ?>
+                <?= avatar_html($authUser, 'w-9 h-9 border-2 border-slate-200 lg:border-white/20') ?>
                 <span class="hidden md:block text-left leading-tight">
-                  <span class="block text-white text-xs font-bold truncate max-w-[110px]"><?= e($authUser['name']) ?></span>
+                  <span class="block text-primary-navy lg:text-white text-xs font-bold truncate max-w-[110px]"><?= e($authUser['name']) ?></span>
                   <?php if ($cohortBadge): ?><span class="block text-gold text-[0.65rem] font-semibold"><?= e($cohortBadge) ?></span><?php endif; ?>
                 </span>
                 <i class="fa-solid fa-angle-down text-[0.65rem] text-slate-400"></i>
@@ -792,10 +792,10 @@ if ($authUser && $authUser['program']) {
               </div>
             </div>
           <?php else: ?>
-            <a href="<?= e(url('login')) ?>" class="text-xs font-semibold text-slate-200 hover:text-gold uppercase hidden sm:inline">Login</a>
+            <a href="<?= e(url('login')) ?>" class="text-xs font-semibold text-primary-navy lg:text-slate-200 hover:text-gold uppercase hidden sm:inline">Login</a>
             <a href="<?= e(url('register')) ?>" class="btn-gold !px-4 !py-2 text-xs hidden sm:inline-block">Join Now</a>
           <?php endif; ?>
-          <button type="button" id="mobile-menu-open" class="lg:hidden text-white text-xl cursor-pointer">
+          <button type="button" id="mobile-menu-open" class="lg:hidden text-primary-navy text-xl cursor-pointer">
             <i class="fa-solid fa-bars"></i>
           </button>
         </div>
