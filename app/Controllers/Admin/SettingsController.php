@@ -36,14 +36,21 @@ class SettingsController extends AdminController
             $data[$key] = trim((string) $this->input($key, ''));
         }
 
-        $height = (int) $this->input('hero_height', 480);
-        $data['hero_height'] = (string) max(300, min(900, $height ?: 480));
+        $heightDesktop = (int) $this->input('hero_height_desktop', 480);
+        $data['hero_height_desktop'] = (string) max(300, min(900, $heightDesktop ?: 480));
+        $heightMobile = (int) $this->input('hero_height_mobile', 380);
+        $data['hero_height_mobile'] = (string) max(300, min(900, $heightMobile ?: 380));
 
         $interval = (int) $this->input('hero_interval', 6);
         $data['hero_interval'] = (string) max(3, min(20, $interval ?: 6));
 
         $transition = (string) $this->input('hero_transition', 'fade');
         $data['hero_transition'] = in_array($transition, self::TRANSITIONS, true) ? $transition : 'fade';
+
+        $data['hero_btn_h_align_desktop'] = valid_align($this->input('hero_btn_h_align_desktop'), ['left', 'center', 'right'], 'left');
+        $data['hero_btn_h_align_mobile'] = valid_align($this->input('hero_btn_h_align_mobile'), ['left', 'center', 'right'], 'left');
+        $data['hero_btn_v_align_desktop'] = valid_align($this->input('hero_btn_v_align_desktop'), ['top', 'center', 'bottom'], 'bottom');
+        $data['hero_btn_v_align_mobile'] = valid_align($this->input('hero_btn_v_align_mobile'), ['top', 'center', 'bottom'], 'bottom');
 
         foreach (['home_news_count', 'home_jobs_count', 'home_events_count'] as $countKey) {
             $count = (int) $this->input($countKey, 4);

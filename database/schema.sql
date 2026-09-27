@@ -522,8 +522,14 @@ INSERT INTO settings (setting_key, setting_value) VALUES
 ('site_name', 'Rome Business School Nigeria - Alumni Network'),
 
 ('hero_height', '480'),
+('hero_height_desktop', '480'),
+('hero_height_mobile', '380'),
 ('hero_interval', '6'),
 ('hero_transition', 'fade'),
+('hero_btn_h_align_desktop', 'left'),
+('hero_btn_h_align_mobile', 'left'),
+('hero_btn_v_align_desktop', 'bottom'),
+('hero_btn_v_align_mobile', 'bottom'),
 
 ('home_news_count', '4'),
 ('home_jobs_count', '3'),

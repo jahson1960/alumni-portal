@@ -1,5 +1,6 @@
 <?php
-$heroHeight = max(300, min(900, (int) ($settings['hero_height'] ?? 480)));
+$heroHeightMobile = max(300, min(900, (int) ($settings['hero_height_mobile'] ?? $settings['hero_height'] ?? 480)));
+$heroHeightDesktop = max(300, min(900, (int) ($settings['hero_height_desktop'] ?? $settings['hero_height'] ?? 480)));
 $heroIntervalMs = max(3, min(20, (int) ($settings['hero_interval'] ?? 6))) * 1000;
 $heroTransition = $settings['hero_transition'] ?? 'fade';
 
@@ -8,9 +9,24 @@ $alignClasses = [
     'center' => ['justify-center', 'text-center', 'items-center'],
     'right' => ['justify-end', 'text-right', 'items-end'],
 ];
+
+$heroBtnHClasses = hero_btn_h_classes(
+    valid_align($settings['hero_btn_h_align_mobile'] ?? null, ['left', 'center', 'right'], 'left'),
+    valid_align($settings['hero_btn_h_align_desktop'] ?? null, ['left', 'center', 'right'], 'left')
+);
+$heroBtnVClasses = hero_btn_v_classes(
+    valid_align($settings['hero_btn_v_align_mobile'] ?? null, ['top', 'center', 'bottom'], 'bottom'),
+    valid_align($settings['hero_btn_v_align_desktop'] ?? null, ['top', 'center', 'bottom'], 'bottom')
+);
 ?>
 <?php if ($heroSlides): ?>
-<section class="relative bg-primary-navy text-white overflow-hidden" id="hero-carousel" data-transition="<?= e($heroTransition) ?>" style="height: <?= $heroHeight ?>px; --hero-height: <?= $heroHeight ?>px;">
+<style>
+  #hero-carousel { height: <?= $heroHeightMobile ?>px; }
+  @media (min-width: 1024px) {
+    #hero-carousel { height: <?= $heroHeightDesktop ?>px; }
+  }
+</style>
+<section class="relative bg-primary-navy text-white overflow-hidden" id="hero-carousel" data-transition="<?= e($heroTransition) ?>">
   <?php foreach ($heroSlides as $i => $slide):
     [$justify, $textAlign, $itemsAlign] = $alignClasses[$slide['content_align'] ?? 'left'] ?? $alignClasses['left'];
     $btn1Link = $slide['btn1_link'] ?: 'jobs';
@@ -26,16 +42,18 @@ $alignClasses = [
           </h1>
           <p class="font-medium mb-2"><?= e($slide['subtitle']) ?></p>
           <p class="text-sm text-slate-300 mb-8"><?= e($slide['description']) ?></p>
-          <div class="flex flex-col sm:flex-row gap-3 w-full sm:w-auto">
-            <?php if (!empty($slide['btn1_show'])): ?>
-              <a href="<?= e(str_starts_with($btn1Link, 'http') ? $btn1Link : url($btn1Link)) ?>" class="btn-gold text-center w-full sm:w-auto"><?= e($slide['btn1_text'] ?: 'Explore Opportunities') ?></a>
-            <?php endif; ?>
-            <?php if (!empty($slide['btn2_show'])): ?>
-              <a href="<?= e(str_starts_with($btn2Link, 'http') ? $btn2Link : url($btn2Link)) ?>" class="btn-outline-white text-center w-full sm:w-auto"><?= e($slide['btn2_text'] ?: 'Update Your Profile') ?></a>
-            <?php endif; ?>
-          </div>
         </div>
       </div>
+      <?php if (!empty($slide['btn1_show']) || !empty($slide['btn2_show'])): ?>
+        <div class="absolute z-10 <?= $heroBtnHClasses ?> <?= $heroBtnVClasses ?> flex flex-col sm:flex-row gap-3">
+          <?php if (!empty($slide['btn1_show'])): ?>
+            <a href="<?= e(str_starts_with($btn1Link, 'http') ? $btn1Link : url($btn1Link)) ?>" class="btn-gold text-center whitespace-nowrap"><?= e($slide['btn1_text'] ?: 'Explore Opportunities') ?></a>
+          <?php endif; ?>
+          <?php if (!empty($slide['btn2_show'])): ?>
+            <a href="<?= e(str_starts_with($btn2Link, 'http') ? $btn2Link : url($btn2Link)) ?>" class="btn-outline-white text-center whitespace-nowrap"><?= e($slide['btn2_text'] ?: 'Update Your Profile') ?></a>
+          <?php endif; ?>
+        </div>
+      <?php endif; ?>
     </div>
   <?php endforeach; ?>
 

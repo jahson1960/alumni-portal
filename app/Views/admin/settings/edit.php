@@ -286,13 +286,20 @@
       <h3 class="section-title text-xs">Hero Section Behavior</h3>
       <a href="<?= e(url('admin/hero-slides')) ?>" class="text-xs font-semibold text-gold hover:underline">Manage Hero Slides &rarr;</a>
     </div>
-    <p class="text-xs text-slate-400 mb-4">Controls the size and slideshow motion of the homepage hero. Slide content, per-slide buttons, and alignment are managed on the Hero Slides page.</p>
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+    <p class="text-xs text-slate-400 mb-4">Controls the size and slideshow motion of the homepage hero. Slide content, per-slide buttons, and text alignment are managed on the Hero Slides page.</p>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
       <div>
-        <label class="form-label" for="hero_height">Height (px)</label>
-        <input type="number" id="hero_height" name="hero_height" min="300" max="900" step="10" class="form-input" value="<?= e($settings['hero_height'] ?? '480') ?>">
+        <label class="form-label" for="hero_height_desktop">Height — Desktop (px)</label>
+        <input type="number" id="hero_height_desktop" name="hero_height_desktop" min="300" max="900" step="10" class="form-input" value="<?= e($settings['hero_height_desktop'] ?? $settings['hero_height'] ?? '480') ?>">
         <p class="text-xs text-slate-400 mt-1">Between 300 and 900.</p>
       </div>
+      <div>
+        <label class="form-label" for="hero_height_mobile">Height — Mobile (px)</label>
+        <input type="number" id="hero_height_mobile" name="hero_height_mobile" min="300" max="900" step="10" class="form-input" value="<?= e($settings['hero_height_mobile'] ?? $settings['hero_height'] ?? '380') ?>">
+        <p class="text-xs text-slate-400 mt-1">Between 300 and 900.</p>
+      </div>
+    </div>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
       <div>
         <label class="form-label" for="hero_interval">Time Between Slides (seconds)</label>
         <input type="number" id="hero_interval" name="hero_interval" min="3" max="20" class="form-input" value="<?= e($settings['hero_interval'] ?? '6') ?>">
@@ -316,6 +323,55 @@
             <option value="<?= e($value) ?>" <?= $currentTransition === $value ? 'selected' : '' ?>><?= e($label) ?></option>
           <?php endforeach; ?>
         </select>
+      </div>
+    </div>
+
+    <div class="pt-4 border-t border-slate-100">
+      <h4 class="text-xs font-extrabold text-slate-500 uppercase tracking-wide mb-1">CTA Button Position</h4>
+      <p class="text-xs text-slate-400 mb-3">Where the "Explore Opportunities" / "Update Your Profile" buttons sit within the hero, independent of the slide's own text alignment. Note: a "Bottom" position may overlap the slide navigation dots.</p>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div>
+          <h5 class="text-xs font-extrabold text-slate-500 uppercase tracking-wide mb-2">Desktop</h5>
+          <div class="grid grid-cols-2 gap-4">
+            <div>
+              <label class="form-label" for="hero_btn_h_align_desktop">Horizontal</label>
+              <select id="hero_btn_h_align_desktop" name="hero_btn_h_align_desktop" class="form-input">
+                <?php foreach (['left' => 'Left', 'center' => 'Center', 'right' => 'Right'] as $value => $label): ?>
+                  <option value="<?= e($value) ?>" <?= ($settings['hero_btn_h_align_desktop'] ?? 'left') === $value ? 'selected' : '' ?>><?= e($label) ?></option>
+                <?php endforeach; ?>
+              </select>
+            </div>
+            <div>
+              <label class="form-label" for="hero_btn_v_align_desktop">Vertical</label>
+              <select id="hero_btn_v_align_desktop" name="hero_btn_v_align_desktop" class="form-input">
+                <?php foreach (['top' => 'Top', 'center' => 'Center', 'bottom' => 'Bottom'] as $value => $label): ?>
+                  <option value="<?= e($value) ?>" <?= ($settings['hero_btn_v_align_desktop'] ?? 'bottom') === $value ? 'selected' : '' ?>><?= e($label) ?></option>
+                <?php endforeach; ?>
+              </select>
+            </div>
+          </div>
+        </div>
+        <div>
+          <h5 class="text-xs font-extrabold text-slate-500 uppercase tracking-wide mb-2">Mobile</h5>
+          <div class="grid grid-cols-2 gap-4">
+            <div>
+              <label class="form-label" for="hero_btn_h_align_mobile">Horizontal</label>
+              <select id="hero_btn_h_align_mobile" name="hero_btn_h_align_mobile" class="form-input">
+                <?php foreach (['left' => 'Left', 'center' => 'Center', 'right' => 'Right'] as $value => $label): ?>
+                  <option value="<?= e($value) ?>" <?= ($settings['hero_btn_h_align_mobile'] ?? 'left') === $value ? 'selected' : '' ?>><?= e($label) ?></option>
+                <?php endforeach; ?>
+              </select>
+            </div>
+            <div>
+              <label class="form-label" for="hero_btn_v_align_mobile">Vertical</label>
+              <select id="hero_btn_v_align_mobile" name="hero_btn_v_align_mobile" class="form-input">
+                <?php foreach (['top' => 'Top', 'center' => 'Center', 'bottom' => 'Bottom'] as $value => $label): ?>
+                  <option value="<?= e($value) ?>" <?= ($settings['hero_btn_v_align_mobile'] ?? 'bottom') === $value ? 'selected' : '' ?>><?= e($label) ?></option>
+                <?php endforeach; ?>
+              </select>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </div>

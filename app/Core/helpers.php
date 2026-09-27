@@ -88,6 +88,50 @@ function valid_hex_color(?string $value, string $default): string
     return preg_match('/^#[0-9a-fA-F]{6}$/', $value) ? $value : $default;
 }
 
+function valid_align(?string $value, array $allowed, string $default): string
+{
+    return in_array($value, $allowed, true) ? $value : $default;
+}
+
+/**
+ * Absolute-position horizontal classes for the hero slide CTA buttons, mobile default + a
+ * "lg:" override for desktop, each combination fully spelled out (rather than built from
+ * interpolated fragments) since Tailwind's build only sees classes that appear as literal
+ * text in a scanned file - a dynamically-concatenated string would compile to nothing.
+ */
+function hero_btn_h_classes(string $mobile, string $desktop): string
+{
+    return match ($mobile . '|' . $desktop) {
+        'left|left' => 'left-4 right-auto translate-x-0 lg:left-8 lg:right-auto lg:translate-x-0',
+        'left|center' => 'left-4 right-auto translate-x-0 lg:left-1/2 lg:right-auto lg:-translate-x-1/2',
+        'left|right' => 'left-4 right-auto translate-x-0 lg:left-auto lg:right-8 lg:translate-x-0',
+        'center|left' => 'left-1/2 right-auto -translate-x-1/2 lg:left-8 lg:right-auto lg:translate-x-0',
+        'center|center' => 'left-1/2 right-auto -translate-x-1/2 lg:left-1/2 lg:right-auto lg:-translate-x-1/2',
+        'center|right' => 'left-1/2 right-auto -translate-x-1/2 lg:left-auto lg:right-8 lg:translate-x-0',
+        'right|left' => 'left-auto right-4 translate-x-0 lg:left-8 lg:right-auto lg:translate-x-0',
+        'right|center' => 'left-auto right-4 translate-x-0 lg:left-1/2 lg:right-auto lg:-translate-x-1/2',
+        'right|right' => 'left-auto right-4 translate-x-0 lg:left-auto lg:right-8 lg:translate-x-0',
+        default => 'left-4 right-auto translate-x-0 lg:left-8 lg:right-auto lg:translate-x-0',
+    };
+}
+
+/** Same idea as hero_btn_h_classes(), for vertical position (top/center/bottom). */
+function hero_btn_v_classes(string $mobile, string $desktop): string
+{
+    return match ($mobile . '|' . $desktop) {
+        'top|top' => 'top-20 bottom-auto translate-y-0 lg:top-24 lg:bottom-auto lg:translate-y-0',
+        'top|center' => 'top-20 bottom-auto translate-y-0 lg:top-1/2 lg:bottom-auto lg:-translate-y-1/2',
+        'top|bottom' => 'top-20 bottom-auto translate-y-0 lg:top-auto lg:bottom-12 lg:translate-y-0',
+        'center|top' => 'top-1/2 bottom-auto -translate-y-1/2 lg:top-24 lg:bottom-auto lg:translate-y-0',
+        'center|center' => 'top-1/2 bottom-auto -translate-y-1/2 lg:top-1/2 lg:bottom-auto lg:-translate-y-1/2',
+        'center|bottom' => 'top-1/2 bottom-auto -translate-y-1/2 lg:top-auto lg:bottom-12 lg:translate-y-0',
+        'bottom|top' => 'top-auto bottom-12 translate-y-0 lg:top-24 lg:bottom-auto lg:translate-y-0',
+        'bottom|center' => 'top-auto bottom-12 translate-y-0 lg:top-1/2 lg:bottom-auto lg:-translate-y-1/2',
+        'bottom|bottom' => 'top-auto bottom-12 translate-y-0 lg:top-auto lg:bottom-12 lg:translate-y-0',
+        default => 'top-auto bottom-12 translate-y-0 lg:top-auto lg:bottom-12 lg:translate-y-0',
+    };
+}
+
 /** 50/100/200/600/700/900 hex shade ramp derived from one base hex color. */
 function color_ramp(string $baseHex): array
 {
