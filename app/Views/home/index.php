@@ -30,17 +30,37 @@ $heroBtnVClasses = hero_btn_v_classes(
     [$justify, $textAlign, $itemsAlign] = $alignClasses[$slide['content_align'] ?? 'left'] ?? $alignClasses['left'];
     $btn1Link = $slide['btn1_link'] ?: 'jobs';
     $btn2Link = $slide['btn2_link'] ?: (\App\Core\Auth::check() ? 'profile/edit' : 'register');
+
+    $slideFontFamilyDesktop = !empty($slide['font_family_desktop']) ? valid_font_family($slide['font_family_desktop']) : null;
+    $slideFontFamilyMobile = !empty($slide['font_family_mobile']) ? valid_font_family($slide['font_family_mobile']) : null;
+    $slideFontSizeDesktop = !empty($slide['font_size_desktop']) ? max(12, min(56, (int) $slide['font_size_desktop'])) : null;
+    $slideFontSizeMobile = !empty($slide['font_size_mobile']) ? max(12, min(56, (int) $slide['font_size_mobile'])) : null;
+    $hasSlideTypography = $slideFontFamilyDesktop || $slideFontFamilyMobile || $slideFontSizeDesktop || $slideFontSizeMobile;
   ?>
+    <?php if ($hasSlideTypography): ?>
+      <style>
+        #hero-slide-content-<?= (int) $slide['id'] ?> {
+          <?php if ($slideFontFamilyMobile): ?>font-family: '<?= e($slideFontFamilyMobile) ?>', sans-serif;<?php endif; ?>
+          <?php if ($slideFontSizeMobile): ?>font-size: <?= $slideFontSizeMobile ?>px;<?php endif; ?>
+        }
+        @media (min-width: 1024px) {
+          #hero-slide-content-<?= (int) $slide['id'] ?> {
+            <?php if ($slideFontFamilyDesktop): ?>font-family: '<?= e($slideFontFamilyDesktop) ?>', sans-serif;<?php endif; ?>
+            <?php if ($slideFontSizeDesktop): ?>font-size: <?= $slideFontSizeDesktop ?>px;<?php endif; ?>
+          }
+        }
+      </style>
+    <?php endif; ?>
     <div class="hero-slide absolute inset-0 bg-cover bg-center <?= $i === 0 ? 'is-active' : '' ?>"
          style="background-image: linear-gradient(90deg, rgba(9,26,46,1) 0%, rgba(9,26,46,1) 30%, rgba(9,26,46,0.7) 50%, rgba(9,26,46,0.3) 100%), url('<?= e($slide['image']) ?>');">
       <div class="max-w-[1280px] mx-auto px-4 md:px-8 py-8 md:py-20 h-full flex <?= $justify ?>">
-        <div class="max-w-xl flex flex-col <?= $itemsAlign ?> <?= $textAlign ?>">
-          <h1 class="text-3xl md:text-4xl font-bold leading-tight mb-4">
+        <div id="hero-slide-content-<?= (int) $slide['id'] ?>" class="max-w-xl flex flex-col <?= $itemsAlign ?> <?= $textAlign ?>">
+          <h1 class="text-[1.875em] lg:text-[2.25em] font-bold leading-tight mb-4">
             <?= e($slide['title']) ?>
             <span class="block text-gold"><?= e($slide['highlight']) ?></span>
           </h1>
-          <p class="font-medium mb-2"><?= e($slide['subtitle']) ?></p>
-          <p class="text-sm text-slate-300 mb-8"><?= e($slide['description']) ?></p>
+          <p class="text-[1em] font-medium mb-2"><?= e($slide['subtitle']) ?></p>
+          <p class="text-[0.875em] text-slate-300 mb-8"><?= e($slide['description']) ?></p>
         </div>
       </div>
       <?php if (!empty($slide['btn1_show']) || !empty($slide['btn2_show'])): ?>
