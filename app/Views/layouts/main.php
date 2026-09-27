@@ -79,8 +79,8 @@ if ($authUser && $authUser['program']) {
         <a href="<?= e(url('/')) ?>" class="flex items-center gap-3 flex-shrink-0">
           <img src="<?= e(upload_url('branding/rbs-logo.png')) ?>" alt="Rome Business School Logo" class="w-9 h-9 object-contain flex-shrink-0">
           <div class="hidden sm:block leading-tight">
-            <div class="text-white font-extrabold text-sm tracking-wide">ROME BUSINESS SCHOOL</div>
-            <div class="text-gold text-[0.62rem] font-bold tracking-[0.15em]">ALUMNI PORTAL</div>
+            <div class="text-white font-extrabold text-sm tracking-wide uppercase truncate max-w-[220px]"><?= e(Setting::get('site_name', 'Rome Business School Nigeria')) ?></div>
+            <div class="text-gold text-[0.62rem] font-bold tracking-[0.15em] uppercase">Alumni Portal</div>
           </div>
         </a>
 
@@ -823,54 +823,66 @@ if ($authUser && $authUser['program']) {
             return;
         }
         ?>
-        <details class="group bg-[var(--menu-accent-50)] rounded-xl">
-          <summary class="flex items-center gap-3 p-4 cursor-pointer list-none marker:hidden [&::-webkit-details-marker]:hidden">
-            <div class="w-11 h-11 rounded-lg bg-[var(--menu-accent-100)] text-gold flex items-center justify-center flex-shrink-0 text-lg"><i class="<?= e($icon) ?>"></i></div>
-            <div class="flex-1 min-w-0">
-              <p class="text-sm font-extrabold text-primary-navy"><?= e($title) ?></p>
-              <p class="text-xs text-slate-500 mt-0.5"><?= e($description) ?></p>
-            </div>
-            <i class="fa-solid fa-chevron-down text-gold text-sm flex-shrink-0 transition-transform group-open:rotate-180"></i>
+        <details class="group">
+          <summary class="flex items-center gap-3 py-3 cursor-pointer list-none marker:hidden [&::-webkit-details-marker]:hidden">
+            <i class="<?= e($icon) ?> text-gold w-5 text-center flex-shrink-0"></i>
+            <span class="flex-1 text-sm font-semibold text-white/90"><?= e($title) ?></span>
+            <i class="fa-solid fa-chevron-down text-white/40 text-xs flex-shrink-0 transition-transform group-open:rotate-180"></i>
           </summary>
-          <div class="grid grid-cols-2 gap-3 px-4 pb-4 pt-1">
+          <div class="pl-8 pb-2 space-y-0.5">
             <?php foreach ($items as $item): ?>
-              <a href="<?= e($item['href']) ?>" class="rounded-lg p-2">
-                <div class="w-9 h-9 rounded-lg bg-white text-gold flex items-center justify-center mb-2"><i class="<?= e($item['icon']) ?>"></i></div>
-                <p class="text-sm font-bold text-primary-navy leading-tight"><?= e($item['label']) ?></p>
-                <p class="text-xs text-slate-500 mt-0.5 leading-snug"><?= e($item['desc']) ?></p>
+              <a href="<?= e($item['href']) ?>" class="flex items-center gap-2.5 py-2 text-white/60 hover:text-white">
+                <span class="w-1 h-1 rounded-full bg-white/30 flex-shrink-0"></span>
+                <i class="<?= e($item['icon']) ?> text-xs w-4 text-center flex-shrink-0"></i>
+                <span class="text-sm"><?= e($item['label']) ?></span>
               </a>
             <?php endforeach; ?>
           </div>
         </details>
+        <div class="border-t border-white/10"></div>
         <?php
     };
     ?>
-    <div id="mobile-menu-overlay" class="hidden lg:!hidden fixed inset-0 z-[100] bg-white flex-col">
-      <div class="bg-primary-navy text-white px-4 py-3.5 flex items-center justify-between flex-shrink-0">
+    <div id="mobile-menu-overlay" class="hidden lg:!hidden fixed inset-0 z-[100] bg-primary-navy flex-col">
+      <div class="bg-primary-navy text-white px-4 py-3.5 flex items-center justify-between flex-shrink-0 border-b border-white/10">
         <a href="<?= e(url('/')) ?>" class="flex items-center gap-2.5 min-w-0">
           <i class="fa-solid fa-building-columns text-gold text-lg flex-shrink-0"></i>
           <span class="min-w-0">
-            <span class="block text-xs font-extrabold tracking-wide truncate">ROME BUSINESS SCHOOL</span>
-            <span class="block text-[0.65rem] text-gold font-bold tracking-wide">ALUMNI PORTAL</span>
+            <span class="block text-sm font-extrabold tracking-wide uppercase truncate"><?= e(Setting::get('site_name', 'Rome Business School Nigeria')) ?></span>
+            <span class="block text-[0.65rem] text-gold font-bold tracking-wide uppercase">Alumni Portal</span>
           </span>
         </a>
         <button type="button" id="mobile-menu-close" class="text-white text-xl cursor-pointer flex-shrink-0 px-1"><i class="fa-solid fa-xmark"></i></button>
       </div>
 
-      <div class="flex-1 overflow-y-auto bg-slate-50 px-4 py-4 space-y-2.5">
-        <a href="<?= e(url('/')) ?>" class="flex items-center gap-3 bg-white rounded-xl p-4 border border-slate-100">
-          <div class="w-11 h-11 rounded-lg bg-[var(--menu-accent-100)] text-gold flex items-center justify-center flex-shrink-0 text-lg"><i class="fa-solid fa-house"></i></div>
-          <p class="text-sm font-extrabold text-primary-navy">Home</p>
+      <div class="flex-1 overflow-y-auto px-4 py-3">
+        <?php if ($authUser): ?>
+          <a href="<?= e(url('profile/edit')) ?>" class="flex items-center gap-3 py-3 border-b border-white/10 mb-1">
+            <?= avatar_html($authUser, 'w-11 h-11') ?>
+            <div class="min-w-0 flex-1">
+              <p class="text-xs text-white/50">Welcome back,</p>
+              <p class="text-sm font-extrabold text-white truncate"><?= e($authUser['name']) ?></p>
+            </div>
+            <i class="fa-solid fa-chevron-right text-white/40 text-sm flex-shrink-0"></i>
+          </a>
+        <?php endif; ?>
+
+        <a href="<?= e(url('/')) ?>" class="flex items-center gap-3 py-3<?= $activeNav === 'home' ? ' border-l-2 border-gold bg-white/5 -mx-4 px-4' : '' ?>">
+          <i class="fa-solid fa-house <?= $activeNav === 'home' ? 'text-gold' : 'text-white/70' ?> w-5 text-center flex-shrink-0"></i>
+          <span class="text-sm font-semibold <?= $activeNav === 'home' ? 'text-white' : 'text-white/90' ?>">Home</span>
         </a>
+        <div class="border-t border-white/10"></div>
         <?php if (!$authUser): ?>
-          <a href="<?= e(url('login')) ?>" class="flex items-center gap-3 bg-white rounded-xl p-4 border border-slate-100">
-            <div class="w-11 h-11 rounded-lg bg-[var(--menu-accent-100)] text-gold flex items-center justify-center flex-shrink-0 text-lg"><i class="fa-solid fa-right-to-bracket"></i></div>
-            <p class="text-sm font-extrabold text-primary-navy">Login</p>
+          <a href="<?= e(url('login')) ?>" class="flex items-center gap-3 py-3">
+            <i class="fa-solid fa-right-to-bracket text-white/70 w-5 text-center flex-shrink-0"></i>
+            <span class="text-sm font-semibold text-white/90">Login</span>
           </a>
-          <a href="<?= e(url('register')) ?>" class="flex items-center gap-3 bg-white rounded-xl p-4 border border-slate-100">
-            <div class="w-11 h-11 rounded-lg bg-[var(--menu-accent-100)] text-gold flex items-center justify-center flex-shrink-0 text-lg"><i class="fa-solid fa-user-plus"></i></div>
-            <p class="text-sm font-extrabold text-primary-navy">Join Now</p>
+          <div class="border-t border-white/10"></div>
+          <a href="<?= e(url('register')) ?>" class="flex items-center gap-3 py-3">
+            <i class="fa-solid fa-user-plus text-white/70 w-5 text-center flex-shrink-0"></i>
+            <span class="text-sm font-semibold text-white/90">Join Now</span>
           </a>
+          <div class="border-t border-white/10"></div>
         <?php endif; ?>
 
         <?php $mobileAccordion('network', 'directory', 'fa-solid fa-users', 'Alumni Network', 'Connect, collaborate and engage with fellow alumni around the world.', array_filter([
@@ -927,38 +939,36 @@ if ($authUser && $authUser['program']) {
         ?>
 
         <?php if ($authUser): ?>
-          <a href="<?= e(url('profile/edit')) ?>" class="flex items-center gap-3 bg-white rounded-xl p-4 border border-slate-100">
-            <div class="w-11 h-11 rounded-lg bg-[var(--menu-accent-100)] text-gold flex items-center justify-center flex-shrink-0 text-lg"><i class="fa-solid fa-user"></i></div>
-            <p class="text-sm font-extrabold text-primary-navy">Edit Profile</p>
-          </a>
           <?php if ($isAdmin): ?>
-            <a href="<?= e(url('admin/dashboard')) ?>" class="flex items-center gap-3 bg-white rounded-xl p-4 border border-slate-100">
-              <div class="w-11 h-11 rounded-lg bg-[var(--menu-accent-100)] text-gold flex items-center justify-center flex-shrink-0 text-lg"><i class="fa-solid fa-gauge"></i></div>
-              <p class="text-sm font-extrabold text-primary-navy">Admin Panel</p>
+            <a href="<?= e(url('admin/dashboard')) ?>" class="flex items-center gap-3 py-3">
+              <i class="fa-solid fa-gauge text-white/70 w-5 text-center flex-shrink-0"></i>
+              <span class="text-sm font-semibold text-white/90">Admin Panel</span>
             </a>
+            <div class="border-t border-white/10"></div>
           <?php endif; ?>
           <?php if ($isAdmin || $authUser['role'] === 'editor'): ?>
-            <a href="<?= e(url('admin/register-alumni')) ?>" class="flex items-center gap-3 bg-white rounded-xl p-4 border border-slate-100">
-              <div class="w-11 h-11 rounded-lg bg-[var(--menu-accent-100)] text-gold flex items-center justify-center flex-shrink-0 text-lg"><i class="fa-solid fa-user-plus"></i></div>
-              <p class="text-sm font-extrabold text-primary-navy">Register Alumni</p>
+            <a href="<?= e(url('admin/register-alumni')) ?>" class="flex items-center gap-3 py-3">
+              <i class="fa-solid fa-user-plus text-white/70 w-5 text-center flex-shrink-0"></i>
+              <span class="text-sm font-semibold text-white/90">Register Alumni</span>
             </a>
+            <div class="border-t border-white/10"></div>
           <?php endif; ?>
           <form method="POST" action="<?= e(url('logout')) ?>">
             <?= csrf_field() ?>
-            <button type="submit" class="w-full flex items-center gap-3 bg-white rounded-xl p-4 border border-slate-100 text-left">
-              <div class="w-11 h-11 rounded-lg bg-slate-100 text-slate-500 flex items-center justify-center flex-shrink-0 text-lg"><i class="fa-solid fa-right-from-bracket"></i></div>
-              <p class="text-sm font-extrabold text-primary-navy">Logout</p>
+            <button type="submit" class="w-full flex items-center gap-3 py-3 text-left">
+              <i class="fa-solid fa-right-from-bracket text-white/70 w-5 text-center flex-shrink-0"></i>
+              <span class="text-sm font-semibold text-white/90">Logout</span>
             </button>
           </form>
         <?php endif; ?>
       </div>
 
-      <div class="flex-shrink-0 bg-[var(--menu-accent-50)] border-t border-[var(--menu-accent-100)] px-4 py-4 flex items-center justify-between gap-3">
+      <div class="flex-shrink-0 bg-white/5 border-t border-white/10 px-4 py-4 flex items-center justify-between gap-3">
         <div class="flex items-center gap-3 min-w-0">
-          <div class="w-10 h-10 rounded-full bg-[var(--menu-accent-100)] text-gold flex items-center justify-center flex-shrink-0"><i class="fa-solid fa-user-group"></i></div>
+          <div class="w-10 h-10 rounded-full bg-white/10 text-gold flex items-center justify-center flex-shrink-0"><i class="fa-solid fa-user-group"></i></div>
           <div class="min-w-0">
-            <p class="text-xs font-extrabold text-primary-navy leading-tight">Grow Your Network. Build Your Future.</p>
-            <p class="text-[0.68rem] text-slate-500 mt-0.5">Connect with alumni making an impact worldwide.</p>
+            <p class="text-xs font-extrabold text-white leading-tight">Grow Your Network. Build Your Future.</p>
+            <p class="text-[0.68rem] text-white/50 mt-0.5">Connect with alumni making an impact worldwide.</p>
           </div>
         </div>
         <a href="<?= e(url('directory')) ?>" class="btn-gold !px-4 !py-2.5 text-xs flex items-center gap-1.5 flex-shrink-0 whitespace-nowrap">View Directory <i class="fa-solid fa-arrow-right"></i></a>
