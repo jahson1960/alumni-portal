@@ -197,7 +197,8 @@ $alignClasses = [
             }
 
             function goTo(index) {
-              slides[index].scrollIntoView({ behavior: 'smooth', inline: 'start', block: 'nearest' });
+              var target = slides[index].getBoundingClientRect().left - carousel.getBoundingClientRect().left + carousel.scrollLeft;
+              carousel.scrollTo({ left: target, behavior: 'smooth' });
             }
 
             function next() {
