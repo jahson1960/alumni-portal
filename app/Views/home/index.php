@@ -90,37 +90,33 @@ $alignClasses = [
 <main class="max-w-[1280px] mx-auto px-4 md:px-8 py-8">
 
   <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3 md:gap-4 mb-10">
-    <a href="<?= e(url('directory')) ?>" class="relative card p-4 md:p-5 flex flex-col md:flex-row items-center md:items-center text-center md:text-left gap-2 md:gap-4 hover:-translate-y-0.5 hover:shadow-md transition-all">
+    <a href="<?= e(url('directory')) ?>" class="card p-4 md:p-5 flex flex-col md:flex-row items-center md:items-center text-center md:text-left gap-2 md:gap-4 hover:-translate-y-0.5 hover:shadow-md transition-all">
       <div class="w-11 h-11 rounded-lg bg-slate-100 text-primary-navy flex items-center justify-center text-xl flex-shrink-0"><i class="fa-solid fa-user-group"></i></div>
       <div class="flex-1 min-w-0">
         <h4 class="text-sm font-bold text-primary-navy">Alumni Directory</h4>
         <p class="text-xs text-slate-500">Connect with alumni like you</p>
       </div>
-      <i class="absolute bottom-3 right-3 md:static fa-solid fa-chevron-right text-slate-400 text-xs"></i>
     </a>
-    <a href="<?= e(url('jobs')) ?>" class="relative card p-4 md:p-5 flex flex-col md:flex-row items-center md:items-center text-center md:text-left gap-2 md:gap-4 hover:-translate-y-0.5 hover:shadow-md transition-all">
+    <a href="<?= e(url('jobs')) ?>" class="card p-4 md:p-5 flex flex-col md:flex-row items-center md:items-center text-center md:text-left gap-2 md:gap-4 hover:-translate-y-0.5 hover:shadow-md transition-all">
       <div class="w-11 h-11 rounded-lg bg-slate-100 text-primary-navy flex items-center justify-center text-xl flex-shrink-0"><i class="fa-solid fa-briefcase"></i></div>
       <div class="flex-1 min-w-0">
         <h4 class="text-sm font-bold text-primary-navy">Job Portal</h4>
         <p class="text-xs text-slate-500">Browse latest job opportunities</p>
       </div>
-      <i class="absolute bottom-3 right-3 md:static fa-solid fa-chevron-right text-slate-400 text-xs"></i>
     </a>
-    <a href="<?= e(url('mentorship')) ?>" class="relative card p-4 md:p-5 flex flex-col md:flex-row items-center md:items-center text-center md:text-left gap-2 md:gap-4 hover:-translate-y-0.5 hover:shadow-md transition-all">
+    <a href="<?= e(url('mentorship')) ?>" class="card p-4 md:p-5 flex flex-col md:flex-row items-center md:items-center text-center md:text-left gap-2 md:gap-4 hover:-translate-y-0.5 hover:shadow-md transition-all">
       <div class="w-11 h-11 rounded-lg bg-slate-100 text-primary-navy flex items-center justify-center text-xl flex-shrink-0"><i class="fa-solid fa-people-arrows"></i></div>
       <div class="flex-1 min-w-0">
         <h4 class="text-sm font-bold text-primary-navy">Mentorship</h4>
         <p class="text-xs text-slate-500">Find a mentor or become one</p>
       </div>
-      <i class="absolute bottom-3 right-3 md:static fa-solid fa-chevron-right text-slate-400 text-xs"></i>
     </a>
-    <a href="<?= e(url('events')) ?>" class="relative card p-4 md:p-5 flex flex-col md:flex-row items-center md:items-center text-center md:text-left gap-2 md:gap-4 hover:-translate-y-0.5 hover:shadow-md transition-all">
+    <a href="<?= e(url('events')) ?>" class="card p-4 md:p-5 flex flex-col md:flex-row items-center md:items-center text-center md:text-left gap-2 md:gap-4 hover:-translate-y-0.5 hover:shadow-md transition-all">
       <div class="w-11 h-11 rounded-lg bg-slate-100 text-primary-navy flex items-center justify-center text-xl flex-shrink-0"><i class="fa-solid fa-calendar-days"></i></div>
       <div class="flex-1 min-w-0">
         <h4 class="text-sm font-bold text-primary-navy">Events</h4>
         <p class="text-xs text-slate-500">Join upcoming events and reunions</p>
       </div>
-      <i class="absolute bottom-3 right-3 md:static fa-solid fa-chevron-right text-slate-400 text-xs"></i>
     </a>
     <a href="<?= e(url('resources')) ?>" class="card p-4 md:p-5 flex items-center text-left gap-4 hover:-translate-y-0.5 hover:shadow-md transition-all col-span-2 md:col-span-1">
       <div class="w-11 h-11 rounded-lg bg-slate-100 text-primary-navy flex items-center justify-center text-xl flex-shrink-0"><i class="fa-solid fa-file-lines"></i></div>
