@@ -188,7 +188,7 @@
       <div>
         <label class="form-label" for="hero_interval">Time Between Slides (seconds)</label>
         <input type="number" id="hero_interval" name="hero_interval" min="3" max="20" class="form-input" value="<?= e($settings['hero_interval'] ?? '6') ?>">
-        <p class="text-xs text-slate-400 mt-1">Between 3 and 20.</p>
+        <p class="text-xs text-slate-400 mt-1">Between 3 and 20. Also controls the auto-advance speed of the News & Blog carousel on mobile.</p>
       </div>
       <div>
         <label class="form-label" for="hero_transition">Transition Style</label>

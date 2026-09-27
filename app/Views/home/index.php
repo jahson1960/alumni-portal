@@ -80,6 +80,17 @@ $alignClasses = [
           dot.addEventListener('click', function () { show(parseInt(dot.dataset.slideIndex, 10)); restart(); });
         });
 
+        var touchStartX = 0;
+        root.addEventListener('touchstart', function (e) {
+          touchStartX = e.changedTouches[0].screenX;
+        }, { passive: true });
+        root.addEventListener('touchend', function (e) {
+          var deltaX = e.changedTouches[0].screenX - touchStartX;
+          if (Math.abs(deltaX) < 40) return;
+          if (deltaX < 0) { next(); } else { prev(); }
+          restart();
+        }, { passive: true });
+
         restart();
       })();
     </script>
@@ -174,16 +185,34 @@ $alignClasses = [
             var dots = document.querySelectorAll('.news-dot');
             if (!slides.length) return;
 
+            var current = 0;
+            var timer;
+
             function setActive(index) {
+              current = index;
               dots.forEach(function (dot, i) {
                 dot.classList.toggle('bg-gold', i === index);
                 dot.classList.toggle('bg-slate-300', i !== index);
               });
             }
 
+            function goTo(index) {
+              slides[index].scrollIntoView({ behavior: 'smooth', inline: 'start', block: 'nearest' });
+            }
+
+            function next() {
+              goTo((current + 1) % slides.length);
+            }
+
+            function restart() {
+              clearInterval(timer);
+              if (slides.length > 1) timer = setInterval(next, <?= $heroIntervalMs ?>);
+            }
+
             dots.forEach(function (dot) {
               dot.addEventListener('click', function () {
-                slides[parseInt(dot.dataset.index, 10)].scrollIntoView({ behavior: 'smooth', inline: 'start', block: 'nearest' });
+                goTo(parseInt(dot.dataset.index, 10));
+                restart();
               });
             });
 
@@ -193,8 +222,11 @@ $alignClasses = [
               scrollTimeout = setTimeout(function () {
                 var index = Math.round(carousel.scrollLeft / carousel.clientWidth);
                 setActive(Math.max(0, Math.min(slides.length - 1, index)));
+                restart();
               }, 100);
             });
+
+            restart();
           })();
         </script>
       <?php endif; ?>
