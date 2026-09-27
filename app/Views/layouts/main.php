@@ -823,7 +823,7 @@ if ($authUser && $authUser['program']) {
             return;
         }
         ?>
-        <details class="group">
+        <details class="group" name="mobile-menu-accordion">
           <summary class="flex items-center gap-3 py-3 cursor-pointer list-none marker:hidden [&::-webkit-details-marker]:hidden">
             <i class="<?= e($icon) ?> text-gold w-5 text-center flex-shrink-0"></i>
             <span class="flex-1 text-sm font-semibold text-white/90"><?= e($title) ?></span>
