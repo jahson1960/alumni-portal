@@ -57,42 +57,58 @@
 
   <div class="border-t border-slate-100 pt-4">
     <h3 class="section-title text-xs mb-1">Slide Typography</h3>
-    <p class="text-xs text-slate-400 mb-3">Override the site-wide font for just this slide's text (title, subtitle, description), independently for desktop and mobile. Leave "Site Default" / blank to inherit the site-wide setting from Site Settings.</p>
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-      <div class="space-y-2 border border-slate-200 rounded-lg p-3">
-        <h4 class="text-xs font-extrabold text-slate-500 uppercase tracking-wide">Desktop</h4>
-        <div>
-          <label class="form-label" for="font_family_desktop">Font</label>
-          <select id="font_family_desktop" name="font_family_desktop" class="form-input">
-            <option value="">Site Default</option>
-            <?php foreach ($availableFonts as $font): ?>
-              <option value="<?= e($font) ?>" <?= ($slide['font_family_desktop'] ?? '') === $font ? 'selected' : '' ?>><?= e($font) ?></option>
-            <?php endforeach; ?>
-          </select>
-        </div>
-        <div>
-          <label class="form-label" for="font_size_desktop">Text Size (px, base)</label>
-          <input type="number" id="font_size_desktop" name="font_size_desktop" min="12" max="56" class="form-input" placeholder="Site default" value="<?= e($slide['font_size_desktop'] ?? '') ?>">
-          <p class="text-xs text-slate-400 mt-1">Title and other text scale proportionally from this base size.</p>
-        </div>
-      </div>
-      <div class="space-y-2 border border-slate-200 rounded-lg p-3">
-        <h4 class="text-xs font-extrabold text-slate-500 uppercase tracking-wide">Mobile</h4>
-        <div>
-          <label class="form-label" for="font_family_mobile">Font</label>
-          <select id="font_family_mobile" name="font_family_mobile" class="form-input">
-            <option value="">Site Default</option>
-            <?php foreach ($availableFonts as $font): ?>
-              <option value="<?= e($font) ?>" <?= ($slide['font_family_mobile'] ?? '') === $font ? 'selected' : '' ?>><?= e($font) ?></option>
-            <?php endforeach; ?>
-          </select>
-        </div>
-        <div>
-          <label class="form-label" for="font_size_mobile">Text Size (px, base)</label>
-          <input type="number" id="font_size_mobile" name="font_size_mobile" min="12" max="56" class="form-input" placeholder="Site default" value="<?= e($slide['font_size_mobile'] ?? '') ?>">
-          <p class="text-xs text-slate-400 mt-1">Title and other text scale proportionally from this base size.</p>
-        </div>
-      </div>
+    <p class="text-xs text-slate-400 mb-3">Override the site-wide font for each piece of this slide's text, independently for desktop and mobile. Leave "Site Default" / blank to inherit the site-wide setting from Site Settings.</p>
+    <div class="space-y-2">
+      <?php
+        $textElements = [
+            'title' => ['Title (line 1)', 'e.g. 36'],
+            'highlight' => ['Highlight (gold line)', 'e.g. 36'],
+            'subtitle' => ['Subtitle', 'e.g. 18'],
+            'description' => ['Description', 'e.g. 14'],
+        ];
+      ?>
+      <?php foreach ($textElements as $el => [$label, $sizePlaceholder]): ?>
+        <details class="group border border-slate-200 rounded-lg">
+          <summary class="flex items-center justify-between gap-2 px-3 py-2.5 cursor-pointer list-none marker:hidden [&::-webkit-details-marker]:hidden">
+            <span class="text-sm font-semibold text-primary-navy"><?= e($label) ?></span>
+            <i class="fa-solid fa-chevron-down text-slate-400 text-xs transition-transform group-open:rotate-180"></i>
+          </summary>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4 px-3 pb-3">
+            <div class="space-y-2 border border-slate-200 rounded-lg p-3">
+              <h4 class="text-xs font-extrabold text-slate-500 uppercase tracking-wide">Desktop</h4>
+              <div>
+                <label class="form-label" for="<?= $el ?>_font_family_desktop">Font</label>
+                <select id="<?= $el ?>_font_family_desktop" name="<?= $el ?>_font_family_desktop" class="form-input">
+                  <option value="">Site Default</option>
+                  <?php foreach ($availableFonts as $font): ?>
+                    <option value="<?= e($font) ?>" <?= ($slide["{$el}_font_family_desktop"] ?? '') === $font ? 'selected' : '' ?>><?= e($font) ?></option>
+                  <?php endforeach; ?>
+                </select>
+              </div>
+              <div>
+                <label class="form-label" for="<?= $el ?>_font_size_desktop">Text Size (px)</label>
+                <input type="number" id="<?= $el ?>_font_size_desktop" name="<?= $el ?>_font_size_desktop" min="10" max="72" class="form-input" placeholder="Site default (<?= e($sizePlaceholder) ?>)" value="<?= e($slide["{$el}_font_size_desktop"] ?? '') ?>">
+              </div>
+            </div>
+            <div class="space-y-2 border border-slate-200 rounded-lg p-3">
+              <h4 class="text-xs font-extrabold text-slate-500 uppercase tracking-wide">Mobile</h4>
+              <div>
+                <label class="form-label" for="<?= $el ?>_font_family_mobile">Font</label>
+                <select id="<?= $el ?>_font_family_mobile" name="<?= $el ?>_font_family_mobile" class="form-input">
+                  <option value="">Site Default</option>
+                  <?php foreach ($availableFonts as $font): ?>
+                    <option value="<?= e($font) ?>" <?= ($slide["{$el}_font_family_mobile"] ?? '') === $font ? 'selected' : '' ?>><?= e($font) ?></option>
+                  <?php endforeach; ?>
+                </select>
+              </div>
+              <div>
+                <label class="form-label" for="<?= $el ?>_font_size_mobile">Text Size (px)</label>
+                <input type="number" id="<?= $el ?>_font_size_mobile" name="<?= $el ?>_font_size_mobile" min="10" max="72" class="form-input" placeholder="Site default" value="<?= e($slide["{$el}_font_size_mobile"] ?? '') ?>">
+              </div>
+            </div>
+          </div>
+        </details>
+      <?php endforeach; ?>
     </div>
   </div>
 

@@ -8,6 +8,7 @@ use App\Models\HeroSlide;
 class HeroSlideController extends AdminController
 {
     private const ALIGNMENTS = ['left', 'center', 'right'];
+    private const TEXT_ELEMENTS = ['title', 'highlight', 'subtitle', 'description'];
 
     public function index(): void
     {
@@ -82,10 +83,18 @@ class HeroSlideController extends AdminController
         $enabled = $this->input('enabled') ? 1 : 0;
         $sortOrder = (int) $this->input('sort_order', 0);
 
-        $fontFamilyDesktop = trim((string) $this->input('font_family_desktop', ''));
-        $fontFamilyMobile = trim((string) $this->input('font_family_mobile', ''));
-        $fontSizeDesktop = trim((string) $this->input('font_size_desktop', ''));
-        $fontSizeMobile = trim((string) $this->input('font_size_mobile', ''));
+        $fontData = [];
+        foreach (self::TEXT_ELEMENTS as $el) {
+            $familyDesktop = trim((string) $this->input("{$el}_font_family_desktop", ''));
+            $familyMobile = trim((string) $this->input("{$el}_font_family_mobile", ''));
+            $sizeDesktop = trim((string) $this->input("{$el}_font_size_desktop", ''));
+            $sizeMobile = trim((string) $this->input("{$el}_font_size_mobile", ''));
+
+            $fontData["{$el}_font_family_desktop"] = $familyDesktop !== '' ? valid_font_family($familyDesktop) : null;
+            $fontData["{$el}_font_family_mobile"] = $familyMobile !== '' ? valid_font_family($familyMobile) : null;
+            $fontData["{$el}_font_size_desktop"] = $sizeDesktop !== '' ? max(10, min(72, (int) $sizeDesktop)) : null;
+            $fontData["{$el}_font_size_mobile"] = $sizeMobile !== '' ? max(10, min(72, (int) $sizeMobile)) : null;
+        }
 
         $btn1Text = trim((string) $this->input('btn1_text', ''));
         $btn1Show = $this->input('btn1_show') ? 1 : 0;
@@ -116,10 +125,6 @@ class HeroSlideController extends AdminController
             'subtitle' => $subtitle !== '' ? $subtitle : null,
             'description' => $description !== '' ? $description : null,
             'content_align' => $align,
-            'font_family_desktop' => $fontFamilyDesktop !== '' ? valid_font_family($fontFamilyDesktop) : null,
-            'font_family_mobile' => $fontFamilyMobile !== '' ? valid_font_family($fontFamilyMobile) : null,
-            'font_size_desktop' => $fontSizeDesktop !== '' ? max(12, min(56, (int) $fontSizeDesktop)) : null,
-            'font_size_mobile' => $fontSizeMobile !== '' ? max(12, min(56, (int) $fontSizeMobile)) : null,
             'enabled' => $enabled,
             'sort_order' => $sortOrder,
             'btn1_text' => $btn1Text !== '' ? $btn1Text : null,
@@ -128,7 +133,7 @@ class HeroSlideController extends AdminController
             'btn2_text' => $btn2Text !== '' ? $btn2Text : null,
             'btn2_show' => $btn2Show,
             'btn2_link' => $btn2Link !== '' ? $btn2Link : null,
-        ];
+        ] + $fontData;
         if ($image) {
             $data['image'] = $image;
         }

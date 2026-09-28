@@ -31,36 +31,45 @@ $heroBtnVClasses = hero_btn_v_classes(
     $btn1Link = $slide['btn1_link'] ?: 'jobs';
     $btn2Link = $slide['btn2_link'] ?: (\App\Core\Auth::check() ? 'profile/edit' : 'register');
 
-    $slideFontFamilyDesktop = !empty($slide['font_family_desktop']) ? valid_font_family($slide['font_family_desktop']) : null;
-    $slideFontFamilyMobile = !empty($slide['font_family_mobile']) ? valid_font_family($slide['font_family_mobile']) : null;
-    $slideFontSizeDesktop = !empty($slide['font_size_desktop']) ? max(12, min(56, (int) $slide['font_size_desktop'])) : null;
-    $slideFontSizeMobile = !empty($slide['font_size_mobile']) ? max(12, min(56, (int) $slide['font_size_mobile'])) : null;
-    $hasSlideTypography = $slideFontFamilyDesktop || $slideFontFamilyMobile || $slideFontSizeDesktop || $slideFontSizeMobile;
-  ?>
-    <?php if ($hasSlideTypography): ?>
-      <style>
-        #hero-slide-content-<?= (int) $slide['id'] ?> {
-          <?php if ($slideFontFamilyMobile): ?>font-family: '<?= e($slideFontFamilyMobile) ?>', sans-serif;<?php endif; ?>
-          <?php if ($slideFontSizeMobile): ?>font-size: <?= $slideFontSizeMobile ?>px;<?php endif; ?>
+    $slideElFonts = [];
+    foreach (['title', 'highlight', 'subtitle', 'description'] as $el) {
+        $famD = !empty($slide["{$el}_font_family_desktop"]) ? valid_font_family($slide["{$el}_font_family_desktop"]) : null;
+        $famM = !empty($slide["{$el}_font_family_mobile"]) ? valid_font_family($slide["{$el}_font_family_mobile"]) : null;
+        $sizeD = !empty($slide["{$el}_font_size_desktop"]) ? max(10, min(72, (int) $slide["{$el}_font_size_desktop"])) : null;
+        $sizeM = !empty($slide["{$el}_font_size_mobile"]) ? max(10, min(72, (int) $slide["{$el}_font_size_mobile"])) : null;
+        if ($famD || $famM || $sizeD || $sizeM) {
+            $slideElFonts[$el] = ['famD' => $famD, 'famM' => $famM, 'sizeD' => $sizeD, 'sizeM' => $sizeM];
         }
+    }
+  ?>
+    <?php if ($slideElFonts): ?>
+      <style>
+        <?php foreach ($slideElFonts as $el => $f): ?>
+        #hero-el-<?= $el ?>-<?= (int) $slide['id'] ?> {
+          <?php if ($f['famM']): ?>font-family: '<?= e($f['famM']) ?>', sans-serif;<?php endif; ?>
+          <?php if ($f['sizeM']): ?>font-size: <?= $f['sizeM'] ?>px;<?php endif; ?>
+        }
+        <?php endforeach; ?>
         @media (min-width: 1024px) {
-          #hero-slide-content-<?= (int) $slide['id'] ?> {
-            <?php if ($slideFontFamilyDesktop): ?>font-family: '<?= e($slideFontFamilyDesktop) ?>', sans-serif;<?php endif; ?>
-            <?php if ($slideFontSizeDesktop): ?>font-size: <?= $slideFontSizeDesktop ?>px;<?php endif; ?>
+          <?php foreach ($slideElFonts as $el => $f): ?>
+          #hero-el-<?= $el ?>-<?= (int) $slide['id'] ?> {
+            <?php if ($f['famD']): ?>font-family: '<?= e($f['famD']) ?>', sans-serif;<?php endif; ?>
+            <?php if ($f['sizeD']): ?>font-size: <?= $f['sizeD'] ?>px;<?php endif; ?>
           }
+          <?php endforeach; ?>
         }
       </style>
     <?php endif; ?>
     <div class="hero-slide absolute inset-0 bg-cover bg-center <?= $i === 0 ? 'is-active' : '' ?>"
          style="background-image: linear-gradient(90deg, rgba(9,26,46,1) 0%, rgba(9,26,46,1) 30%, rgba(9,26,46,0.7) 50%, rgba(9,26,46,0.3) 100%), url('<?= e($slide['image']) ?>');">
       <div class="max-w-[1280px] mx-auto px-4 md:px-8 py-8 md:py-20 h-full flex <?= $justify ?>">
-        <div id="hero-slide-content-<?= (int) $slide['id'] ?>" class="max-w-xl flex flex-col <?= $itemsAlign ?> <?= $textAlign ?>">
+        <div class="max-w-xl flex flex-col <?= $itemsAlign ?> <?= $textAlign ?>">
           <h1 class="text-[1.875em] lg:text-[2.25em] font-bold leading-tight mb-4">
-            <?= e($slide['title']) ?>
-            <span class="block text-gold"><?= e($slide['highlight']) ?></span>
+            <span id="hero-el-title-<?= (int) $slide['id'] ?>"><?= e($slide['title']) ?></span>
+            <span id="hero-el-highlight-<?= (int) $slide['id'] ?>" class="block text-gold"><?= e($slide['highlight']) ?></span>
           </h1>
-          <p class="text-[1em] font-medium mb-2"><?= e($slide['subtitle']) ?></p>
-          <p class="text-[0.875em] text-slate-300 mb-8"><?= e($slide['description']) ?></p>
+          <p id="hero-el-subtitle-<?= (int) $slide['id'] ?>" class="text-[1em] font-medium mb-2"><?= e($slide['subtitle']) ?></p>
+          <p id="hero-el-description-<?= (int) $slide['id'] ?>" class="text-[0.875em] text-slate-300 mb-8"><?= e($slide['description']) ?></p>
         </div>
       </div>
       <?php if (!empty($slide['btn1_show']) || !empty($slide['btn2_show'])): ?>
