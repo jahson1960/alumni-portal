@@ -5,16 +5,18 @@
  * name strings) already in scope. Submits as mentorship_areas[] — no cap on selection count.
  */
 ?>
-<div class="grid grid-cols-2 sm:grid-cols-3 gap-3" id="mentorship-area-chips">
-  <?php foreach ($allMentorshipAreas as $area): $checked = in_array($area['name'], $selectedMentorshipAreas, true); ?>
-    <label class="mentorship-area-chip flex items-center gap-2 text-sm font-medium border rounded-lg px-3 py-2.5 cursor-pointer <?= $checked ? 'border-gold bg-gold/5 text-gold' : 'border-slate-200 text-slate-600 hover:border-slate-300' ?>">
-      <input type="checkbox" name="mentorship_areas[]" value="<?= e($area['name']) ?>" <?= $checked ? 'checked' : '' ?> class="hidden mentorship-area-checkbox">
-      <?= e($area['name']) ?>
-    </label>
-  <?php endforeach; ?>
-  <?php if (empty($allMentorshipAreas)): ?>
-    <p class="text-xs text-slate-400 col-span-full">No mentorship areas have been set up yet.</p>
-  <?php endif; ?>
+<div class="border border-slate-200 rounded-lg p-3 max-h-[170px] overflow-y-auto">
+  <div class="grid grid-cols-2 sm:grid-cols-3 gap-3" id="mentorship-area-chips">
+    <?php foreach ($allMentorshipAreas as $area): $checked = in_array($area['name'], $selectedMentorshipAreas, true); ?>
+      <label class="mentorship-area-chip flex items-center gap-2 text-sm font-medium border rounded-lg px-3 py-2.5 cursor-pointer <?= $checked ? 'border-gold bg-gold/5 text-gold' : 'border-slate-200 text-slate-600 hover:border-slate-300' ?>">
+        <input type="checkbox" name="mentorship_areas[]" value="<?= e($area['name']) ?>" <?= $checked ? 'checked' : '' ?> class="hidden mentorship-area-checkbox">
+        <?= e($area['name']) ?>
+      </label>
+    <?php endforeach; ?>
+    <?php if (empty($allMentorshipAreas)): ?>
+      <p class="text-xs text-slate-400 col-span-full">No mentorship areas have been set up yet.</p>
+    <?php endif; ?>
+  </div>
 </div>
 
 <script>
