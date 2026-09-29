@@ -5,7 +5,11 @@ RewriteEngine On
 # the docroot at a public/ subfolder instead). These directories/files are source, config and
 # tooling only — never meant to be fetched directly — so block them outright before anything
 # else runs.
-RewriteRule ^(app|config|database|routes|resources|node_modules|\.git)(/|$) - [F,L]
+# (Note: the Tailwind CSS source lives in tailwind-src/, deliberately not named "resources" —
+# the app has a real page at the URL /resources, which a same-named directory here would
+# otherwise collide with: Apache's own directory handling intercepts a bare-directory URL like
+# /resources before any rewrite rule gets a chance to route it to the front controller.)
+RewriteRule ^(app|config|database|routes|tailwind-src|node_modules|\.git)(/|$) - [F,L]
 
 <FilesMatch "\.(sql|md|lock|json|ya?ml|log|env)$">
   Require all denied
