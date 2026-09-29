@@ -400,7 +400,7 @@ $heroBtnVClasses = hero_btn_v_classes(
           <div class="w-11 h-11 rounded-full bg-white/10 flex items-center justify-center mb-3 text-gold text-lg"><i class="fa-solid fa-user-group"></i></div>
           <h4 class="text-base font-extrabold mb-1.5"><?= e($settings['cta_title'] ?? 'Become a Mentor') ?></h4>
           <p class="text-xs text-slate-300 mb-4 leading-relaxed"><?= e($settings['cta_subtitle'] ?? 'Share your experience. Inspire the next generation.') ?></p>
-          <a href="<?= e(url(\App\Core\Auth::check() ? 'directory' : 'register')) ?>" class="btn-gold !rounded-full w-full text-center flex items-center justify-center gap-2">Become a Mentor <i class="fa-solid fa-arrow-right"></i></a>
+          <a href="<?= e(url('mentorship/become')) ?>" class="btn-gold !rounded-full w-full text-center flex items-center justify-center gap-2">Become a Mentor <i class="fa-solid fa-arrow-right"></i></a>
         </div>
       </div>
     </div>

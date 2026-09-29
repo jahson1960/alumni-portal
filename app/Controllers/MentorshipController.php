@@ -4,6 +4,7 @@ namespace App\Controllers;
 
 use App\Core\Auth;
 use App\Core\Controller;
+use App\Models\MentorshipArea;
 use App\Models\MentorshipRequest;
 use App\Models\Notification;
 use App\Models\User;
@@ -61,6 +62,7 @@ class MentorshipController extends Controller
             'availabilityOptions' => self::AVAILABILITY,
             'mentorCount' => MentorshipRequest::countMentors([]),
             'sampleMentors' => array_slice(MentorshipRequest::mentors([]), 0, 3),
+            'allMentorshipAreas' => MentorshipArea::all('name ASC'),
         ]);
     }
 
@@ -70,12 +72,14 @@ class MentorshipController extends Controller
         $this->guard();
 
         $isMentor = $this->input('is_mentor') ? 1 : 0;
-        $mentorshipAreas = trim((string) $this->input('mentorship_areas', ''));
+        $submittedAreas = array_map('trim', (array) $this->input('mentorship_areas', []));
+        $validAreaNames = array_column(MentorshipArea::all('name ASC'), 'name');
+        $mentorshipAreas = implode(', ', array_values(array_intersect($validAreaNames, $submittedAreas)));
         $availability = in_array($this->input('mentor_availability'), array_keys(self::AVAILABILITY), true)
             ? $this->input('mentor_availability') : 'open';
 
         if ($isMentor && $mentorshipAreas === '') {
-            $_SESSION['_errors'] = ['Please list at least one area you can mentor in.'];
+            $_SESSION['_errors'] = ['Please select at least one area you can mentor in.'];
             $this->redirect('mentorship/become');
         }
 

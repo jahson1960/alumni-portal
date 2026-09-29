@@ -266,6 +266,12 @@ $router->get('/admin/categories/{id}/edit', 'Admin\\CategoryController@edit');
 $router->post('/admin/categories/{id}', 'Admin\\CategoryController@update');
 $router->post('/admin/categories/{id}/delete', 'Admin\\CategoryController@destroy');
 
+$router->get('/admin/mentorship-areas', 'Admin\\MentorshipAreaController@index');
+$router->post('/admin/mentorship-areas', 'Admin\\MentorshipAreaController@store');
+$router->get('/admin/mentorship-areas/{id}/edit', 'Admin\\MentorshipAreaController@edit');
+$router->post('/admin/mentorship-areas/{id}', 'Admin\\MentorshipAreaController@update');
+$router->post('/admin/mentorship-areas/{id}/delete', 'Admin\\MentorshipAreaController@destroy');
+
 // Admin: companies
 $router->get('/admin/companies', 'Admin\\CompanyController@index');
 $router->get('/admin/companies/create', 'Admin\\CompanyController@create');

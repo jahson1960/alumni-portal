@@ -5,6 +5,7 @@ namespace App\Controllers;
 use App\Core\Auth;
 use App\Core\Controller;
 use App\Core\Upload;
+use App\Models\MentorshipArea;
 use App\Models\User;
 use App\Models\UserEducation;
 use App\Models\UserExperience;
@@ -32,6 +33,7 @@ class ProfileController extends Controller
             'education' => UserEducation::forUser($userId),
             'experience' => UserExperience::forUser($userId),
             'needsRichEditor' => true,
+            'allMentorshipAreas' => MentorshipArea::all('name ASC'),
         ]);
     }
 
@@ -66,7 +68,9 @@ class ProfileController extends Controller
         $showEmail = $this->input('show_email') ? 1 : 0;
         $showPhone = $this->input('show_phone') ? 1 : 0;
         $isMentor = $this->input('is_mentor') ? 1 : 0;
-        $mentorshipAreas = trim((string) $this->input('mentorship_areas', ''));
+        $submittedAreas = array_map('trim', (array) $this->input('mentorship_areas', []));
+        $validAreaNames = array_column(MentorshipArea::all('name ASC'), 'name');
+        $mentorshipAreas = implode(', ', array_values(array_intersect($validAreaNames, $submittedAreas)));
 
         $errors = [];
         if ($name === '') {

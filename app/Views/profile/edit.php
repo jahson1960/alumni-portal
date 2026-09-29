@@ -268,8 +268,11 @@ $industryOptions = \App\Models\User::distinctFilterValues('industry');
             Available as a Mentor
           </label>
           <div>
-            <label class="form-label" for="mentorship_areas">Mentorship Areas</label>
-            <input type="text" id="mentorship_areas" name="mentorship_areas" class="form-input" placeholder="e.g. Entrepreneurship, Corporate Strategy" value="<?= e($user['mentorship_areas']) ?>">
+            <label class="form-label">Mentorship Areas</label>
+            <?php
+              $selectedMentorshipAreas = array_values(array_filter(array_map('trim', explode(',', (string) ($user['mentorship_areas'] ?? '')))));
+              require dirname(__DIR__) . '/partials/mentorship_areas_picker.php';
+            ?>
           </div>
         </div>
       </form>

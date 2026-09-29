@@ -75,16 +75,10 @@ $existingAreas = array_values(array_filter(array_map('trim', explode(',', (strin
         </label>
 
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          <div>
-            <label class="form-label flex items-center gap-1.5" for="mentorship-tag-entry">Mentorship Areas <i class="fa-regular fa-circle-question text-slate-300 text-xs" title="Add areas of expertise you can mentor in"></i></label>
-            <div id="mentorship-tags-input" class="form-input flex flex-wrap items-center gap-2 cursor-text">
-              <?php foreach ($existingAreas as $tag): ?>
-                <span class="tag-chip inline-flex items-center gap-1.5 bg-indigo-50 text-indigo-700 text-xs font-semibold pl-2.5 pr-1.5 py-1 rounded-full" data-value="<?= e($tag) ?>"><?= e($tag) ?> <button type="button" class="tag-remove text-indigo-400 hover:text-indigo-700 leading-none">&times;</button></span>
-              <?php endforeach; ?>
-              <input type="text" id="mentorship-tag-entry" class="flex-1 min-w-[100px] border-0 outline-none text-sm bg-transparent py-0.5" placeholder="<?= empty($existingAreas) ? 'Type and press Enter...' : '' ?>">
-            </div>
-            <input type="hidden" name="mentorship_areas" id="mentorship_areas" value="<?= e($user['mentorship_areas'] ?? '') ?>">
-            <p class="text-xs text-slate-400 mt-1">Add areas of expertise separated by commas. These will appear as tags on your profile.</p>
+          <div class="sm:col-span-2">
+            <label class="form-label flex items-center gap-1.5">Mentorship Areas <i class="fa-regular fa-circle-question text-slate-300 text-xs" title="Select areas of expertise you can mentor in"></i></label>
+            <?php $selectedMentorshipAreas = $existingAreas; require dirname(__DIR__) . '/partials/mentorship_areas_picker.php'; ?>
+            <p class="text-xs text-slate-400 mt-1">These will appear as tags on your profile.</p>
           </div>
 
           <div>
@@ -124,7 +118,9 @@ $existingAreas = array_values(array_filter(array_map('trim', explode(',', (strin
       <?php if (!empty($user['is_mentor'])): ?>
         <form method="POST" action="<?= e(url('mentorship/become')) ?>" class="mt-4" data-confirm="Stop appearing in the mentor directory?">
           <?= csrf_field() ?>
-          <input type="hidden" name="mentorship_areas" value="<?= e($user['mentorship_areas'] ?? '') ?>">
+          <?php foreach ($existingAreas as $tag): ?>
+            <input type="hidden" name="mentorship_areas[]" value="<?= e($tag) ?>">
+          <?php endforeach; ?>
           <button type="submit" class="text-xs text-red-500 hover:underline">Remove me from the mentor directory</button>
         </form>
       <?php endif; ?>
@@ -172,63 +168,3 @@ $existingAreas = array_values(array_filter(array_map('trim', explode(',', (strin
     </div>
   </div>
 </div>
-
-<script>
-  (function () {
-    var container = document.getElementById('mentorship-tags-input');
-    var entry = document.getElementById('mentorship-tag-entry');
-    var hidden = document.getElementById('mentorship_areas');
-    if (!container || !entry || !hidden) return;
-
-    function syncHidden() {
-      var tags = Array.prototype.map.call(container.querySelectorAll('.tag-chip'), function (chip) { return chip.dataset.value; });
-      hidden.value = tags.join(', ');
-    }
-
-    function addTag(value) {
-      value = value.trim().replace(/,+$/, '').trim();
-      if (!value) return;
-      var existing = Array.prototype.map.call(container.querySelectorAll('.tag-chip'), function (c) { return c.dataset.value.toLowerCase(); });
-      if (existing.indexOf(value.toLowerCase()) !== -1) return;
-      var chip = document.createElement('span');
-      chip.className = 'tag-chip inline-flex items-center gap-1.5 bg-indigo-50 text-indigo-700 text-xs font-semibold pl-2.5 pr-1.5 py-1 rounded-full';
-      chip.dataset.value = value;
-      var label = document.createElement('span');
-      label.textContent = value;
-      var btn = document.createElement('button');
-      btn.type = 'button';
-      btn.className = 'tag-remove text-indigo-400 hover:text-indigo-700 leading-none';
-      btn.innerHTML = '&times;';
-      chip.appendChild(label);
-      chip.appendChild(btn);
-      container.insertBefore(chip, entry);
-      syncHidden();
-    }
-
-    entry.addEventListener('keydown', function (e) {
-      if (e.key === 'Enter' || e.key === ',') {
-        e.preventDefault();
-        addTag(entry.value);
-        entry.value = '';
-      } else if (e.key === 'Backspace' && entry.value === '') {
-        var chips = container.querySelectorAll('.tag-chip');
-        if (chips.length) chips[chips.length - 1].remove();
-        syncHidden();
-      }
-    });
-    entry.addEventListener('blur', function () {
-      if (entry.value.trim()) {
-        addTag(entry.value);
-        entry.value = '';
-      }
-    });
-    container.addEventListener('click', function (e) {
-      if (e.target.classList.contains('tag-remove')) {
-        e.target.closest('.tag-chip').remove();
-        syncHidden();
-      } else if (e.target === container) {
-        entry.focus();
-      }
-    });
-  })();
-</script>

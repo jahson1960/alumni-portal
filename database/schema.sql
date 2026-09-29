@@ -286,6 +286,27 @@ CREATE TABLE news_category (
 ) ENGINE=InnoDB;
 
 -- ---------------------------------------------------------------------
+-- mentorship_areas  (admin-managed pick-list; selected names are joined into
+-- the free-text users.mentorship_areas column, same as before — this table
+-- only constrains what a mentor can choose from, no separate junction table)
+-- ---------------------------------------------------------------------
+CREATE TABLE mentorship_areas (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  name VARCHAR(100) NOT NULL UNIQUE,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB;
+
+INSERT INTO mentorship_areas (name) VALUES
+('Agribusiness'), ('Banking Compliance'), ('Biotech'), ('Career Development'),
+('Career Transitions'), ('Consulting Careers'), ('Corporate Banking'), ('E-commerce'),
+('Engineering Careers'), ('Entrepreneurship'), ('Executive Leadership'), ('Export Trade'),
+('Finance Careers'), ('Fintech'), ('Fintech Strategy'), ('Fundraising'),
+('Healthcare Entrepreneurship'), ('Healthcare Innovation'), ('Interview Prep'),
+('Legal Careers'), ('Manufacturing Careers'), ('Marketing Leadership'),
+('Negotiation Skills'), ('Operations'), ('Product Management'), ('Sales Careers'),
+('SME Strategy'), ('Starting a Consultancy');
+
+-- ---------------------------------------------------------------------
 -- events
 -- ---------------------------------------------------------------------
 CREATE TABLE events (

@@ -18,6 +18,7 @@ $navItems = [
     'events' => ['label' => 'Events', 'icon' => 'fa-calendar-days', 'href' => url('admin/events')],
     'resources' => ['label' => 'Resources', 'icon' => 'fa-folder-open', 'href' => url('admin/resources')],
     'categories' => ['label' => 'Categories', 'icon' => 'fa-tags', 'href' => url('admin/categories')],
+    'mentorship_areas' => ['label' => 'Mentorship Areas', 'icon' => 'fa-people-arrows', 'href' => url('admin/mentorship-areas')],
     'articles' => ['label' => 'Article Review', 'icon' => 'fa-book', 'href' => url('admin/articles')],
     'campaigns' => ['label' => 'Giving Campaigns', 'icon' => 'fa-hand-holding-heart', 'href' => url('admin/campaigns')],
     'donation_methods' => ['label' => 'Donation Methods', 'icon' => 'fa-building-columns', 'href' => url('admin/donation-methods')],
