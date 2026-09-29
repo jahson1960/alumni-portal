@@ -154,7 +154,8 @@ abstract class Controller
             return;
         }
         if ($viewer === null && \App\Models\PageVisibility::audienceOf($pageKey) === 'alumni') {
-            $this->redirect('login');
+            $current = sanitize_redirect_target($_SERVER['REQUEST_URI'] ?? null);
+            $this->redirect('login' . ($current !== null ? '?redirect=' . rawurlencode($current) : ''));
         }
         http_response_code(404);
         (new \App\Controllers\ErrorController())->notFound();

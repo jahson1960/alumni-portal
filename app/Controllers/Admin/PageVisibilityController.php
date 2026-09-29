@@ -47,7 +47,8 @@ class PageVisibilityController extends AdminController
         PageTabVisibility::setMany($visibleComposite);
 
         $linkVisible = array_keys((array) $this->input('link_visible', []));
-        LinkVisibility::setMany($linkVisible);
+        $linkRequiresLogin = array_keys((array) $this->input('link_requires_login', []));
+        LinkVisibility::setMany($linkVisible, $linkRequiresLogin);
 
         $this->flash('success', 'Page and tab visibility updated.');
         $this->redirect('admin/page-visibility');

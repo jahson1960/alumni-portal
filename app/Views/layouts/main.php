@@ -838,7 +838,7 @@ if ($authUser && $authUser['program']) {
           </summary>
           <div class="pl-8 pb-2 space-y-0.5">
             <?php foreach ($items as $item): ?>
-              <a href="<?= e($item['href']) ?>" class="flex items-center gap-2.5 py-2 text-[var(--menu-item-text)] opacity-60 hover:opacity-100">
+              <a href="<?= e(nav_href($item['href'], link_visibility_key(url_page_key($item['href']), $item['label']))) ?>" class="flex items-center gap-2.5 py-2 text-[var(--menu-item-text)] opacity-60 hover:opacity-100">
                 <span class="w-1 h-1 rounded-full bg-[var(--menu-item-text)] opacity-30 flex-shrink-0"></span>
                 <i class="<?= e($item['icon']) ?> text-xs w-4 text-center flex-shrink-0"></i>
                 <span class="text-sm"><?= e($item['label']) ?></span>

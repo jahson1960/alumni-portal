@@ -664,7 +664,8 @@ CREATE TABLE link_visibility (
   link_key VARCHAR(191) PRIMARY KEY,
   page_key VARCHAR(60) NOT NULL,
   label VARCHAR(160) NOT NULL,
-  is_visible TINYINT(1) NOT NULL DEFAULT 1
+  is_visible TINYINT(1) NOT NULL DEFAULT 1,
+  requires_login TINYINT(1) NOT NULL DEFAULT 0
 ) ENGINE=InnoDB;
 
 INSERT INTO link_visibility (link_key, page_key, label, is_visible) VALUES

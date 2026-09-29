@@ -96,6 +96,12 @@ class AuthController extends Controller
         if (Auth::check()) {
             $this->redirect(Auth::isAdmin() ? 'admin/dashboard' : '/');
         }
+        $redirect = sanitize_redirect_target($this->input('redirect'));
+        if ($redirect !== null) {
+            $_SESSION['_intended_url'] = $redirect;
+        } else {
+            unset($_SESSION['_intended_url']);
+        }
         $this->view('auth.login', ['title' => 'Login'], 'auth');
     }
 
@@ -107,6 +113,12 @@ class AuthController extends Controller
         $password = (string) $this->input('password', '');
 
         if (Auth::attempt($email, $password)) {
+            $intended = sanitize_redirect_target($_SESSION['_intended_url'] ?? null);
+            unset($_SESSION['_intended_url']);
+            if ($intended !== null) {
+                header('Location: ' . $intended);
+                exit;
+            }
             $this->redirect(Auth::isAdmin() ? 'admin/dashboard' : '/');
         }
 

@@ -58,7 +58,7 @@
 
   <div class="p-5 border-t border-slate-100">
     <h3 class="text-sm font-bold text-primary-navy mb-1">Individual Links</h3>
-    <p class="text-xs text-slate-400 mb-4">Hide one specific menu link without affecting others that lead to the same page — e.g. hide "Create a Poll" while keeping "Start a Discussion" (both currently point to the Community Feed).</p>
+    <p class="text-xs text-slate-400 mb-4">Hide one specific menu link without affecting others that lead to the same page — e.g. hide "Create a Poll" while keeping "Start a Discussion" (both currently point to the Community Feed). Mark a link "Requires login" to keep it visible to visitors who aren't logged in — clicking it sends them to Login first, then straight on to the page once they've signed in.</p>
     <?php
       $linkPageLabels = [
           'directory' => 'Alumni Network — Directory', 'connections' => 'Alumni Network — Connections',
@@ -78,10 +78,16 @@
           </summary>
           <div class="flex flex-wrap gap-x-6 gap-y-2 px-4 pb-4">
             <?php foreach ($links as $link): ?>
-              <label class="flex items-center gap-2">
-                <input type="checkbox" name="link_visible[<?= e($link['link_key']) ?>]" value="1" <?= !empty($link['is_visible']) ? 'checked' : '' ?> class="rounded border-slate-300 text-gold focus:ring-gold">
-                <span class="text-xs text-slate-600"><?= e($link['label']) ?></span>
-              </label>
+              <div class="flex items-center gap-3">
+                <label class="flex items-center gap-2">
+                  <input type="checkbox" name="link_visible[<?= e($link['link_key']) ?>]" value="1" <?= !empty($link['is_visible']) ? 'checked' : '' ?> class="rounded border-slate-300 text-gold focus:ring-gold">
+                  <span class="text-xs text-slate-600"><?= e($link['label']) ?></span>
+                </label>
+                <label class="flex items-center gap-1.5">
+                  <input type="checkbox" name="link_requires_login[<?= e($link['link_key']) ?>]" value="1" <?= !empty($link['requires_login']) ? 'checked' : '' ?> class="rounded border-slate-300 text-gold focus:ring-gold scale-90">
+                  <span class="text-[0.65rem] text-slate-400">Requires login</span>
+                </label>
+              </div>
             <?php endforeach; ?>
           </div>
         </details>

@@ -528,6 +528,37 @@ function link_visibility_key(string $pageKey, string $title): string
     return ($pageKey !== '' ? $pageKey : 'other') . ':' . slugify($title);
 }
 
+/**
+ * Rejects anything that isn't a same-app, path-relative target: empty values, absolute URLs
+ * (containing "://"), and protocol-relative ones ("//host/..."). Used both when reading an
+ * incoming ?redirect= value and when re-emitting it as a Location header, so a tampered
+ * redirect= can never send a visitor off-site.
+ */
+function sanitize_redirect_target(?string $target): ?string
+{
+    if ($target === null) {
+        return null;
+    }
+    $target = trim($target);
+    if ($target === '' || str_contains($target, '://') || str_starts_with($target, '//') || !str_starts_with($target, '/')) {
+        return null;
+    }
+    return $target;
+}
+
+/**
+ * The href a nav link should actually point to: its normal destination, unless the visitor is a
+ * guest and this link is admin-flagged "requires login" — in which case it detours through
+ * /login, which sends them on to $url after a successful sign-in.
+ */
+function nav_href(string $url, string $linkKey): string
+{
+    if (\App\Core\Auth::user() === null && \App\Models\LinkVisibility::requiresLogin($linkKey)) {
+        return url('login') . '?redirect=' . rawurlencode($url);
+    }
+    return $url;
+}
+
 function mega_item(string $url, string $icon, string $title, string $description): string
 {
     $pageKey = url_page_key($url);
@@ -538,11 +569,12 @@ function mega_item(string $url, string $icon, string $title, string $description
     if ($tabKey !== null && !\App\Models\PageTabVisibility::isVisible($pageKey, $tabKey)) {
         return '';
     }
-    if (!\App\Models\LinkVisibility::isVisible(link_visibility_key($pageKey, $title))) {
+    $linkKey = link_visibility_key($pageKey, $title);
+    if (!\App\Models\LinkVisibility::isVisible($linkKey)) {
         return '';
     }
 
-    return '<a href="' . e($url) . '" class="mega-item">'
+    return '<a href="' . e(nav_href($url, $linkKey)) . '" class="mega-item">'
         . '<span class="mega-item-icon"><i class="' . e($icon) . '"></i></span>'
         . '<span class="min-w-0"><span class="mega-item-title">' . e($title) . '</span>'
         . '<span class="mega-item-desc">' . e($description) . '</span></span>'
