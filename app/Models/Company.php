@@ -20,7 +20,12 @@ class Company extends Model
 
     public static function update(int $id, array $data): bool
     {
-        return static::updateRow('companies', $id, $data);
+        $result = static::updateRow('companies', $id, $data);
+        if (array_key_exists('logo', $data)) {
+            static::db()->prepare('UPDATE jobs SET company_logo = ? WHERE company_id = ?')
+                ->execute([$data['logo'], $id]);
+        }
+        return $result;
     }
 
     /** Alumni whose free-text profile "company" matches this company's name. */

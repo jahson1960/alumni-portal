@@ -159,7 +159,7 @@
       <label class="form-label">Company Logo</label>
       <img id="company_logo_preview" src="<?= e($job['company_logo'] ?? '') ?>" alt="" class="w-16 h-16 object-contain rounded border border-slate-200 mb-2 bg-white p-1 <?= empty($job['company_logo']) ? 'hidden' : '' ?>">
       <input type="file" id="company_logo" name="company_logo" accept=".jpg,.jpeg,.png,.webp" class="text-sm block">
-      <p class="text-xs text-slate-400 mt-1">Uploading a new file always overrides the selected company's logo. If none is set, the colored initials badge below is used.</p>
+      <p class="text-xs text-slate-400 mt-1">Uploading a file here only changes the logo shown on this job post, not the company's own logo. If none is set, the colored initials badge below is used.</p>
     </div>
 
     <div class="grid grid-cols-2 gap-4 mb-4">

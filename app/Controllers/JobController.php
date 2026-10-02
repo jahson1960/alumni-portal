@@ -5,6 +5,7 @@ namespace App\Controllers;
 use App\Core\Auth;
 use App\Core\Controller;
 use App\Core\Sanitizer;
+use App\Core\Upload;
 use App\Models\Category;
 use App\Models\Company;
 use App\Models\Job;
@@ -200,6 +201,7 @@ class JobController extends Controller
             'job' => null,
             'allCategories' => Category::forType('job'),
             'selectedCategoryIds' => [],
+            'allCompanies' => Company::all(),
             'postingMode' => Setting::get('job_posting_mode', 'approval'),
             'needsRichEditor' => true,
         ]);
@@ -264,6 +266,7 @@ class JobController extends Controller
             'job' => $job,
             'allCategories' => Category::forType('job'),
             'selectedCategoryIds' => array_column(Category::forJob((int) $id), 'id'),
+            'allCompanies' => Company::all(),
             'postingMode' => Setting::get('job_posting_mode', 'approval'),
             'needsRichEditor' => true,
         ]);
@@ -369,6 +372,8 @@ class JobController extends Controller
     {
         $title = trim((string) $this->input('title', ''));
         $company = trim((string) $this->input('company', ''));
+        $companyId = $this->input('company_id') !== null && $this->input('company_id') !== '' ? (int) $this->input('company_id') : null;
+        $companyLogoUrl = trim((string) $this->input('company_logo_url', ''));
         $location = trim((string) $this->input('location', ''));
         $jobType = in_array($this->input('job_type'), Job::JOB_TYPES, true) ? $this->input('job_type') : 'Full-time';
         $experienceLevel = array_key_exists($this->input('experience_level'), Job::EXPERIENCE_LEVELS) ? $this->input('experience_level') : null;
@@ -401,6 +406,16 @@ class JobController extends Controller
             }
         }
 
+        $companyLogo = $companyLogoUrl !== '' ? $companyLogoUrl : null;
+        try {
+            $uploadedLogo = Upload::image($this->file('company_logo'), 'jobs');
+            if ($uploadedLogo) {
+                $companyLogo = upload_url($uploadedLogo);
+            }
+        } catch (\RuntimeException $e) {
+            $errors[] = $e->getMessage();
+        }
+
         if ($errors) {
             $_SESSION['_errors'] = $errors;
             $this->redirect($id ? "jobs/mine/{$id}/edit" : 'jobs/post');
@@ -410,6 +425,7 @@ class JobController extends Controller
         $data = [
             'title' => $title,
             'company' => $company,
+            'company_id' => $companyId,
             'location' => $location,
             'job_type' => $jobType,
             'experience_level' => $experienceLevel,
@@ -423,6 +439,9 @@ class JobController extends Controller
             'apply_value' => $applyValue,
             'closing_date' => $closingDate !== '' ? $closingDate : null,
         ];
+        if ($companyLogo) {
+            $data['company_logo'] = $companyLogo;
+        }
 
         if ($id === null) {
             $data['posted_by'] = Auth::id();

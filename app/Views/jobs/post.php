@@ -35,7 +35,7 @@ $postingTips = [
   <?php require dirname(__DIR__) . '/partials/errors.php'; ?>
 
   <div class="grid grid-cols-1 lg:grid-cols-[1fr_320px] gap-6 items-start">
-    <form method="POST" action="<?= e($isEdit ? url('jobs/mine/' . $job['id']) : url('jobs/post')) ?>" id="post-job-form">
+    <form method="POST" action="<?= e($isEdit ? url('jobs/mine/' . $job['id']) : url('jobs/post')) ?>" id="post-job-form" enctype="multipart/form-data">
       <?= csrf_field() ?>
 
       <!-- Step 1: Job Details -->
@@ -66,6 +66,32 @@ $postingTips = [
                 <i class="fa-solid fa-location-dot absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-sm pointer-events-none"></i>
               </div>
             </div>
+          </div>
+
+          <div>
+            <label class="form-label" for="company_select">Already have a company profile set up?</label>
+            <select id="company_select" class="form-input">
+              <option value="">&mdash; None, enter company details manually &mdash;</option>
+              <?php foreach ($allCompanies as $c): ?>
+                <option value="<?= $c['id'] ?>"
+                        data-name="<?= e($c['name']) ?>"
+                        data-logo="<?= e($c['logo'] ?? '') ?>"
+                        <?= !empty($job['company_id']) && (int) $job['company_id'] === (int) $c['id'] ? 'selected' : '' ?>>
+                  <?= e($c['name']) ?>
+                </option>
+              <?php endforeach; ?>
+            </select>
+            <p class="text-xs text-slate-400 mt-1">Selecting one fills in the company name and shows its logo below.</p>
+          </div>
+
+          <input type="hidden" id="company_id" name="company_id" value="<?= e($job['company_id'] ?? '') ?>">
+          <input type="hidden" id="company_logo_url" name="company_logo_url" value="<?= !empty($job['company_logo']) ? e($job['company_logo']) : '' ?>">
+
+          <div>
+            <label class="form-label">Company Logo <span class="text-slate-400 font-normal">(optional)</span></label>
+            <img id="company_logo_preview" src="<?= e($job['company_logo'] ?? '') ?>" alt="" class="w-16 h-16 object-contain rounded border border-slate-200 mb-2 bg-white p-1 <?= empty($job['company_logo']) ? 'hidden' : '' ?>">
+            <input type="file" id="company_logo" name="company_logo" accept=".jpg,.jpeg,.png,.webp" class="text-sm block">
+            <p class="text-xs text-slate-400 mt-1">Shows the selected company's logo if it has one. You can upload a different image just for this job post &mdash; it won't change the company's own logo.</p>
           </div>
 
           <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -324,6 +350,53 @@ $postingTips = [
         syncChip(chip);
       });
     });
+
+    // Company picker — selecting a saved company fills in its name and shows its logo.
+    var companySelect = document.getElementById('company_select');
+    if (companySelect) {
+      companySelect.addEventListener('change', function () {
+        var option = this.options[this.selectedIndex];
+        var companyIdField = document.getElementById('company_id');
+        var logoUrlField = document.getElementById('company_logo_url');
+        var logoPreview = document.getElementById('company_logo_preview');
+        var nameField = document.getElementById('company');
+        var fileField = document.getElementById('company_logo');
+
+        if (!option.value) {
+          companyIdField.value = '';
+          return;
+        }
+
+        companyIdField.value = option.value;
+        nameField.value = option.dataset.name || option.textContent.trim();
+
+        var logo = option.dataset.logo || '';
+        logoUrlField.value = logo;
+        fileField.value = '';
+        if (logo) {
+          logoPreview.src = logo;
+          logoPreview.classList.remove('hidden');
+        } else {
+          logoPreview.classList.add('hidden');
+        }
+      });
+    }
+
+    var companyLogoInput = document.getElementById('company_logo');
+    if (companyLogoInput) {
+      companyLogoInput.addEventListener('change', function () {
+        if (this.files && this.files[0]) {
+          document.getElementById('company_logo_url').value = '';
+          var reader = new FileReader();
+          var preview = document.getElementById('company_logo_preview');
+          reader.onload = function (e) {
+            preview.src = e.target.result;
+            preview.classList.remove('hidden');
+          };
+          reader.readAsDataURL(this.files[0]);
+        }
+      });
+    }
 
     // Description char counter — wired once the shared rich editor (admin.js) has initialized.
     window.addEventListener('load', function () {

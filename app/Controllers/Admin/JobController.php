@@ -177,10 +177,9 @@ class JobController extends AdminController
         }
 
         if ($saveCompany) {
+            // Logo deliberately excluded: a job's uploaded logo never changes the company's own logo
+            // (that's only ever set from the dedicated company management screen).
             $companyData = ['name' => $company, 'about' => $companyAbout];
-            if ($companyLogo) {
-                $companyData['logo'] = $companyLogo;
-            }
             if ($companyId) {
                 Company::update($companyId, $companyData);
             } else {
