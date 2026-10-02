@@ -942,6 +942,9 @@ if ($authUser && $authUser['program']) {
             ['href' => url('news'), 'icon' => 'fa-solid fa-newspaper', 'label' => 'News & Blog', 'desc' => 'Latest news from the school'],
             ['href' => url('spotlight'), 'icon' => 'fa-solid fa-star', 'label' => 'Alumni Spotlight', 'desc' => 'Celebrating alumni achievements'],
             ['href' => url('give'), 'icon' => 'fa-solid fa-hand-holding-heart', 'label' => 'Give Back', 'desc' => 'Support scholarships and alumni causes'],
+            ['href' => url('resources'), 'icon' => 'fa-solid fa-file-lines', 'label' => 'Career Resources', 'desc' => 'Guides, templates and career tools'],
+            ['href' => url('mentorship'), 'icon' => 'fa-solid fa-chalkboard-user', 'label' => 'Mentorship', 'desc' => 'Find or become a mentor'],
+            ['href' => url('connections'), 'icon' => 'fa-solid fa-user-group', 'label' => 'My Connections', 'desc' => 'Keep in touch with your connections'],
           ]));
         ?>
 
@@ -983,7 +986,10 @@ if ($authUser && $authUser['program']) {
     </div>
 
     <script>
-      (function () {
+      document.addEventListener('DOMContentLoaded', function () {
+        // Deferred to DOMContentLoaded: #mobile-menu-open-bottom lives in the bottom nav bar,
+        // further down the page than this script tag, so looking it up immediately (before the
+        // rest of the page has parsed) always returned null and left that button unresponsive.
         var overlay = document.getElementById('mobile-menu-overlay');
         var openBtns = [document.getElementById('mobile-menu-open'), document.getElementById('mobile-menu-open-bottom')];
         var closeBtn = document.getElementById('mobile-menu-close');
@@ -1013,7 +1019,7 @@ if ($authUser && $authUser['program']) {
         window.addEventListener('resize', function () {
           if (window.innerWidth >= 1024) closeMenu();
         });
-      })();
+      });
     </script>
   </header>
 
