@@ -16,7 +16,7 @@ class JobController extends AdminController
         $this->view('admin.jobs.index', [
             'title' => 'Jobs',
             'activeNav' => 'jobs',
-            'jobs' => Job::all('created_at DESC'),
+            'jobs' => Job::all('posted_at DESC, created_at DESC'),
             'pendingCount' => Job::countPendingApproval(),
         ]);
     }

@@ -18,6 +18,7 @@
         <th>Company</th>
         <th>Location</th>
         <th>Posted By</th>
+        <th>Posted</th>
         <th>Status</th>
         <th></th>
       </tr>
@@ -34,6 +35,7 @@
           <td><?= e($job['company']) ?></td>
           <td class="text-slate-500"><?= e($job['location']) ?></td>
           <td class="text-slate-500"><?= !empty($job['posted_by']) ? 'Alumni' : 'Admin' ?></td>
+          <td class="text-slate-500 whitespace-nowrap"><?= !empty($job['posted_at']) ? e(format_date($job['posted_at'])) : '<span class="text-slate-300">Not yet</span>' ?></td>
           <td class="whitespace-nowrap">
             <span class="<?= $job['status'] === 'open' ? 'badge-blue' : 'badge-gold' ?>"><?= e($job['status']) ?></span>
             <?php if ($job['approval_status'] === 'pending'): ?>
@@ -52,7 +54,7 @@
         </tr>
       <?php endforeach; ?>
       <?php if (empty($jobs)): ?>
-        <tr><td colspan="6" class="text-center text-slate-400 py-6">No job listings yet.</td></tr>
+        <tr><td colspan="7" class="text-center text-slate-400 py-6">No job listings yet.</td></tr>
       <?php endif; ?>
     </tbody>
   </table>
