@@ -85,6 +85,8 @@ $experienceLabel = !empty($job['experience_level']) ? (\App\Models\Job::EXPERIEN
         <?php endif; ?>
       </div>
 
+      <!-- Tabbed layout: desktop only. Mobile gets its own stacked-sections block below, in a fixed reading order. -->
+      <div class="hidden lg:block">
       <div class="flex items-center gap-6 px-6 md:px-8 border-t border-slate-100 overflow-x-auto overflow-y-hidden">
         <button type="button" class="job-tab-link flex items-center gap-2 text-sm font-semibold py-3.5 border-b-2 -mb-px whitespace-nowrap text-gold border-gold" data-tab="overview">Overview</button>
         <?php if (!empty($job['responsibilities'])): ?>
@@ -142,10 +144,11 @@ $experienceLabel = !empty($job['experience_level']) ? (\App\Models\Job::EXPERIEN
           </div>
         <?php endif; ?>
       </div>
+      </div>
     </div>
 
-    <!-- Sidebar -->
-    <aside class="space-y-6">
+    <!-- Sidebar: desktop only. Mobile shows Job Summary and Share within the stacked block below instead. -->
+    <aside class="hidden lg:block space-y-6">
       <div class="card p-5 !bg-sky-50 !border-sky-100">
         <div class="flex items-start gap-3">
           <div class="w-11 h-11 rounded-full bg-white text-sky-600 flex items-center justify-center flex-shrink-0 text-lg"><i class="fa-solid fa-building"></i></div>
@@ -215,9 +218,9 @@ $experienceLabel = !empty($job['experience_level']) ? (\App\Models\Job::EXPERIEN
           <a href="https://twitter.com/intent/tweet?url=<?= urlencode($jobUrl) ?>&text=<?= urlencode($job['title'] . ' at ' . $job['company']) ?>" target="_blank" rel="noopener noreferrer" class="w-9 h-9 rounded-full bg-black text-white flex items-center justify-center hover:opacity-85" title="Share on X"><i class="fa-brands fa-x-twitter"></i></a>
           <a href="https://www.facebook.com/sharer/sharer.php?u=<?= urlencode($jobUrl) ?>" target="_blank" rel="noopener noreferrer" class="w-9 h-9 rounded-full bg-[#1877f2] text-white flex items-center justify-center hover:opacity-85" title="Share on Facebook"><i class="fa-brands fa-facebook-f"></i></a>
           <a href="https://wa.me/?text=<?= urlencode($job['title'] . ' at ' . $job['company'] . ' ' . $jobUrl) ?>" target="_blank" rel="noopener noreferrer" class="w-9 h-9 rounded-full bg-[#25d366] text-white flex items-center justify-center hover:opacity-85" title="Share on WhatsApp"><i class="fa-brands fa-whatsapp"></i></a>
-          <button type="button" id="copy-job-link" data-url="<?= e($jobUrl) ?>" class="w-9 h-9 rounded-full bg-slate-100 text-slate-500 flex items-center justify-center hover:bg-slate-200" title="Copy link"><i class="fa-solid fa-link"></i></button>
+          <button type="button" data-url="<?= e($jobUrl) ?>" class="job-copy-link-btn w-9 h-9 rounded-full bg-slate-100 text-slate-500 flex items-center justify-center hover:bg-slate-200" title="Copy link"><i class="fa-solid fa-link"></i></button>
         </div>
-        <p id="copy-job-link-msg" class="hidden text-xs text-emerald-600 mt-2">Link copied!</p>
+        <p class="job-copy-link-msg hidden text-xs text-emerald-600 mt-2">Link copied!</p>
       </div>
 
       <?php if (!empty($job['company_about'])): ?>
@@ -233,6 +236,130 @@ $experienceLabel = !empty($job['experience_level']) ? (\App\Models\Job::EXPERIEN
         </div>
       <?php endif; ?>
     </aside>
+  </div>
+
+  <!-- Mobile-only stacked sections, in a fixed reading order (desktop keeps the tabbed layout above). -->
+  <div class="lg:hidden space-y-6 mt-6">
+    <?php if (!empty($job['company_about'])): ?>
+      <div class="card p-5">
+        <div class="flex items-start gap-3 mb-3">
+          <div class="w-9 h-9 rounded-lg bg-sky-50 text-sky-600 flex items-center justify-center flex-shrink-0"><i class="fa-regular fa-building"></i></div>
+          <h3 class="text-base font-extrabold text-primary-navy pt-1.5">About <?= e($job['company']) ?></h3>
+        </div>
+        <div class="prose prose-sm max-w-none prose-headings:text-primary-navy prose-a:text-gold"><?= $job['company_about'] ?></div>
+        <?php if (!empty($companyWebsite)): ?>
+          <a href="<?= e($companyWebsite) ?>" target="_blank" rel="noopener noreferrer" class="text-xs font-semibold text-gold hover:underline mt-3 inline-flex items-center gap-1.5">Visit Company Website <i class="fa-solid fa-arrow-right"></i></a>
+        <?php endif; ?>
+      </div>
+    <?php endif; ?>
+
+    <div class="card p-5">
+      <h3 class="text-sm font-extrabold text-primary-navy mb-4 flex items-center gap-2"><i class="fa-regular fa-clipboard text-gold"></i> Job Summary</h3>
+      <div class="space-y-4">
+        <div class="flex items-start gap-3">
+          <div class="w-8 h-8 rounded-lg bg-slate-100 text-slate-500 flex items-center justify-center flex-shrink-0"><i class="fa-regular fa-building"></i></div>
+          <div>
+            <p class="text-xs text-slate-400">Company</p>
+            <p class="text-sm font-semibold text-primary-navy"><?= e($job['company']) ?></p>
+          </div>
+        </div>
+        <div class="flex items-start gap-3">
+          <div class="w-8 h-8 rounded-lg bg-slate-100 text-slate-500 flex items-center justify-center flex-shrink-0"><i class="fa-solid fa-briefcase"></i></div>
+          <div>
+            <p class="text-xs text-slate-400">Job Title</p>
+            <p class="text-sm font-semibold text-primary-navy"><?= e($job['title']) ?></p>
+          </div>
+        </div>
+        <?php if (!empty($job['location'])): ?>
+          <div class="flex items-start gap-3">
+            <div class="w-8 h-8 rounded-lg bg-slate-100 text-slate-500 flex items-center justify-center flex-shrink-0"><i class="fa-solid fa-location-dot"></i></div>
+            <div>
+              <p class="text-xs text-slate-400">Location</p>
+              <p class="text-sm font-semibold text-primary-navy"><?= e($job['location']) ?></p>
+            </div>
+          </div>
+        <?php endif; ?>
+        <div class="flex items-start gap-3">
+          <div class="w-8 h-8 rounded-lg bg-slate-100 text-slate-500 flex items-center justify-center flex-shrink-0"><i class="fa-regular fa-clock"></i></div>
+          <div>
+            <p class="text-xs text-slate-400">Employment Type</p>
+            <p class="text-sm font-semibold text-primary-navy"><?= e($job['job_type']) ?></p>
+          </div>
+        </div>
+        <?php if ($experienceLabel): ?>
+          <div class="flex items-start gap-3">
+            <div class="w-8 h-8 rounded-lg bg-slate-100 text-slate-500 flex items-center justify-center flex-shrink-0"><i class="fa-solid fa-user-group"></i></div>
+            <div>
+              <p class="text-xs text-slate-400">Experience Level</p>
+              <p class="text-sm font-semibold text-primary-navy"><?= e($experienceLabel) ?></p>
+            </div>
+          </div>
+        <?php endif; ?>
+        <div class="flex items-start gap-3">
+          <div class="w-8 h-8 rounded-lg bg-slate-100 text-slate-500 flex items-center justify-center flex-shrink-0"><i class="fa-regular fa-calendar"></i></div>
+          <div>
+            <p class="text-xs text-slate-400">Posted</p>
+            <p class="text-sm font-semibold text-primary-navy"><?= e(time_ago($job['posted_at'])) ?></p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card p-5">
+      <div class="flex items-start gap-3 mb-3">
+        <div class="w-9 h-9 rounded-lg bg-sky-50 text-sky-600 flex items-center justify-center flex-shrink-0"><i class="fa-regular fa-file-lines"></i></div>
+        <h3 class="text-base font-extrabold text-primary-navy pt-1.5">About the Role</h3>
+      </div>
+      <div class="prose prose-sm max-w-none prose-headings:text-primary-navy prose-a:text-gold"><?= $job['description'] ?></div>
+    </div>
+
+    <?php if (!empty($job['responsibilities'])): ?>
+      <div class="card p-5">
+        <div class="flex items-start gap-3 mb-3">
+          <div class="w-9 h-9 rounded-lg bg-sky-50 text-sky-600 flex items-center justify-center flex-shrink-0"><i class="fa-solid fa-bullseye"></i></div>
+          <h3 class="text-base font-extrabold text-primary-navy pt-1.5">Key Responsibilities</h3>
+        </div>
+        <div class="prose prose-sm max-w-none prose-headings:text-primary-navy prose-a:text-gold prose-ul:list-disc marker:text-gold"><?= $job['responsibilities'] ?></div>
+      </div>
+    <?php endif; ?>
+
+    <?php if (!empty($job['requirements'])): ?>
+      <div class="card p-5">
+        <div class="flex items-start gap-3 mb-3">
+          <div class="w-9 h-9 rounded-lg bg-sky-50 text-sky-600 flex items-center justify-center flex-shrink-0"><i class="fa-regular fa-user"></i></div>
+          <h3 class="text-base font-extrabold text-primary-navy pt-1.5">Requirements</h3>
+        </div>
+        <div class="prose prose-sm max-w-none prose-headings:text-primary-navy prose-a:text-gold prose-ul:list-disc marker:text-gold"><?= $job['requirements'] ?></div>
+      </div>
+    <?php endif; ?>
+
+    <div class="card p-5">
+      <div class="flex items-start gap-3 mb-3">
+        <div class="w-9 h-9 rounded-lg bg-sky-50 text-sky-600 flex items-center justify-center flex-shrink-0"><i class="fa-solid fa-paper-plane"></i></div>
+        <h3 class="text-base font-extrabold text-primary-navy pt-1.5">How to Apply</h3>
+      </div>
+      <p class="text-sm text-slate-500 mb-4">Ready to take the next step? Submit your application for this role below.</p>
+      <?php if ($isClosed): ?>
+        <button type="button" disabled class="btn-gold !px-5 !py-2.5 text-sm w-full opacity-50 cursor-not-allowed flex items-center justify-center gap-2"><i class="fa-solid fa-paper-plane"></i> Applications Closed</button>
+      <?php else: ?>
+        <form method="POST" action="<?= e(url('jobs/' . $job['id'] . '/apply')) ?>">
+          <?= csrf_field() ?>
+          <button type="submit" class="btn-gold !px-5 !py-2.5 text-sm w-full flex items-center justify-center gap-2"><i class="fa-solid fa-paper-plane"></i> <?= $hasApplied ? 'Apply Again' : 'Apply Now' ?></button>
+        </form>
+      <?php endif; ?>
+    </div>
+
+    <div class="card p-5">
+      <h3 class="text-sm font-extrabold text-primary-navy mb-4 flex items-center gap-2"><i class="fa-solid fa-share-nodes text-gold"></i> Share This Job</h3>
+      <div class="flex items-center gap-2.5">
+        <a href="https://www.linkedin.com/sharing/share-offsite/?url=<?= urlencode($jobUrl) ?>" target="_blank" rel="noopener noreferrer" class="w-9 h-9 rounded-full bg-[#0a66c2] text-white flex items-center justify-center hover:opacity-85" title="Share on LinkedIn"><i class="fa-brands fa-linkedin-in"></i></a>
+        <a href="https://twitter.com/intent/tweet?url=<?= urlencode($jobUrl) ?>&text=<?= urlencode($job['title'] . ' at ' . $job['company']) ?>" target="_blank" rel="noopener noreferrer" class="w-9 h-9 rounded-full bg-black text-white flex items-center justify-center hover:opacity-85" title="Share on X"><i class="fa-brands fa-x-twitter"></i></a>
+        <a href="https://www.facebook.com/sharer/sharer.php?u=<?= urlencode($jobUrl) ?>" target="_blank" rel="noopener noreferrer" class="w-9 h-9 rounded-full bg-[#1877f2] text-white flex items-center justify-center hover:opacity-85" title="Share on Facebook"><i class="fa-brands fa-facebook-f"></i></a>
+        <a href="https://wa.me/?text=<?= urlencode($job['title'] . ' at ' . $job['company'] . ' ' . $jobUrl) ?>" target="_blank" rel="noopener noreferrer" class="w-9 h-9 rounded-full bg-[#25d366] text-white flex items-center justify-center hover:opacity-85" title="Share on WhatsApp"><i class="fa-brands fa-whatsapp"></i></a>
+        <button type="button" data-url="<?= e($jobUrl) ?>" class="job-copy-link-btn w-9 h-9 rounded-full bg-slate-100 text-slate-500 flex items-center justify-center hover:bg-slate-200" title="Copy link"><i class="fa-solid fa-link"></i></button>
+      </div>
+      <p class="job-copy-link-msg hidden text-xs text-emerald-600 mt-2">Link copied!</p>
+    </div>
   </div>
 </div>
 
@@ -259,9 +386,8 @@ $experienceLabel = !empty($job['experience_level']) ? (\App\Models\Job::EXPERIEN
       btn.addEventListener('click', function () { activate(btn.dataset.tab); });
     });
 
-    var copyBtn = document.getElementById('copy-job-link');
-    var copyMsg = document.getElementById('copy-job-link-msg');
-    if (copyBtn) {
+    document.querySelectorAll('.job-copy-link-btn').forEach(function (copyBtn) {
+      var copyMsg = copyBtn.closest('.card').querySelector('.job-copy-link-msg');
       copyBtn.addEventListener('click', function () {
         var url = copyBtn.dataset.url;
         var done = function () {
@@ -281,6 +407,6 @@ $experienceLabel = !empty($job['experience_level']) ? (\App\Models\Job::EXPERIEN
           done();
         }
       });
-    }
+    });
   })();
 </script>
