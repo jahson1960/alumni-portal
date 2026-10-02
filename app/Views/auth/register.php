@@ -21,16 +21,31 @@
   <div class="grid grid-cols-2 gap-4">
     <div>
       <label class="form-label" for="graduation_year">Graduation Year</label>
-      <input type="number" id="graduation_year" name="graduation_year" class="form-input" min="1990" max="2100" value="<?= old('graduation_year') ?>" required>
+      <select id="graduation_year" name="graduation_year" class="form-input" required>
+        <option value="">Select year</option>
+        <?php foreach ($years as $year): ?>
+          <option value="<?= e((string) $year) ?>" <?= old('graduation_year') === e((string) $year) ? 'selected' : '' ?>><?= e((string) $year) ?></option>
+        <?php endforeach; ?>
+      </select>
     </div>
     <div>
       <label class="form-label" for="cohort">Cohort</label>
-      <input type="text" id="cohort" name="cohort" class="form-input" placeholder="e.g. MBA 2019" value="<?= old('cohort') ?>" required>
+      <select id="cohort" name="cohort" class="form-input" required>
+        <option value="">Select cohort</option>
+        <?php foreach ($cohorts as $cohort): ?>
+          <option value="<?= e($cohort) ?>" <?= old('cohort') === e($cohort) ? 'selected' : '' ?>><?= e($cohort) ?></option>
+        <?php endforeach; ?>
+      </select>
     </div>
   </div>
   <div>
     <label class="form-label" for="program">Program</label>
-    <input type="text" id="program" name="program" class="form-input" placeholder="e.g. Executive MBA" value="<?= old('program') ?>">
+    <select id="program" name="program" class="form-input">
+      <option value="">Select program</option>
+      <?php foreach ($programs as $program): ?>
+        <option value="<?= e($program['name']) ?>" <?= old('program') === e($program['name']) ? 'selected' : '' ?>><?= e($program['name']) ?></option>
+      <?php endforeach; ?>
+    </select>
   </div>
   <div>
     <label class="form-label" for="password">Password</label>

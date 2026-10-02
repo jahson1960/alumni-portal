@@ -5,6 +5,7 @@ namespace App\Controllers;
 use App\Core\Auth;
 use App\Core\Controller;
 use App\Models\AlumniRoster;
+use App\Models\Program;
 use App\Models\User;
 
 class AuthController extends Controller
@@ -14,7 +15,13 @@ class AuthController extends Controller
         if (Auth::check()) {
             $this->redirect('/');
         }
-        $this->view('auth.register', ['title' => 'Create Your Alumni Account'], 'auth');
+        $currentYear = (int) date('Y');
+        $this->view('auth.register', [
+            'title' => 'Create Your Alumni Account',
+            'cohorts' => AlumniRoster::distinctCohorts(),
+            'programs' => Program::all('name ASC'),
+            'years' => range($currentYear, 1990),
+        ], 'auth');
     }
 
     public function register(): void
@@ -29,6 +36,10 @@ class AuthController extends Controller
         $program = trim((string) $this->input('program', ''));
         $matricNumber = trim((string) $this->input('matric_number', ''));
         $cohort = trim((string) $this->input('cohort', ''));
+
+        if ($program !== '' && !in_array($program, array_column(Program::all(), 'name'), true)) {
+            $program = '';
+        }
 
         $errors = [];
         if ($name === '') {

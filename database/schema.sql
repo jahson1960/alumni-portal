@@ -307,6 +307,20 @@ INSERT INTO mentorship_areas (name) VALUES
 ('SME Strategy'), ('Starting a Consultancy');
 
 -- ---------------------------------------------------------------------
+-- programs  (admin-managed pick-list of academic programs, used on the
+-- registration form and stored as free text on users.program, same pattern
+-- as mentorship_areas above)
+-- ---------------------------------------------------------------------
+CREATE TABLE programs (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  name VARCHAR(100) NOT NULL UNIQUE,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB;
+
+INSERT INTO programs (name) VALUES
+('DBA'), ('Executive MBA'), ('MBA'), ('MSc Finance'), ('MSc Marketing'), ('MSc Marketing Management');
+
+-- ---------------------------------------------------------------------
 -- events
 -- ---------------------------------------------------------------------
 CREATE TABLE events (
