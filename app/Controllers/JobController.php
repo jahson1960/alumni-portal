@@ -314,7 +314,7 @@ class JobController extends Controller
         }
 
         if (!Auth::check() && Setting::get('require_login_to_apply', '0') === '1') {
-            $this->redirect('login');
+            $this->redirect('login?redirect=' . rawurlencode(url('jobs/' . $id)));
         }
 
         if (Auth::check()) {
