@@ -142,7 +142,13 @@
         setHighlight(Math.max(highlighted - 1, 0));
       } else if (e.key === 'Enter') {
         e.preventDefault();
-        select(visible[highlighted >= 0 ? highlighted : 0]);
+        // Only confirm a highlighted item, or the single match when there's exactly one —
+        // never silently guess among several still-ambiguous matches.
+        if (highlighted >= 0) {
+          select(visible[highlighted]);
+        } else if (visible.length === 1) {
+          select(visible[0]);
+        }
       } else if (e.key === 'Escape') {
         optionsBox.classList.add('hidden');
       }
@@ -151,6 +157,12 @@
     document.addEventListener('click', function (e) {
       if (e.target !== searchInput && !optionsBox.contains(e.target)) {
         optionsBox.classList.add('hidden');
+        // Give feedback as soon as they leave the field without a real selection, rather
+        // than waiting until they try to submit the whole form.
+        if (hiddenInput.value.trim() === '' && searchInput.value.trim() !== '') {
+          noMatch.textContent = 'Please select a cohort from the list.';
+          noMatch.classList.remove('hidden');
+        }
       }
     });
 
