@@ -96,6 +96,16 @@ class SettingsController extends AdminController
         }
 
         $errors = [];
+        $logo = null;
+        try {
+            $uploaded = Upload::image($this->file('site_logo'), 'branding');
+            if ($uploaded) {
+                $logo = upload_url($uploaded);
+            }
+        } catch (\RuntimeException $e) {
+            $errors[] = $e->getMessage();
+        }
+
         $favicon = null;
         try {
             $uploaded = Upload::image($this->file('favicon'), 'branding');
@@ -129,6 +139,10 @@ class SettingsController extends AdminController
         if ($errors) {
             $_SESSION['_errors'] = $errors;
             $this->redirect('admin/settings');
+        }
+
+        if ($logo) {
+            $data['site_logo'] = $logo;
         }
 
         if ($favicon) {

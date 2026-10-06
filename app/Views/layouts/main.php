@@ -84,7 +84,7 @@ if ($authUser && $authUser['program']) {
     <div class="max-w-[1400px] mx-auto px-4 md:px-8">
       <div class="flex items-center justify-between h-[var(--header-height)] gap-4">
         <a href="<?= e(url('/')) ?>" class="flex items-center gap-3 flex-shrink-0 min-w-0">
-          <img src="<?= e(upload_url('branding/rbs-logo.png')) ?>" alt="Rome Business School Logo" class="w-9 h-9 object-contain flex-shrink-0">
+          <img src="<?= e(Setting::get('site_logo', upload_url('branding/rbs-logo.png'))) ?>" alt="<?= e(Setting::get('site_name', 'Rome Business School Nigeria')) ?> Logo" class="w-9 h-9 object-contain flex-shrink-0">
           <div class="leading-tight min-w-0">
             <div class="text-[var(--header-text)] font-extrabold text-[0.65rem] lg:text-sm tracking-wide uppercase lg:truncate max-w-[130px] lg:max-w-[300px]"><?= e(Setting::get('site_name', 'Rome Business School Nigeria')) ?></div>
             <div class="text-gold text-[0.6rem] lg:text-[0.62rem] font-bold tracking-[0.15em] uppercase">Alumni Portal</div>
@@ -853,7 +853,7 @@ if ($authUser && $authUser['program']) {
     <div id="mobile-menu-overlay" class="hidden lg:!hidden fixed inset-0 z-[100] bg-[var(--menu-panel-bg)] flex-col">
       <div class="bg-[var(--menu-panel-bg)] text-[var(--menu-item-text)] px-4 py-3.5 flex items-center justify-between flex-shrink-0 border-b border-white/10">
         <a href="<?= e(url('/')) ?>" class="flex items-center gap-2.5 min-w-0">
-          <i class="fa-solid fa-building-columns text-gold text-lg flex-shrink-0"></i>
+          <img src="<?= e(Setting::get('site_logo', upload_url('branding/rbs-logo.png'))) ?>" alt="" class="w-8 h-8 object-contain rounded flex-shrink-0 bg-white p-0.5">
           <span class="min-w-0">
             <span class="block text-sm font-extrabold tracking-wide uppercase truncate"><?= e(Setting::get('site_name', 'Rome Business School Nigeria')) ?></span>
             <span class="block text-[0.65rem] text-gold font-bold tracking-wide uppercase">Alumni Portal</span>

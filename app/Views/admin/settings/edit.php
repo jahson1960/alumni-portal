@@ -15,6 +15,12 @@
         <input type="email" id="giving_contact_email" name="giving_contact_email" class="form-input" value="<?= e($settings['giving_contact_email'] ?? '') ?>">
       </div>
       <div>
+        <label class="form-label">Site Logo</label>
+        <img src="<?= e($settings['site_logo'] ?? upload_url('branding/rbs-logo.png')) ?>" alt="" class="w-9 h-9 object-contain rounded border border-slate-200 mb-2 bg-white p-1">
+        <input type="file" name="site_logo" accept=".png,.jpg,.jpeg,.webp" class="text-sm block">
+        <p class="text-xs text-slate-400 mt-1">Shown next to the site name in the header, on both desktop and mobile. Square image works best.</p>
+      </div>
+      <div>
         <label class="form-label">Favicon</label>
         <?php if (!empty($settings['site_favicon'])): ?>
           <img src="<?= e($settings['site_favicon']) ?>" alt="" class="w-8 h-8 object-contain rounded border border-slate-200 mb-2 bg-white p-1">
