@@ -248,6 +248,11 @@ function upload_url(?string $path): ?string
     if (!$path) {
         return null;
     }
+    $config = require __DIR__ . '/../../config/config.php';
+    $base = $config['upload_base_url'] ?? null;
+    if ($base) {
+        return rtrim($base, '/') . '/' . ltrim($path, '/');
+    }
     return asset('uploads/' . ltrim($path, '/'));
 }
 
