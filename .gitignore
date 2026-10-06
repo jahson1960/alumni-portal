@@ -9,3 +9,10 @@ node_modules/
 Thumbs.db
 .vscode/
 .idea/
+
+# User-uploaded content — lives only on the server, never in the repo, so a
+# future `git add -A` can't accidentally start tracking it (and risk a later
+# deploy's "reset to last commit" discarding uploads made after that commit).
+# The shared assets/uploads/.htaccess (blocking PHP execution) stays tracked.
+assets/uploads/jobs/
+assets/uploads/companies/
