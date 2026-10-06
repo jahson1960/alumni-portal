@@ -91,6 +91,9 @@ class SettingsController extends AdminController
             'menu_panel_bg_mobile' => '#091a2e',
             'menu_item_text_desktop' => '#091a2e',
             'menu_item_text_mobile' => '#ffffff',
+            'admin_email_header_bg' => $this->input('header_bg_desktop', '#091a2e'),
+            'admin_email_header_text' => $this->input('header_text_desktop', '#ffffff'),
+            'admin_email_button_color' => $this->input('theme_button_color', '#d49326'),
         ] as $key => $default) {
             $data[$key] = valid_hex_color($this->input($key), $default);
         }

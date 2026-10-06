@@ -12,6 +12,8 @@ $router->post('/register', 'AuthController@register');
 $router->get('/login', 'AuthController@showLogin');
 $router->post('/login', 'AuthController@login');
 $router->post('/logout', 'AuthController@logout');
+$router->get('/change-password', 'ChangePasswordController@show');
+$router->post('/change-password', 'ChangePasswordController@update');
 
 // Profile (self-service)
 $router->get('/profile/edit', 'ProfileController@edit');
@@ -176,6 +178,8 @@ $router->get('/admin/settings', 'Admin\\SettingsController@edit');
 $router->post('/admin/settings', 'Admin\\SettingsController@update');
 $router->get('/admin/page-visibility', 'Admin\\PageVisibilityController@edit');
 $router->post('/admin/page-visibility', 'Admin\\PageVisibilityController@update');
+$router->get('/admin/email-queue', 'Admin\\EmailQueueController@index');
+$router->post('/admin/email-queue/{id}/retry', 'Admin\\EmailQueueController@retry');
 
 // Admin: news
 $router->get('/admin/news', 'Admin\\NewsController@index');
@@ -298,6 +302,7 @@ $router->post('/admin/alumni/{id}/delete', 'Admin\\AlumniController@destroy');
 $router->post('/admin/alumni/{id}/spotlight', 'Admin\\AlumniController@spotlight');
 $router->post('/admin/alumni/{id}/unspotlight', 'Admin\\AlumniController@unspotlight');
 $router->post('/admin/alumni/{id}/role', 'Admin\\AlumniController@setRole');
+$router->post('/admin/alumni/{id}/reset-password', 'Admin\\AlumniController@resetPassword');
 
 $router->get('/admin/alumni-roster', 'Admin\\AlumniRosterController@index');
 $router->get('/admin/alumni-roster/create', 'Admin\\AlumniRosterController@create');

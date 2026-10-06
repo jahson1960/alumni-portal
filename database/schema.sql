@@ -25,6 +25,7 @@ CREATE TABLE users (
   preferred_name VARCHAR(100) NULL,
   email VARCHAR(150) NOT NULL UNIQUE,
   password_hash VARCHAR(255) NOT NULL,
+  must_change_password TINYINT(1) NOT NULL DEFAULT 0,
   avatar VARCHAR(255) NULL,
   headline VARCHAR(200) NULL,
   company VARCHAR(150) NULL,
@@ -1016,4 +1017,22 @@ CREATE TABLE notifications (
   PRIMARY KEY (id),
   KEY user_id (user_id),
   CONSTRAINT notifications_ibfk_1 FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+) ENGINE=InnoDB;
+
+-- ---------------------------------------------------------------------
+-- email_queue  (every outbound email is enqueued here, never sent inline
+-- during a request; scripts/send_queued_emails.php processes it via cron)
+-- ---------------------------------------------------------------------
+CREATE TABLE email_queue (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  to_email VARCHAR(150) NOT NULL,
+  to_name VARCHAR(150) NULL,
+  subject VARCHAR(200) NOT NULL,
+  html_body MEDIUMTEXT NOT NULL,
+  status ENUM('pending','sent','failed') NOT NULL DEFAULT 'pending',
+  attempts INT NOT NULL DEFAULT 0,
+  last_error TEXT NULL,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  sent_at TIMESTAMP NULL,
+  KEY status_idx (status)
 ) ENGINE=InnoDB;

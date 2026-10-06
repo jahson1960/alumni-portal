@@ -23,6 +23,24 @@ function versioned_asset(string $path): string
     return asset($relative) . '?v=' . $version;
 }
 
+/**
+ * Full scheme+host+path URL — unlike url(), safe to use where there's no "current page" to
+ * resolve a relative URL against, i.e. inside outbound emails (links, images). Uses config's
+ * app_url when set, otherwise the host of the current request (fine for a single-domain site;
+ * emails are always rendered during a web request, never from the CLI queue worker).
+ */
+function absolute_url(string $path = ''): string
+{
+    $config = require __DIR__ . '/../../config/config.php';
+    $base = $config['app_url'] ?? null;
+    if (!$base) {
+        $scheme = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? 'https' : 'http';
+        $host = $_SERVER['HTTP_HOST'] ?? 'localhost';
+        $base = $scheme . '://' . $host . (defined('BASE_URL') ? BASE_URL : '');
+    }
+    return rtrim($base, '/') . '/' . ltrim($path, '/');
+}
+
 /** @return array{0:float,1:float,2:float} [hue 0-360, saturation 0-100, lightness 0-100] */
 function hex_to_hsl(string $hex): array
 {
@@ -648,6 +666,68 @@ function notification_icon(string $type): string
         'resume_review_completed' => 'bi-file-earmark-check',
     ];
     return $map[$type] ?? 'bi-gear';
+}
+
+/** Human subject line for a notification's `type`, used when it's also emailed. */
+function notification_email_subject(string $type): string
+{
+    $map = [
+        'new_message' => 'You have a new message',
+        'connection_request' => 'New connection request',
+        'connection_accepted' => 'Your connection request was accepted',
+        'new_follower' => 'You have a new follower',
+        'mentorship_request' => 'New mentorship request',
+        'mentorship_accepted' => 'Your mentorship request was accepted',
+        'mentorship_declined' => 'Your mentorship request was declined',
+        'post_liked' => 'Someone liked your post',
+        'post_commented' => 'New comment on your post',
+        'job_pending' => 'A job post is awaiting your review',
+        'job_approved' => 'Your job post was approved',
+        'job_rejected' => 'Your job post was not approved',
+        'resume_review_claimed' => 'Your resume review was claimed',
+        'resume_review_completed' => 'Your resume review is ready',
+    ];
+    return $map[$type] ?? 'New notification';
+}
+
+/**
+ * Wraps $bodyHtml (plain HTML, no need to be email-safe — kept simple inline markup is fine) in
+ * the shared branded email shell (app/Views/emails/layout.php), optionally appending a button
+ * linking to $ctaLink. This is the one place that builds final email HTML — every call site
+ * (new-account/password-reset emails, the notification-email hook) goes through this.
+ */
+function render_email(string $subject, string $bodyHtml, ?string $ctaText = null, ?string $ctaLink = null): string
+{
+    $settings = \App\Models\Setting::all();
+    $buttonColor = $settings['admin_email_button_color'] ?? $settings['theme_button_color'] ?? '#d49326';
+
+    if ($ctaText !== null && $ctaLink !== null) {
+        $bodyHtml .= '<table role="presentation" cellpadding="0" cellspacing="0" style="margin-top:20px;"><tr><td style="background-color:' . e($buttonColor) . '; border-radius:6px;">'
+            . '<a href="' . e(absolute_url($ctaLink)) . '" style="display:inline-block; padding:12px 24px; color:#ffffff; font-size:14px; font-weight:bold; text-decoration:none;">' . e($ctaText) . '</a>'
+            . '</td></tr></table>';
+    }
+
+    ob_start();
+    require dirname(__DIR__) . '/Views/emails/layout.php';
+    return ob_get_clean();
+}
+
+/** Random temporary password (excludes visually-ambiguous characters like I/O/0/1). */
+function generate_temp_password(): string
+{
+    return substr(str_shuffle('ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnpqrstuvwxyz23456789'), 0, 10);
+}
+
+/** Shared body for both the new-account and admin-password-reset emails — only the intro differs. */
+function credential_email_body(string $firstName, string $email, string $tempPassword, string $introHtml): string
+{
+    return '<p>Hi ' . e($firstName) . ',</p>'
+        . '<p>' . $introHtml . '</p>'
+        . '<table role="presentation" cellpadding="0" cellspacing="0" style="background-color:#f8fafc; border:1px solid #e2e8f0; border-radius:6px; margin:16px 0; width:100%;"><tr><td style="padding:14px 16px; font-size:13px;">'
+        . '<strong>Email:</strong> ' . e($email) . '<br>'
+        . '<strong>Temporary Password:</strong> <code style="background-color:#e2e8f0; padding:2px 6px; border-radius:4px; font-size:13px;">' . e($tempPassword) . '</code>'
+        . '</td></tr></table>'
+        . '<p style="color:#b45309;">For your security, you will be asked to set your own password the first time you log in.</p>';
 }
 
 /** Font Awesome icon for a Career Resource's format (Guide/Template/Report/Video/PPTX). */

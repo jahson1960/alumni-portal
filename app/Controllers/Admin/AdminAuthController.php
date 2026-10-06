@@ -23,6 +23,10 @@ class AdminAuthController extends Controller
         $password = (string) $this->input('password', '');
 
         if (Auth::attempt($email, $password) && Auth::isAdmin()) {
+            if (!empty(Auth::user()['must_change_password'])) {
+                $_SESSION['_post_password_change_redirect'] = url('admin/dashboard');
+                $this->redirect('change-password');
+            }
             $this->redirect('admin/dashboard');
         }
 

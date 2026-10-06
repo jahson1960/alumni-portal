@@ -221,6 +221,26 @@
   </div>
 
   <div class="card p-6">
+    <h3 class="section-title text-xs mb-1">Email Theme</h3>
+    <p class="text-xs text-slate-400 mb-4">Branding used in the header and buttons of every outbound email (account credentials, password resets, notifications). Defaults to match the site's own header colors — only change these if you want emails to look different from the live site.</p>
+    <div class="grid grid-cols-3 gap-4">
+      <div>
+        <label class="form-label" for="admin_email_header_bg">Header Background</label>
+        <input type="color" id="admin_email_header_bg" name="admin_email_header_bg" class="w-full h-10 rounded border border-slate-300 cursor-pointer" value="<?= e($settings['admin_email_header_bg'] ?? $settings['header_bg_desktop'] ?? '#091a2e') ?>">
+      </div>
+      <div>
+        <label class="form-label" for="admin_email_header_text">Header Text</label>
+        <input type="color" id="admin_email_header_text" name="admin_email_header_text" class="w-full h-10 rounded border border-slate-300 cursor-pointer" value="<?= e($settings['admin_email_header_text'] ?? $settings['header_text_desktop'] ?? '#ffffff') ?>">
+      </div>
+      <div>
+        <label class="form-label" for="admin_email_button_color">Button Color</label>
+        <input type="color" id="admin_email_button_color" name="admin_email_button_color" class="w-full h-10 rounded border border-slate-300 cursor-pointer" value="<?= e($settings['admin_email_button_color'] ?? $settings['theme_button_color'] ?? '#d49326') ?>">
+      </div>
+    </div>
+    <p class="text-xs text-slate-400 mt-3">The logo shown in emails is the same as the Site Logo set above.</p>
+  </div>
+
+  <div class="card p-6">
     <h3 class="section-title text-xs mb-1">Alumni Job Postings</h3>
     <p class="text-xs text-slate-400 mb-4">Controls what happens when an alumnus submits a job through "Post a Job" on the public site.</p>
     <div class="space-y-2">

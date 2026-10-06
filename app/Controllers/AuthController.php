@@ -126,11 +126,15 @@ class AuthController extends Controller
         if (Auth::attempt($email, $password)) {
             $intended = sanitize_redirect_target($_SESSION['_intended_url'] ?? null);
             unset($_SESSION['_intended_url']);
-            if ($intended !== null) {
-                header('Location: ' . $intended);
-                exit;
+            $destination = $intended ?? url(Auth::isAdmin() ? 'admin/dashboard' : '/');
+
+            if (!empty(Auth::user()['must_change_password'])) {
+                $_SESSION['_post_password_change_redirect'] = $destination;
+                $this->redirect('change-password');
             }
-            $this->redirect(Auth::isAdmin() ? 'admin/dashboard' : '/');
+
+            header('Location: ' . $destination);
+            exit;
         }
 
         $_SESSION['_errors'] = ['Incorrect email or password, or the account has been suspended.'];

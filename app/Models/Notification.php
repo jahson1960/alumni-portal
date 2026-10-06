@@ -8,6 +8,7 @@ class Notification extends Model
 {
     protected static string $table = 'notifications';
 
+    /** Inserts the in-app notification, then enqueues a matching branded email — the one choke point for all 14 notification types. */
     public static function notify(int $userId, string $type, string $message, ?string $link = null): void
     {
         static::insertRow('notifications', [
@@ -16,6 +17,16 @@ class Notification extends Model
             'message' => $message,
             'link' => $link,
         ]);
+
+        $user = User::find($userId);
+        if ($user && !empty($user['email'])) {
+            EmailQueue::enqueue($user['email'], $user['name'], notification_email_subject($type), render_email(
+                notification_email_subject($type),
+                '<p>Hi ' . e($user['first_name'] ?: $user['name']) . ',</p><p>' . e($message) . '</p>',
+                $link !== null ? 'View' : null,
+                $link
+            ));
+        }
     }
 
     public static function forUser(int $userId, int $limit = 50): array

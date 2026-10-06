@@ -1,5 +1,12 @@
 <a href="<?= e(url('admin/alumni')) ?>" class="text-xs text-slate-500 hover:text-gold mb-4 inline-block"><i class="fa-solid fa-arrow-left"></i> Back to Alumni</a>
 
+<?php if ($resetResult): ?>
+  <div class="card p-4 mb-4 !bg-emerald-50 !border-emerald-100">
+    <p class="text-sm font-semibold text-emerald-800 mb-1">Password reset for <?= e($resetResult['name']) ?></p>
+    <p class="text-xs text-emerald-700">A reset email has been queued, but here's the temporary password in case it doesn't arrive — share it securely: <code class="bg-white border border-emerald-200 rounded px-2 py-0.5 font-mono"><?= e($resetResult['password']) ?></code></p>
+  </div>
+<?php endif; ?>
+
 <div class="card p-6 max-w-2xl">
   <div class="flex items-center gap-4 mb-6">
     <?= avatar_html($alum, 'w-16 h-16') ?>
@@ -55,6 +62,10 @@
   </div>
 
   <div class="flex gap-3 mt-6 pt-6 border-t border-slate-100">
+    <form method="POST" action="<?= e(url('admin/alumni/' . $alum['id'] . '/reset-password')) ?>" onsubmit="return confirm('Reset this alumnus\'s password? A new temporary password will be generated and emailed to them.');">
+      <?= csrf_field() ?>
+      <button type="submit" class="btn bg-sky-100 text-sky-700 hover:bg-sky-200">Reset Password</button>
+    </form>
     <?php if ($alum['status'] === 'active'): ?>
       <form method="POST" action="<?= e(url('admin/alumni/' . $alum['id'] . '/suspend')) ?>">
         <?= csrf_field() ?>

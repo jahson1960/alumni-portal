@@ -6,6 +6,7 @@ use App\Controllers\ErrorController;
 use App\Core\Auth;
 use App\Core\Controller;
 use App\Models\AlumniRoster;
+use App\Models\EmailQueue;
 use App\Models\Program;
 use App\Models\User;
 
@@ -93,7 +94,7 @@ class AlumniRegistrationController extends Controller
             $this->redirect('admin/register-alumni');
         }
 
-        $tempPassword = self::generatePassword();
+        $tempPassword = generate_temp_password();
 
         $id = User::create([
             'role' => 'alumni',
@@ -102,6 +103,7 @@ class AlumniRegistrationController extends Controller
             'other_names' => $otherNames !== '' ? $otherNames : null,
             'email' => $email,
             'password_hash' => password_hash($tempPassword, PASSWORD_DEFAULT),
+            'must_change_password' => 1,
             'graduation_year' => $graduationYear !== '' ? (int) $graduationYear : null,
             'program' => $program !== '' ? $program : null,
             'matric_number' => $matricNumber,
@@ -110,6 +112,13 @@ class AlumniRegistrationController extends Controller
         ]);
 
         AlumniRoster::markClaimed((int) $rosterEntry['id'], $id);
+
+        EmailQueue::enqueue($email, $name, 'Your Rome Business School Nigeria Alumni Portal Account', render_email(
+            'Your Alumni Portal Account',
+            credential_email_body($firstName, $email, $tempPassword, 'An account has been created for you on the Rome Business School Nigeria Alumni Portal.'),
+            'Log In Now',
+            'login'
+        ));
 
         $_SESSION['_registered_alumni'] = ['name' => $name, 'email' => $email, 'password' => $tempPassword];
         $this->redirect('admin/register-alumni/success');
@@ -128,11 +137,5 @@ class AlumniRegistrationController extends Controller
             'activeNav' => 'register_alumni',
             'result' => $result,
         ], 'admin');
-    }
-
-    /** Random temporary password shown once to the staff member registering the account, to relay to the alum. */
-    private static function generatePassword(): string
-    {
-        return substr(str_shuffle('ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnpqrstuvwxyz23456789'), 0, 10);
     }
 }
