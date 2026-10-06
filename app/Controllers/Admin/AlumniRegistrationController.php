@@ -6,6 +6,7 @@ use App\Controllers\ErrorController;
 use App\Core\Auth;
 use App\Core\Controller;
 use App\Models\AlumniRoster;
+use App\Models\Program;
 use App\Models\User;
 
 /**
@@ -32,6 +33,9 @@ class AlumniRegistrationController extends Controller
         $this->view('admin.alumni_registration.create', [
             'title' => 'Register Alumni',
             'activeNav' => 'register_alumni',
+            'cohorts' => AlumniRoster::distinctCohorts(),
+            'programs' => Program::all('name ASC'),
+            'years' => range((int) date('Y'), 1990),
         ], 'admin');
     }
 
@@ -39,16 +43,23 @@ class AlumniRegistrationController extends Controller
     {
         $this->requireCsrf();
 
-        $name = trim((string) $this->input('name', ''));
+        $firstName = trim((string) $this->input('first_name', ''));
+        $otherNames = trim((string) $this->input('other_names', ''));
         $email = trim((string) $this->input('email', ''));
         $graduationYear = trim((string) $this->input('graduation_year', ''));
         $program = trim((string) $this->input('program', ''));
         $matricNumber = trim((string) $this->input('matric_number', ''));
         $cohort = trim((string) $this->input('cohort', ''));
 
+        if ($program !== '' && !in_array($program, array_column(Program::all(), 'name'), true)) {
+            $program = '';
+        }
+
+        $name = trim($firstName . ' ' . $otherNames);
+
         $errors = [];
-        if ($name === '') {
-            $errors[] = 'Full name is required.';
+        if ($firstName === '') {
+            $errors[] = 'First name is required.';
         }
         if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
             $errors[] = 'A valid email address is required.';
@@ -78,7 +89,7 @@ class AlumniRegistrationController extends Controller
 
         if ($errors) {
             $_SESSION['_errors'] = $errors;
-            $this->old(['name' => $name, 'email' => $email, 'graduation_year' => $graduationYear, 'program' => $program, 'matric_number' => $matricNumber, 'cohort' => $cohort]);
+            $this->old(['first_name' => $firstName, 'other_names' => $otherNames, 'email' => $email, 'graduation_year' => $graduationYear, 'program' => $program, 'matric_number' => $matricNumber, 'cohort' => $cohort]);
             $this->redirect('admin/register-alumni');
         }
 
@@ -87,6 +98,8 @@ class AlumniRegistrationController extends Controller
         $id = User::create([
             'role' => 'alumni',
             'name' => $name,
+            'first_name' => $firstName,
+            'other_names' => $otherNames !== '' ? $otherNames : null,
             'email' => $email,
             'password_hash' => password_hash($tempPassword, PASSWORD_DEFAULT),
             'graduation_year' => $graduationYear !== '' ? (int) $graduationYear : null,
