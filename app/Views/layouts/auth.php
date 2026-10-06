@@ -21,7 +21,7 @@ $authFontQuery = implode('&', array_map(fn ($f) => 'family=' . str_replace(' ', 
 <body class="font-sans bg-primary-navy min-h-screen flex items-center justify-center p-4">
   <div class="w-full max-w-md">
     <a href="<?= e(url('/')) ?>" class="flex flex-col items-center gap-1 mb-6">
-      <img src="<?= e($authSettings['site_logo'] ?? upload_url('branding/rbs-logo.png')) ?>" alt="<?= e($authSettings['site_name'] ?? 'Rome Business School Nigeria') ?> Logo" width="56" height="40">
+      <img src="<?= e($authSettings['site_logo'] ?? asset('uploads/branding/rbs-logo.png')) ?>" alt="<?= e($authSettings['site_name'] ?? 'Rome Business School Nigeria') ?> Logo" width="56" height="40">
       <span class="text-white font-extrabold text-xs tracking-wide text-center">ROME BUSINESS SCHOOL NIGERIA</span>
     </a>
     <div class="card p-8">

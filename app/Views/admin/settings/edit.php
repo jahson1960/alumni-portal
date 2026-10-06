@@ -16,7 +16,7 @@
       </div>
       <div>
         <label class="form-label">Site Logo</label>
-        <img src="<?= e($settings['site_logo'] ?? upload_url('branding/rbs-logo.png')) ?>" alt="" class="w-9 h-9 object-contain rounded border border-slate-200 mb-2 bg-white p-1">
+        <img src="<?= e($settings['site_logo'] ?? asset('uploads/branding/rbs-logo.png')) ?>" alt="" class="w-9 h-9 object-contain rounded border border-slate-200 mb-2 bg-white p-1">
         <input type="file" name="site_logo" accept=".png,.jpg,.jpeg,.webp" class="text-sm block">
         <p class="text-xs text-slate-400 mt-1">Shown next to the site name in the header, on both desktop and mobile. Square image works best.</p>
       </div>
