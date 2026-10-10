@@ -76,13 +76,13 @@ $industryOptions = \App\Models\User::distinctFilterValues('industry');
           <div class="mb-5">
             <label class="form-label">Profile Photo</label>
             <div class="flex items-center gap-4">
-              <div class="relative flex-shrink-0">
+              <div class="relative flex-shrink-0" id="avatar_preview">
                 <?= avatar_html($user, 'w-20 h-20') ?>
               </div>
               <label for="avatar" class="flex-1 border-2 border-dashed border-slate-200 rounded-lg py-5 text-center cursor-pointer hover:border-[var(--menu-accent-600)] transition-colors block">
                 <i class="fa-solid fa-cloud-arrow-up text-[var(--menu-accent-600)] text-lg block mb-1"></i>
-                <span class="text-sm font-semibold text-primary-navy">Upload New Photo</span>
-                <span class="block text-xs text-slate-400 mt-0.5">JPG, PNG or WEBP. Max 2MB</span>
+                <span class="text-sm font-semibold text-primary-navy" id="avatar_upload_label">Upload New Photo</span>
+                <span class="block text-xs text-slate-400 mt-0.5" id="avatar_upload_hint">JPG, PNG or WEBP. Max 2MB</span>
                 <input type="file" id="avatar" name="avatar" accept=".jpg,.jpeg,.png,.webp" class="hidden">
               </label>
             </div>
@@ -530,6 +530,20 @@ $industryOptions = \App\Models\User::distinctFilterValues('industry');
         window.scrollTo({ top: 0, behavior: 'smooth' });
       });
     });
+
+    var avatarInput = document.getElementById('avatar');
+    var avatarPreview = document.getElementById('avatar_preview');
+    var avatarLabel = document.getElementById('avatar_upload_label');
+    var avatarHint = document.getElementById('avatar_upload_hint');
+    if (avatarInput && avatarPreview) {
+      avatarInput.addEventListener('change', function () {
+        var file = avatarInput.files && avatarInput.files[0];
+        if (!file) return;
+        avatarPreview.innerHTML = '<img src="' + URL.createObjectURL(file) + '" alt="" class="w-20 h-20 rounded-full object-cover">';
+        if (avatarLabel) avatarLabel.textContent = 'Change Photo';
+        if (avatarHint) avatarHint.textContent = file.name + ' — click Save Changes to upload';
+      });
+    }
 
     var initialTab = (location.hash || '').replace('#', '');
     if (initialTab) {
