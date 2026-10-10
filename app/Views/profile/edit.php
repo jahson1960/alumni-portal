@@ -191,29 +191,105 @@ $industryOptions = \App\Models\User::distinctFilterValues('industry');
         </div>
 
         <div class="profile-tab-panel hidden card p-6" data-tab="contact">
-          <h3 class="text-base font-bold text-primary-navy mb-1">Contact &amp; Location</h3>
-          <p class="text-xs text-slate-500 mb-5">How and where alumni can reach you</p>
-          <div class="mb-4">
-            <label class="form-label" for="phone">Phone</label>
-            <input type="text" id="phone" name="phone" class="form-input" value="<?= e($user['phone']) ?>">
+          <div class="flex items-start gap-3 mb-6">
+            <div class="w-11 h-11 rounded-full bg-[var(--menu-accent-100)] text-[var(--menu-accent-600)] flex items-center justify-center flex-shrink-0">
+              <i class="fa-solid fa-location-dot"></i>
+            </div>
+            <div>
+              <h3 class="text-base font-bold text-primary-navy">Contact &amp; Location</h3>
+              <p class="text-xs text-slate-500">Let alumni and fellow professionals know how and where to reach you.</p>
+            </div>
           </div>
-          <div class="grid grid-cols-3 gap-4">
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6">
+            <!-- Contact Details -->
             <div>
-              <label class="form-label" for="city">City</label>
-              <input type="text" id="city" name="city" class="form-input" value="<?= e($user['city']) ?>">
+              <h4 class="text-xs font-extrabold text-primary-navy uppercase tracking-wide mb-4 flex items-center gap-1.5"><i class="fa-regular fa-address-card text-[var(--menu-accent-600)]"></i> Contact Details</h4>
+
+              <div class="mb-4">
+                <label class="form-label" for="phone">Phone Number <span class="text-red-500">*</span></label>
+                <div class="relative">
+                  <i class="fa-solid fa-phone absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-sm"></i>
+                  <input type="tel" id="phone" name="phone" class="form-input !pl-9" placeholder="+234 801 234 5678" value="<?= e($user['phone']) ?>" required>
+                </div>
+                <p class="text-xs text-slate-400 mt-1">Include country code (e.g. +234).</p>
+              </div>
+
+              <div class="mb-4">
+                <label class="form-label" for="email_display">Email Address <span class="text-red-500">*</span></label>
+                <div class="relative">
+                  <i class="fa-solid fa-envelope absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-sm"></i>
+                  <input type="email" id="email_display" class="form-input !pl-9 bg-slate-50 text-slate-500 cursor-not-allowed" value="<?= e($user['email']) ?>" disabled>
+                </div>
+                <p class="text-xs text-slate-400 mt-1">This will be visible to other alumni (if you allow).</p>
+              </div>
+
+              <div class="mb-5">
+                <label class="form-label" for="whatsapp">WhatsApp <span class="text-slate-400 font-normal normal-case">(Optional)</span></label>
+                <div class="relative">
+                  <i class="fa-brands fa-whatsapp absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-sm"></i>
+                  <input type="tel" id="whatsapp" name="whatsapp" class="form-input !pl-9" placeholder="+234 801 234 5678" value="<?= e($user['whatsapp'] ?? '') ?>">
+                </div>
+                <p class="text-xs text-slate-400 mt-1">For easier and faster communication.</p>
+              </div>
+
+              <div class="flex items-start gap-3 pt-4 border-t border-slate-100">
+                <label class="relative inline-flex items-center cursor-pointer flex-shrink-0 mt-0.5">
+                  <input type="checkbox" name="show_contact_details" value="1" class="sr-only peer" <?= (!empty($user['show_email']) && !empty($user['show_phone'])) ? 'checked' : '' ?>>
+                  <div class="w-10 h-6 bg-slate-200 rounded-full peer peer-checked:bg-[var(--menu-accent-600)] transition-colors after:content-[''] after:absolute after:top-0.5 after:left-0.5 after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:after:translate-x-4"></div>
+                </label>
+                <div>
+                  <p class="text-sm font-semibold text-slate-700">Show my contact details to other alumni</p>
+                  <p class="text-xs text-slate-400">You can change this anytime in your privacy settings.</p>
+                </div>
+              </div>
             </div>
+
+            <!-- Location -->
             <div>
-              <label class="form-label" for="state">State</label>
-              <input type="text" id="state" name="state" class="form-input" value="<?= e($user['state'] ?? '') ?>">
-            </div>
-            <div>
-              <label class="form-label" for="country">Country</label>
-              <?php $selectedCountry = $user['country'] ?: 'Nigeria'; ?>
-              <select id="country" name="country" class="form-input">
-                <?php foreach (all_countries() as $countryName): ?>
-                  <option value="<?= e($countryName) ?>" <?= $selectedCountry === $countryName ? 'selected' : '' ?>><?= e($countryName) ?></option>
-                <?php endforeach; ?>
-              </select>
+              <h4 class="text-xs font-extrabold text-primary-navy uppercase tracking-wide mb-4 flex items-center gap-1.5"><i class="fa-solid fa-map-pin text-[var(--menu-accent-600)]"></i> Location</h4>
+
+              <div class="mb-4">
+                <label class="form-label" for="city">City <span class="text-red-500">*</span></label>
+                <div class="relative">
+                  <i class="fa-solid fa-city absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-sm"></i>
+                  <input type="text" id="city" name="city" class="form-input !pl-9" value="<?= e($user['city']) ?>" required>
+                </div>
+              </div>
+
+              <div class="mb-4">
+                <label class="form-label" for="state">State <span class="text-red-500">*</span></label>
+                <div class="relative">
+                  <i class="fa-solid fa-map absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-sm"></i>
+                  <input type="text" id="state" name="state" class="form-input !pl-9" value="<?= e($user['state'] ?? '') ?>" required>
+                </div>
+              </div>
+
+              <div class="mb-5">
+                <label class="form-label" for="country">Country <span class="text-red-500">*</span></label>
+                <?php $selectedCountry = $user['country'] ?: 'Nigeria'; ?>
+                <div class="relative">
+                  <i class="fa-solid fa-earth-africa absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-sm z-10"></i>
+                  <select id="country" name="country" class="form-input !pl-9" required>
+                    <?php foreach (all_countries() as $countryName): ?>
+                      <option value="<?= e($countryName) ?>" <?= $selectedCountry === $countryName ? 'selected' : '' ?>><?= e($countryName) ?></option>
+                    <?php endforeach; ?>
+                  </select>
+                </div>
+              </div>
+
+              <div class="rounded-lg border border-slate-200 bg-slate-50/60 p-4">
+                <p class="text-xs font-bold text-primary-navy flex items-center gap-1.5 mb-1"><i class="fa-solid fa-map-location-dot text-[var(--menu-accent-600)]"></i> Add on Map <span class="text-slate-400 font-normal normal-case">(Optional)</span></p>
+                <p class="text-xs text-slate-400 mb-3">Help others find you. You can drag the pin to your exact location.</p>
+                <div class="relative mb-3">
+                  <i class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-sm z-10"></i>
+                  <input type="text" id="map_search" class="form-input !pl-9" placeholder="Search for a location..." value="<?= e($user['map_address'] ?? '') ?>" autocomplete="off">
+                </div>
+                <div id="profile_map" class="rounded-lg overflow-hidden border border-slate-200" style="height: 220px;"></div>
+                <input type="hidden" id="latitude" name="latitude" value="<?= e((string) ($user['latitude'] ?? '')) ?>">
+                <input type="hidden" id="longitude" name="longitude" value="<?= e((string) ($user['longitude'] ?? '')) ?>">
+                <input type="hidden" id="map_address" name="map_address" value="<?= e($user['map_address'] ?? '') ?>">
+              </div>
             </div>
           </div>
         </div>
@@ -260,16 +336,7 @@ $industryOptions = \App\Models\User::distinctFilterValues('industry');
             </select>
           </div>
 
-          <div class="space-y-2 mb-6">
-            <label class="flex items-center gap-2 text-sm text-slate-700">
-              <input type="checkbox" name="show_email" value="1" <?= !empty($user['show_email']) ? 'checked' : '' ?> class="rounded border-slate-300 text-gold focus:ring-gold">
-              Show my email address on my public profile
-            </label>
-            <label class="flex items-center gap-2 text-sm text-slate-700">
-              <input type="checkbox" name="show_phone" value="1" <?= !empty($user['show_phone']) ? 'checked' : '' ?> class="rounded border-slate-300 text-gold focus:ring-gold">
-              Show my phone number on my public profile
-            </label>
-          </div>
+          <p class="text-xs text-slate-500 mb-6">Whether your email and phone number are visible to other alumni is controlled by the "Show my contact details" switch on the <a href="#contact" class="jump-tab text-gold hover:underline" data-tab="contact">Contact &amp; Location</a> tab.</p>
 
           <h4 class="text-xs font-extrabold text-primary-navy uppercase tracking-wide mb-3 border-t border-slate-100 pt-4">Mentorship</h4>
           <label class="flex items-center gap-2 text-sm text-slate-700 mb-3">
@@ -512,6 +579,7 @@ $industryOptions = \App\Models\User::distinctFilterValues('industry');
   (function () {
     var panels = document.querySelectorAll('.profile-tab-panel');
     var navLinks = document.querySelectorAll('.profile-tab-link');
+    var profileMap = null;
 
     function activate(tab) {
       panels.forEach(function (p) {
@@ -522,6 +590,10 @@ $industryOptions = \App\Models\User::distinctFilterValues('industry');
         b.classList.toggle('!bg-[var(--menu-accent-50)]', b.dataset.tab === tab);
         b.classList.toggle('!text-[var(--menu-accent-600)]', b.dataset.tab === tab);
       });
+      // Leaflet can't size a map hidden behind display:none — fix it up once the tab is shown.
+      if (tab === 'contact' && profileMap) {
+        setTimeout(function () { profileMap.invalidateSize(); }, 0);
+      }
     }
 
     navLinks.forEach(function (btn) {
@@ -552,6 +624,69 @@ $industryOptions = \App\Models\User::distinctFilterValues('industry');
         if (avatarLabel) avatarLabel.textContent = 'Change Photo';
         if (avatarHint) avatarHint.textContent = file.name + ' — click Save Changes to upload';
       });
+    }
+
+    var mapEl = document.getElementById('profile_map');
+    if (mapEl && window.L) {
+      var latInput = document.getElementById('latitude');
+      var lngInput = document.getElementById('longitude');
+      var mapAddressInput = document.getElementById('map_address');
+      var mapSearchInput = document.getElementById('map_search');
+
+      var initialLat = parseFloat(latInput.value);
+      var initialLng = parseFloat(lngInput.value);
+      var hasInitial = !isNaN(initialLat) && !isNaN(initialLng);
+      var startLatLng = hasInitial ? [initialLat, initialLng] : [9.0820, 8.6753];
+
+      profileMap = L.map(mapEl).setView(startLatLng, hasInitial ? 13 : 6);
+      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; OpenStreetMap contributors',
+        maxZoom: 19
+      }).addTo(profileMap);
+
+      var marker = L.marker(startLatLng, { draggable: true }).addTo(profileMap);
+
+      function reverseGeocode(lat, lng) {
+        fetch('https://nominatim.openstreetmap.org/reverse?format=json&lat=' + lat + '&lon=' + lng)
+          .then(function (r) { return r.json(); })
+          .then(function (data) {
+            var label = data && data.display_name ? data.display_name : (lat.toFixed(5) + ', ' + lng.toFixed(5));
+            mapSearchInput.value = label;
+            mapAddressInput.value = label;
+          })
+          .catch(function () {});
+      }
+
+      marker.on('dragend', function () {
+        var pos = marker.getLatLng();
+        latInput.value = pos.lat;
+        lngInput.value = pos.lng;
+        reverseGeocode(pos.lat, pos.lng);
+      });
+
+      if (mapSearchInput) {
+        mapSearchInput.addEventListener('keydown', function (e) {
+          if (e.key !== 'Enter') return;
+          e.preventDefault();
+          var query = mapSearchInput.value.trim();
+          if (!query) return;
+          fetch('https://nominatim.openstreetmap.org/search?format=json&limit=1&q=' + encodeURIComponent(query))
+            .then(function (r) { return r.json(); })
+            .then(function (results) {
+              if (!results || !results.length) return;
+              var result = results[0];
+              var lat = parseFloat(result.lat);
+              var lng = parseFloat(result.lon);
+              latInput.value = lat;
+              lngInput.value = lng;
+              mapAddressInput.value = result.display_name;
+              mapSearchInput.value = result.display_name;
+              marker.setLatLng([lat, lng]);
+              profileMap.setView([lat, lng], 13);
+            })
+            .catch(function () {});
+        });
+      }
     }
 
     var initialTab = (location.hash || '').replace('#', '');

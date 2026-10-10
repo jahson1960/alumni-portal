@@ -33,6 +33,7 @@ class ProfileController extends Controller
             'education' => UserEducation::forUser($userId),
             'experience' => UserExperience::forUser($userId),
             'needsRichEditor' => true,
+            'needsMap' => true,
             'allMentorshipAreas' => MentorshipArea::all('name ASC'),
         ]);
     }
@@ -63,11 +64,16 @@ class ProfileController extends Controller
         $personalWebsite = trim((string) $this->input('personal_website', ''));
         $twitter = trim((string) $this->input('twitter_url', ''));
         $phone = trim((string) $this->input('phone', ''));
+        $whatsapp = trim((string) $this->input('whatsapp', ''));
         $resumeUrl = trim((string) $this->input('resume_url', ''));
+        $latitude = trim((string) $this->input('latitude', ''));
+        $longitude = trim((string) $this->input('longitude', ''));
+        $mapAddress = trim((string) $this->input('map_address', ''));
         $visibility = in_array($this->input('profile_visibility'), self::VISIBILITY_OPTIONS, true)
             ? $this->input('profile_visibility') : 'public';
-        $showEmail = $this->input('show_email') ? 1 : 0;
-        $showPhone = $this->input('show_phone') ? 1 : 0;
+        // One combined "show my contact details" switch on the Contact tab drives both
+        // show_email and show_phone together — there's no separate per-field control anymore.
+        $showContactDetails = $this->input('show_contact_details') ? 1 : 0;
         $isMentor = $this->input('is_mentor') ? 1 : 0;
         $submittedAreas = array_map('trim', (array) $this->input('mentorship_areas', []));
         $validAreaNames = array_column(MentorshipArea::all('name ASC'), 'name');
@@ -127,11 +133,15 @@ class ProfileController extends Controller
             'personal_website' => $personalWebsite !== '' ? $personalWebsite : null,
             'twitter_url' => $twitter !== '' ? $twitter : null,
             'phone' => $phone !== '' ? $phone : null,
+            'whatsapp' => $whatsapp !== '' ? $whatsapp : null,
             'resume_url' => $resumeUrl !== '' ? $resumeUrl : null,
             'resume_file' => $resumeFilePath,
+            'latitude' => $latitude !== '' ? $latitude : null,
+            'longitude' => $longitude !== '' ? $longitude : null,
+            'map_address' => $mapAddress !== '' ? $mapAddress : null,
             'profile_visibility' => $visibility,
-            'show_email' => $showEmail,
-            'show_phone' => $showPhone,
+            'show_email' => $showContactDetails,
+            'show_phone' => $showContactDetails,
             'is_mentor' => $isMentor,
             'mentorship_areas' => $mentorshipAreas !== '' ? $mentorshipAreas : null,
             'avatar' => $avatarPath,

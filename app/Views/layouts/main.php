@@ -77,6 +77,10 @@ if ($authUser && $authUser['program']) {
     <script src="https://cdn.jsdelivr.net/npm/quill@1.3.7/dist/quill.min.js"></script>
     <script>window.EDITOR_UPLOAD_URL = <?= json_encode(url('editor-upload')) ?>;</script>
   <?php endif; ?>
+  <?php if (!empty($needsMap)): ?>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+  <?php endif; ?>
 </head>
 <body class="pb-16 lg:pb-0 flex flex-col min-h-screen">
 
