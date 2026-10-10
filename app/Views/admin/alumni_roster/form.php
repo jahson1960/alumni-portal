@@ -12,8 +12,9 @@
   </div>
 
   <div>
-    <label class="form-label" for="full_name">Full Name (optional, for your reference)</label>
-    <input type="text" id="full_name" name="full_name" class="form-input" value="<?= e($row['full_name'] ?? '') ?>">
+    <label class="form-label" for="full_name">Full Name</label>
+    <input type="text" id="full_name" name="full_name" class="form-input" value="<?= e($row['full_name'] ?? '') ?>" required>
+    <p class="text-xs text-slate-400 mt-1">Used as-is to create the alumnus's account — they won't be asked to enter it again at sign-up.</p>
   </div>
 
   <div class="grid grid-cols-2 gap-4">
@@ -25,6 +26,16 @@
       <label class="form-label" for="cohort">Cohort</label>
       <input type="text" id="cohort" name="cohort" class="form-input" placeholder="e.g. MBA 2019" value="<?= e($row['cohort'] ?? '') ?>" required>
     </div>
+  </div>
+
+  <div>
+    <label class="form-label" for="program">Program</label>
+    <select id="program" name="program" class="form-input">
+      <option value="">Select program</option>
+      <?php foreach ($programs as $p): ?>
+        <option value="<?= e($p['name']) ?>" <?= ($row['program'] ?? '') === $p['name'] ? 'selected' : '' ?>><?= e($p['name']) ?></option>
+      <?php endforeach; ?>
+    </select>
   </div>
 
   <?php if ($isEdit && $row['claimed_by_user_id']): ?>

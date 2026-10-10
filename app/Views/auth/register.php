@@ -6,19 +6,15 @@
 <form method="POST" action="<?= e(url('register')) ?>" class="space-y-4">
   <?= csrf_field() ?>
   <div>
-    <label class="form-label" for="name">Full Name</label>
-    <input type="text" id="name" name="name" class="form-input" value="<?= old('name') ?>" required>
-  </div>
-  <div>
     <label class="form-label" for="email">Email Address</label>
     <input type="email" id="email" name="email" class="form-input" value="<?= old('email') ?>" required>
   </div>
   <div>
     <label class="form-label" for="matric_number">Matric Number</label>
     <input type="text" id="matric_number" name="matric_number" class="form-input" value="<?= old('matric_number') ?>" required>
-    <p class="text-xs text-slate-400 mt-1">Must match the matric number, graduation year and cohort on file with the school.</p>
+    <p class="text-xs text-slate-400 mt-1">Your name, program, cohort and graduation year will be pulled from the alumni roster on file with the school.</p>
+    <?php require dirname(__DIR__) . '/partials/roster_lookup_preview.php'; ?>
   </div>
-  <?php require dirname(__DIR__) . '/partials/cohort_program_year_fields.php'; ?>
   <div>
     <label class="form-label" for="password">Password</label>
     <div class="relative">

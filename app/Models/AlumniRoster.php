@@ -34,12 +34,4 @@ class AlumniRoster extends Model
     {
         static::updateRow('alumni_roster', $id, ['claimed_by_user_id' => $userId]);
     }
-
-    /** Distinct cohort names already on the roster, for the registration form's dropdown. */
-    public static function distinctCohorts(): array
-    {
-        return static::db()->query(
-            'SELECT DISTINCT cohort FROM alumni_roster ORDER BY cohort ASC'
-        )->fetchAll(\PDO::FETCH_COLUMN);
-    }
 }

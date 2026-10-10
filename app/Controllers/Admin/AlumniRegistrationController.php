@@ -7,7 +7,6 @@ use App\Core\Auth;
 use App\Core\Controller;
 use App\Models\AlumniRoster;
 use App\Models\EmailQueue;
-use App\Models\Program;
 use App\Models\User;
 
 /**
@@ -34,9 +33,6 @@ class AlumniRegistrationController extends Controller
         $this->view('admin.alumni_registration.create', [
             'title' => 'Register Alumni',
             'activeNav' => 'register_alumni',
-            'cohorts' => AlumniRoster::distinctCohorts(),
-            'programs' => Program::all('name ASC'),
-            'years' => range((int) date('Y'), 1990),
         ], 'admin');
     }
 
@@ -44,24 +40,10 @@ class AlumniRegistrationController extends Controller
     {
         $this->requireCsrf();
 
-        $firstName = trim((string) $this->input('first_name', ''));
-        $otherNames = trim((string) $this->input('other_names', ''));
         $email = trim((string) $this->input('email', ''));
-        $graduationYear = trim((string) $this->input('graduation_year', ''));
-        $program = trim((string) $this->input('program', ''));
         $matricNumber = trim((string) $this->input('matric_number', ''));
-        $cohort = trim((string) $this->input('cohort', ''));
-
-        if ($program !== '' && !in_array($program, array_column(Program::all(), 'name'), true)) {
-            $program = '';
-        }
-
-        $name = trim($firstName . ' ' . $otherNames);
 
         $errors = [];
-        if ($firstName === '') {
-            $errors[] = 'First name is required.';
-        }
         if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
             $errors[] = 'A valid email address is required.';
         } elseif (User::emailExists($email)) {
@@ -71,29 +53,23 @@ class AlumniRegistrationController extends Controller
         $rosterEntry = null;
         if ($matricNumber === '') {
             $errors[] = 'Matric number is required.';
-        } elseif ($graduationYear === '') {
-            $errors[] = 'Graduation year is required.';
-        } elseif ($cohort === '') {
-            $errors[] = 'Cohort is required.';
         } else {
             $rosterEntry = AlumniRoster::findByMatric($matricNumber);
             if (!$rosterEntry) {
                 $errors[] = 'No alumni roster record was found for that matric number.';
             } elseif ($rosterEntry['claimed_by_user_id']) {
                 $errors[] = 'An account has already been created for this matric number.';
-            } elseif ((int) $rosterEntry['graduation_year'] !== (int) $graduationYear) {
-                $errors[] = 'The graduation year does not match our roster records for this matric number.';
-            } elseif (mb_strtolower($rosterEntry['cohort']) !== mb_strtolower($cohort)) {
-                $errors[] = 'The cohort does not match our roster records for this matric number.';
             }
         }
 
         if ($errors) {
             $_SESSION['_errors'] = $errors;
-            $this->old(['first_name' => $firstName, 'other_names' => $otherNames, 'email' => $email, 'graduation_year' => $graduationYear, 'program' => $program, 'matric_number' => $matricNumber, 'cohort' => $cohort]);
+            $this->old(['email' => $email, 'matric_number' => $matricNumber]);
             $this->redirect('admin/register-alumni');
         }
 
+        $name = trim((string) $rosterEntry['full_name']);
+        [$firstName, $otherNames] = split_full_name($name);
         $tempPassword = generate_temp_password();
 
         $id = User::create([
@@ -104,10 +80,10 @@ class AlumniRegistrationController extends Controller
             'email' => $email,
             'password_hash' => password_hash($tempPassword, PASSWORD_DEFAULT),
             'must_change_password' => 1,
-            'graduation_year' => $graduationYear !== '' ? (int) $graduationYear : null,
-            'program' => $program !== '' ? $program : null,
+            'graduation_year' => $rosterEntry['graduation_year'],
+            'program' => $rosterEntry['program'],
             'matric_number' => $matricNumber,
-            'cohort' => $cohort,
+            'cohort' => $rosterEntry['cohort'],
             'status' => 'active',
         ]);
 

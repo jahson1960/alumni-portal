@@ -64,9 +64,10 @@ CREATE TABLE users (
 ) ENGINE=InnoDB;
 
 -- ---------------------------------------------------------------------
--- alumni_roster  (admin-entered pre-approved records — a matric number,
--- graduation year and cohort must match one of these rows before
--- registration is allowed, and each row can only be claimed once)
+-- alumni_roster  (admin-entered pre-approved records — an alumnus can only
+-- register by matching an existing matric number here, and registration
+-- pulls their name/program/cohort/graduation year straight from this row
+-- rather than asking for them again; each row can only be claimed once)
 -- ---------------------------------------------------------------------
 CREATE TABLE alumni_roster (
   id INT AUTO_INCREMENT PRIMARY KEY,
@@ -74,6 +75,7 @@ CREATE TABLE alumni_roster (
   full_name VARCHAR(150) NULL,
   graduation_year INT NOT NULL,
   cohort VARCHAR(150) NOT NULL,
+  program VARCHAR(150) NULL,
   claimed_by_user_id INT NULL,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,

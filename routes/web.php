@@ -9,6 +9,7 @@ $router->get('/', 'HomeController@index');
 // Alumni auth
 $router->get('/register', 'AuthController@showRegister');
 $router->post('/register', 'AuthController@register');
+$router->get('/roster-lookup', 'RosterLookupController@lookup');
 $router->get('/login', 'AuthController@showLogin');
 $router->post('/login', 'AuthController@login');
 $router->post('/logout', 'AuthController@logout');

@@ -718,6 +718,13 @@ function generate_temp_password(): string
     return substr(str_shuffle('ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnpqrstuvwxyz23456789'), 0, 10);
 }
 
+/** Splits a roster entry's single full-name field into first_name/other_names for User::create(). */
+function split_full_name(string $fullName): array
+{
+    $parts = preg_split('/\s+/', trim($fullName), 2);
+    return [$parts[0] ?? '', $parts[1] ?? ''];
+}
+
 /** Shared body for both the new-account and admin-password-reset emails — only the intro differs. */
 function credential_email_body(string $firstName, string $email, string $tempPassword, string $introHtml): string
 {

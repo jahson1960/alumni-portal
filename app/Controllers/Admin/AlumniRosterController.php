@@ -3,6 +3,7 @@
 namespace App\Controllers\Admin;
 
 use App\Models\AlumniRoster;
+use App\Models\Program;
 
 class AlumniRosterController extends AdminController
 {
@@ -21,6 +22,7 @@ class AlumniRosterController extends AdminController
             'title' => 'New Roster Entry',
             'activeNav' => 'alumni_roster',
             'row' => null,
+            'programs' => Program::all('name ASC'),
         ]);
     }
 
@@ -41,6 +43,7 @@ class AlumniRosterController extends AdminController
             'title' => 'Edit Roster Entry',
             'activeNav' => 'alumni_roster',
             'row' => $row,
+            'programs' => Program::all('name ASC'),
         ]);
     }
 
@@ -65,10 +68,18 @@ class AlumniRosterController extends AdminController
         $fullName = trim((string) $this->input('full_name', ''));
         $graduationYear = trim((string) $this->input('graduation_year', ''));
         $cohort = trim((string) $this->input('cohort', ''));
+        $program = trim((string) $this->input('program', ''));
+
+        if ($program !== '' && !in_array($program, array_column(Program::all(), 'name'), true)) {
+            $program = '';
+        }
 
         $errors = [];
         if ($matricNumber === '') {
             $errors[] = 'A matric number is required.';
+        }
+        if ($fullName === '') {
+            $errors[] = 'Full name is required — it is used as-is to create the alumnus\'s account.';
         }
         if ($graduationYear === '' || !ctype_digit($graduationYear)) {
             $errors[] = 'A valid graduation year is required.';
@@ -91,9 +102,10 @@ class AlumniRosterController extends AdminController
 
         $data = [
             'matric_number' => $matricNumber,
-            'full_name' => $fullName !== '' ? $fullName : null,
+            'full_name' => $fullName,
             'graduation_year' => (int) $graduationYear,
             'cohort' => $cohort,
+            'program' => $program !== '' ? $program : null,
         ];
 
         if ($id === null) {
