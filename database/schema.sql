@@ -33,6 +33,7 @@ CREATE TABLE users (
   years_in_role VARCHAR(50) NULL,
   industry VARCHAR(150) NULL,
   city VARCHAR(100) NULL,
+  state VARCHAR(100) NULL,
   country VARCHAR(100) NULL,
   graduation_year YEAR NULL,
   program VARCHAR(150) NULL,

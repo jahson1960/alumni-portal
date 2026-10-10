@@ -197,14 +197,23 @@ $industryOptions = \App\Models\User::distinctFilterValues('industry');
             <label class="form-label" for="phone">Phone</label>
             <input type="text" id="phone" name="phone" class="form-input" value="<?= e($user['phone']) ?>">
           </div>
-          <div class="grid grid-cols-2 gap-4">
+          <div class="grid grid-cols-3 gap-4">
             <div>
               <label class="form-label" for="city">City</label>
               <input type="text" id="city" name="city" class="form-input" value="<?= e($user['city']) ?>">
             </div>
             <div>
+              <label class="form-label" for="state">State</label>
+              <input type="text" id="state" name="state" class="form-input" value="<?= e($user['state'] ?? '') ?>">
+            </div>
+            <div>
               <label class="form-label" for="country">Country</label>
-              <input type="text" id="country" name="country" class="form-input" value="<?= e($user['country']) ?>">
+              <?php $selectedCountry = $user['country'] ?: 'Nigeria'; ?>
+              <select id="country" name="country" class="form-input">
+                <?php foreach (all_countries() as $countryName): ?>
+                  <option value="<?= e($countryName) ?>" <?= $selectedCountry === $countryName ? 'selected' : '' ?>><?= e($countryName) ?></option>
+                <?php endforeach; ?>
+              </select>
             </div>
           </div>
         </div>

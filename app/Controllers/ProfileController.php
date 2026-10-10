@@ -50,6 +50,7 @@ class ProfileController extends Controller
         $yearsInRole = trim((string) $this->input('years_in_role', ''));
         $industry = trim((string) $this->input('industry', ''));
         $city = trim((string) $this->input('city', ''));
+        $state = trim((string) $this->input('state', ''));
         $country = trim((string) $this->input('country', ''));
         $graduationYear = trim((string) $this->input('graduation_year', ''));
         $program = trim((string) $this->input('program', ''));
@@ -113,6 +114,7 @@ class ProfileController extends Controller
             'years_in_role' => $yearsInRole !== '' ? $yearsInRole : null,
             'industry' => $industry !== '' ? $industry : null,
             'city' => $city !== '' ? $city : null,
+            'state' => $state !== '' ? $state : null,
             'country' => $country !== '' ? $country : null,
             'graduation_year' => $graduationYear !== '' ? (int) $graduationYear : null,
             'program' => $program !== '' ? $program : null,

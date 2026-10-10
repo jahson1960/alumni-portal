@@ -459,12 +459,18 @@ function job_logo_html(array $job, string $classes = 'w-10 h-10'): string
 
 function location_display(array $user): string
 {
-    $city = trim((string) ($user['city'] ?? ''));
-    $country = trim((string) ($user['country'] ?? ''));
-    if ($city !== '' && $country !== '') {
-        return "{$city}, {$country}";
-    }
-    return $city !== '' ? $city : $country;
+    $parts = array_filter([
+        trim((string) ($user['city'] ?? '')),
+        trim((string) ($user['state'] ?? '')),
+        trim((string) ($user['country'] ?? '')),
+    ], static fn (string $part): bool => $part !== '');
+    return implode(', ', $parts);
+}
+
+/** Alphabetical list of world countries, for the profile "Country" dropdown. */
+function all_countries(): array
+{
+    return require __DIR__ . '/countries.php';
 }
 
 /**
