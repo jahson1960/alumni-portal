@@ -645,6 +645,9 @@ $industryOptions = \App\Models\User::distinctFilterValues('industry');
       }).addTo(profileMap);
 
       var marker = L.marker(startLatLng, { draggable: true }).addTo(profileMap);
+      // Once the pin is placed manually (dragged, or a specific address searched), City/State/Country
+      // edits stop nudging it — otherwise a small spelling fix could silently discard a precise pin.
+      var pinManuallySet = hasInitial;
 
       function reverseGeocode(lat, lng) {
         fetch('https://nominatim.openstreetmap.org/reverse?format=json&lat=' + lat + '&lon=' + lng)
@@ -657,7 +660,28 @@ $industryOptions = \App\Models\User::distinctFilterValues('industry');
           .catch(function () {});
       }
 
+      function geocode(query, zoom) {
+        query = query.trim();
+        if (!query) return;
+        fetch('https://nominatim.openstreetmap.org/search?format=json&limit=1&q=' + encodeURIComponent(query))
+          .then(function (r) { return r.json(); })
+          .then(function (results) {
+            if (!results || !results.length) return;
+            var result = results[0];
+            var lat = parseFloat(result.lat);
+            var lng = parseFloat(result.lon);
+            latInput.value = lat;
+            lngInput.value = lng;
+            mapAddressInput.value = result.display_name;
+            mapSearchInput.value = result.display_name;
+            marker.setLatLng([lat, lng]);
+            profileMap.setView([lat, lng], zoom);
+          })
+          .catch(function () {});
+      }
+
       marker.on('dragend', function () {
+        pinManuallySet = true;
         var pos = marker.getLatLng();
         latInput.value = pos.lat;
         lngInput.value = pos.lng;
@@ -668,25 +692,32 @@ $industryOptions = \App\Models\User::distinctFilterValues('industry');
         mapSearchInput.addEventListener('keydown', function (e) {
           if (e.key !== 'Enter') return;
           e.preventDefault();
-          var query = mapSearchInput.value.trim();
-          if (!query) return;
-          fetch('https://nominatim.openstreetmap.org/search?format=json&limit=1&q=' + encodeURIComponent(query))
-            .then(function (r) { return r.json(); })
-            .then(function (results) {
-              if (!results || !results.length) return;
-              var result = results[0];
-              var lat = parseFloat(result.lat);
-              var lng = parseFloat(result.lon);
-              latInput.value = lat;
-              lngInput.value = lng;
-              mapAddressInput.value = result.display_name;
-              mapSearchInput.value = result.display_name;
-              marker.setLatLng([lat, lng]);
-              profileMap.setView([lat, lng], 13);
-            })
-            .catch(function () {});
+          pinManuallySet = true;
+          geocode(mapSearchInput.value, 13);
         });
       }
+
+      // Keep the map in sync with City/State/Country as the user fills them in, so they don't
+      // have to separately retype their location into the search box — until they've placed
+      // the pin manually (search or drag), after which those fields no longer move it.
+      var cityInput = document.getElementById('city');
+      var stateInput = document.getElementById('state');
+      var countryInput = document.getElementById('country');
+      var locationDebounce = null;
+
+      function scheduleLocationGeocode() {
+        if (pinManuallySet) return;
+        var parts = [cityInput.value, stateInput.value, countryInput.value]
+          .map(function (v) { return v.trim(); })
+          .filter(function (v) { return v !== ''; });
+        if (!parts.length) return;
+        clearTimeout(locationDebounce);
+        locationDebounce = setTimeout(function () { geocode(parts.join(', '), 10); }, 900);
+      }
+
+      if (cityInput) cityInput.addEventListener('input', scheduleLocationGeocode);
+      if (stateInput) stateInput.addEventListener('input', scheduleLocationGeocode);
+      if (countryInput) countryInput.addEventListener('change', scheduleLocationGeocode);
     }
 
     var initialTab = (location.hash || '').replace('#', '');
