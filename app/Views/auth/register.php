@@ -12,7 +12,7 @@
   <div>
     <label class="form-label" for="matric_number">Matric Number</label>
     <input type="text" id="matric_number" name="matric_number" class="form-input" value="<?= old('matric_number') ?>" required>
-    <p class="text-xs text-slate-400 mt-1">Your name, program, cohort and graduation year will be pulled from the alumni roster on file with the school.</p>
+    <p class="text-xs text-slate-400 mt-1">Your matric number must match a record on the Alumni Roster. Your name, program, cohort and graduation year will be pulled from the alumni roster on file with the school.</p>
     <?php require dirname(__DIR__) . '/partials/roster_lookup_preview.php'; ?>
   </div>
   <div>
