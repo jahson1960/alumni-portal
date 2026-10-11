@@ -232,7 +232,7 @@ class DirectoryController extends Controller
             'education' => UserEducation::forUser((int) $id),
             'mutualCount' => $mutualCount,
             'mutualConnections' => $mutualConnections,
-            'upcomingEvents' => $viewerId && !$isOwnerOrAdmin ? Event::upcoming(20) : [],
+            'upcomingEvents' => $viewerId && !$isSelf ? Event::upcoming(20) : [],
         ]);
     }
 

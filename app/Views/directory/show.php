@@ -207,7 +207,7 @@
     <!-- Sidebar -->
     <div class="space-y-4">
       <div class="card p-5">
-        <h3 class="text-sm font-bold text-primary-navy flex items-center gap-2 mb-4"><span class="w-8 h-8 rounded-full bg-sky-600 text-white flex items-center justify-center flex-shrink-0"><i class="fa-regular fa-user"></i></span> Contact Information</h3>
+        <h3 class="text-sm font-bold text-primary-navy flex items-center gap-2 mb-4"><span class="w-8 h-8 rounded-full bg-[var(--menu-accent-100)] text-[var(--menu-accent-600)] flex items-center justify-center flex-shrink-0"><i class="fa-regular fa-user"></i></span> Contact Information</h3>
         <div class="space-y-3.5">
           <?php if (($isOwnerOrAdmin || $profile['show_phone']) && $profile['phone']): ?>
             <div class="flex items-start gap-2.5">
@@ -241,7 +241,7 @@
 
       <?php if ($showActions): ?>
         <div class="card p-5 bg-[var(--menu-accent-50)] border-[var(--menu-accent-100)]">
-          <h3 class="text-sm font-bold text-primary-navy flex items-center gap-2 mb-2"><span class="w-8 h-8 rounded-full bg-[var(--menu-accent-600)] text-white flex items-center justify-center flex-shrink-0"><i class="fa-solid fa-people-group"></i></span> In your network</h3>
+          <h3 class="text-sm font-bold text-primary-navy flex items-center gap-2 mb-2"><span class="w-8 h-8 rounded-full bg-white text-[var(--menu-accent-600)] flex items-center justify-center flex-shrink-0"><i class="fa-solid fa-people-group"></i></span> In your network</h3>
           <p class="text-xs text-slate-500 mb-3">
             <?= $mutualCount > 0 ? 'You are connected with ' . $mutualCount . ' mutual alumn' . ($mutualCount === 1 ? 'us' : 'i') . '.' : "You don't have any mutual connections yet." ?>
           </p>
@@ -251,11 +251,11 @@
         </div>
 
         <div class="card p-5">
-          <h3 class="text-sm font-bold text-primary-navy flex items-center gap-2 mb-3"><span class="w-8 h-8 rounded-full bg-sky-600 text-white flex items-center justify-center flex-shrink-0"><i class="fa-regular fa-id-badge"></i></span> Quick Actions</h3>
+          <h3 class="text-sm font-bold text-primary-navy flex items-center gap-2 mb-3"><span class="w-8 h-8 rounded-full bg-sky-100 text-sky-600 flex items-center justify-center flex-shrink-0"><i class="fa-regular fa-id-badge"></i></span> Quick Actions</h3>
           <div class="divide-y divide-slate-100">
             <?php if ($connectionStatus !== null && $connectionStatus['status'] === 'accepted'): ?>
               <a href="<?= e(url('messages/' . $profile['id'])) ?>" class="flex items-center justify-between py-2.5 text-sm text-slate-700 hover:text-gold">
-                <span><i class="fa-regular fa-envelope w-4 text-center text-sky-500"></i> Send a Message</span>
+                <span><i class="fa-regular fa-envelope w-4 text-center text-slate-400"></i> Send a Message</span>
                 <i class="fa-solid fa-chevron-right text-[0.65rem] text-slate-300"></i>
               </a>
             <?php else: ?>
@@ -266,7 +266,7 @@
 
             <?php if ($upcomingEvents): ?>
               <button type="button" class="quick-action-toggle w-full flex items-center justify-between py-2.5 text-sm text-slate-700 hover:text-gold" data-target="invite-panel">
-                <span><i class="fa-regular fa-calendar w-4 text-center text-sky-500"></i> Invite to Event</span>
+                <span><i class="fa-regular fa-calendar w-4 text-center text-slate-400"></i> Invite to Event</span>
                 <i class="fa-solid fa-chevron-right text-[0.65rem] text-slate-300"></i>
               </button>
               <div id="invite-panel" class="hidden py-3">
