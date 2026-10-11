@@ -94,180 +94,225 @@
   </div>
 
   <!-- Tabs -->
-  <div class="flex flex-nowrap items-center gap-4 sm:gap-6 mb-6 border-b border-slate-200 overflow-x-auto overflow-y-hidden">
-    <button type="button" class="profile-tab-link flex items-center gap-1.5 text-sm font-semibold pb-2.5 border-b-2 -mb-px whitespace-nowrap text-gold border-gold" data-tab="about"><i class="fa-regular fa-clock"></i> About</button>
-    <button type="button" class="profile-tab-link flex items-center gap-1.5 text-sm font-semibold pb-2.5 border-b-2 -mb-px whitespace-nowrap text-slate-500 border-transparent hover:text-primary-navy" data-tab="about"><i class="fa-regular fa-star"></i> Skills</button>
-    <button type="button" class="profile-tab-link flex items-center gap-1.5 text-sm font-semibold pb-2.5 border-b-2 -mb-px whitespace-nowrap text-slate-500 border-transparent hover:text-primary-navy" data-tab="about"><i class="fa-solid fa-briefcase"></i> Experience</button>
-    <button type="button" class="profile-tab-link flex items-center gap-1.5 text-sm font-semibold pb-2.5 border-b-2 -mb-px whitespace-nowrap text-slate-500 border-transparent hover:text-primary-navy" data-tab="about"><i class="fa-regular fa-heart"></i> Interests</button>
-    <button type="button" class="profile-tab-link flex items-center gap-1.5 text-sm font-semibold pb-2.5 border-b-2 -mb-px whitespace-nowrap text-slate-500 border-transparent hover:text-primary-navy" data-tab="about"><i class="fa-regular fa-id-badge"></i> Contact</button>
-    <div class="relative pb-2.5 -mb-px">
-      <button type="button" class="profile-more-btn flex items-center gap-1.5 text-sm font-semibold whitespace-nowrap text-slate-500 hover:text-primary-navy">More <i class="fa-solid fa-chevron-down text-[0.6rem]"></i></button>
-      <div class="profile-more-menu hidden absolute left-0 top-full z-20 pt-1">
-        <div class="bg-white min-w-[160px] shadow-lg rounded-md border border-slate-200 py-2">
-          <button type="button" class="profile-tab-link block w-full text-left px-4 py-2 text-xs text-slate-700 hover:bg-slate-50 hover:text-gold" data-tab="education">Education</button>
+  <div class="card overflow-x-auto mb-6">
+    <div class="flex items-center px-6 gap-8 min-w-max text-sm font-medium">
+      <button type="button" class="profile-tab-link py-4 text-gold border-b-2 border-gold font-semibold flex items-center gap-2" data-tab="about"><i class="fa-regular fa-clock text-xs"></i> About</button>
+      <button type="button" class="profile-tab-link py-4 text-slate-500 hover:text-slate-900 border-b-2 border-transparent transition flex items-center gap-2" data-tab="about"><i class="fa-solid fa-wand-magic-sparkles text-xs"></i> Skills</button>
+      <button type="button" class="profile-tab-link py-4 text-slate-500 hover:text-slate-900 border-b-2 border-transparent transition flex items-center gap-2" data-tab="about"><i class="fa-solid fa-briefcase text-xs"></i> Experience</button>
+      <button type="button" class="profile-tab-link py-4 text-slate-500 hover:text-slate-900 border-b-2 border-transparent transition flex items-center gap-2" data-tab="about"><i class="fa-regular fa-heart text-xs"></i> Interests</button>
+      <button type="button" class="profile-tab-link py-4 text-slate-500 hover:text-slate-900 border-b-2 border-transparent transition flex items-center gap-2" data-tab="about"><i class="fa-regular fa-address-book text-xs"></i> Contact</button>
+      <div class="relative">
+        <button type="button" class="profile-more-btn py-4 text-slate-500 hover:text-slate-900 transition flex items-center gap-2">More <i class="fa-solid fa-chevron-down text-xs ml-1"></i></button>
+        <div class="profile-more-menu hidden absolute left-0 top-full z-20">
+          <div class="bg-white min-w-[160px] shadow-lg rounded-md border border-slate-200 py-2">
+            <button type="button" class="profile-tab-link block w-full text-left px-4 py-2 text-xs text-slate-700 hover:bg-slate-50 hover:text-gold" data-tab="education">Education</button>
+          </div>
         </div>
       </div>
     </div>
   </div>
 
-  <div class="grid grid-cols-1 lg:grid-cols-[1fr_320px] gap-6 items-start">
+  <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 items-start">
     <!-- Main content -->
-    <div class="card p-6 md:p-8">
+    <div class="lg:col-span-2 space-y-6">
       <div class="profile-tab-panel space-y-6" data-tab="about">
-        <div>
-          <h3 class="text-sm font-bold text-primary-navy flex items-center gap-2 mb-2"><span class="w-7 h-7 rounded-full bg-[var(--menu-accent-100)] text-[var(--menu-accent-600)] flex items-center justify-center flex-shrink-0 text-xs"><i class="fa-regular fa-user"></i></span> About</h3>
+        <div class="card p-6">
+          <div class="flex items-center gap-3 mb-3">
+            <div class="w-8 h-8 rounded-full bg-amber-50 text-amber-500 flex items-center justify-center flex-shrink-0"><i class="fa-regular fa-user text-sm"></i></div>
+            <h3 class="text-base font-bold text-slate-900">About</h3>
+          </div>
           <?php if ($profile['bio']): ?>
-            <div class="prose prose-sm max-w-none prose-headings:text-primary-navy prose-a:text-gold text-slate-600"><?= $profile['bio'] ?></div>
+            <div class="prose prose-sm max-w-none prose-headings:text-slate-900 prose-a:text-gold text-slate-600 pl-11"><?= $profile['bio'] ?></div>
           <?php else: ?>
-            <p class="text-xs text-slate-400">No bio added yet.</p>
+            <p class="text-sm text-slate-400 pl-11">No bio added yet.</p>
           <?php endif; ?>
         </div>
 
-        <div class="border-t border-slate-100 pt-6">
-          <h3 class="text-sm font-bold text-primary-navy flex items-center gap-2 mb-2"><span class="w-7 h-7 rounded-full bg-sky-100 text-sky-600 flex items-center justify-center flex-shrink-0 text-xs"><i class="fa-solid fa-tag"></i></span> Skills</h3>
+        <div class="card p-6">
+          <div class="flex items-center gap-3 mb-4">
+            <div class="w-8 h-8 rounded-full bg-blue-50 text-blue-500 flex items-center justify-center flex-shrink-0"><i class="fa-solid fa-tag text-sm"></i></div>
+            <h3 class="text-base font-bold text-slate-900">Skills</h3>
+          </div>
           <?php if ($profile['skills']): ?>
-            <div><?= tag_list_html($profile['skills']) ?></div>
+            <div class="flex flex-wrap gap-2 pl-11">
+              <?php foreach (array_filter(array_map('trim', explode(',', $profile['skills']))) as $skill): ?>
+                <span class="bg-sky-50 text-blue-600 text-xs font-medium px-3.5 py-1.5 rounded-full border border-sky-100"><?= e($skill) ?></span>
+              <?php endforeach; ?>
+            </div>
           <?php else: ?>
-            <p class="text-xs text-slate-400">No skills listed yet.</p>
+            <p class="text-sm text-slate-400 pl-11">No skills listed yet.</p>
           <?php endif; ?>
         </div>
 
-        <div class="border-t border-slate-100 pt-6">
-          <h3 class="text-sm font-bold text-primary-navy flex items-center gap-2 mb-2"><span class="w-7 h-7 rounded-full bg-green-100 text-green-600 flex items-center justify-center flex-shrink-0 text-xs"><i class="fa-solid fa-bullseye"></i></span> Areas of Expertise</h3>
+        <div class="card p-6">
+          <div class="flex items-center gap-3 mb-4">
+            <div class="w-8 h-8 rounded-full bg-emerald-50 text-emerald-500 flex items-center justify-center flex-shrink-0"><i class="fa-solid fa-bullseye text-sm"></i></div>
+            <h3 class="text-base font-bold text-slate-900">Areas of Expertise</h3>
+          </div>
           <?php if ($profile['expertise_areas']): ?>
-            <div><?= tag_list_html($profile['expertise_areas'], 'badge-gold') ?></div>
+            <div class="flex flex-wrap gap-2 pl-11">
+              <?php foreach (array_filter(array_map('trim', explode(',', $profile['expertise_areas']))) as $area): ?>
+                <span class="bg-amber-50 text-amber-800 text-xs font-medium px-3.5 py-1.5 rounded-full border border-amber-200/50"><?= e($area) ?></span>
+              <?php endforeach; ?>
+            </div>
           <?php else: ?>
-            <p class="text-xs text-slate-400">No areas of expertise listed yet.</p>
+            <p class="text-sm text-slate-400 pl-11">No areas of expertise listed yet.</p>
           <?php endif; ?>
         </div>
 
-        <div class="border-t border-slate-100 pt-6">
-          <h3 class="text-sm font-bold text-primary-navy flex items-center gap-2 mb-2"><span class="w-7 h-7 rounded-full bg-purple-100 text-purple-600 flex items-center justify-center flex-shrink-0 text-xs"><i class="fa-solid fa-people-group"></i></span> Business Interests</h3>
+        <div class="card p-6">
+          <div class="flex items-center gap-3 mb-4">
+            <div class="w-8 h-8 rounded-full bg-purple-50 text-purple-500 flex items-center justify-center flex-shrink-0"><i class="fa-solid fa-briefcase text-sm"></i></div>
+            <h3 class="text-base font-bold text-slate-900">Business Interests</h3>
+          </div>
           <?php if ($profile['business_interests']): ?>
-            <div><?= tag_list_html($profile['business_interests']) ?></div>
+            <div class="flex flex-wrap gap-2 pl-11">
+              <?php foreach (array_filter(array_map('trim', explode(',', $profile['business_interests']))) as $interest): ?>
+                <span class="bg-purple-50 text-purple-700 text-xs font-medium px-3.5 py-1.5 rounded-full border border-purple-100"><?= e($interest) ?></span>
+              <?php endforeach; ?>
+            </div>
           <?php else: ?>
-            <p class="text-xs text-slate-400">No business interests listed yet.</p>
+            <p class="text-sm text-slate-400 pl-11">No business interests listed yet.</p>
           <?php endif; ?>
         </div>
 
-        <div class="border-t border-slate-100 pt-6">
-          <h3 class="text-sm font-bold text-primary-navy flex items-center gap-2 mb-2"><span class="w-7 h-7 rounded-full bg-rose-100 text-rose-600 flex items-center justify-center flex-shrink-0 text-xs"><i class="fa-regular fa-heart"></i></span> Personal Interests</h3>
+        <div class="card p-6">
+          <div class="flex items-center gap-3 mb-4">
+            <div class="w-8 h-8 rounded-full bg-rose-50 text-rose-500 flex items-center justify-center flex-shrink-0"><i class="fa-regular fa-heart text-sm"></i></div>
+            <h3 class="text-base font-bold text-slate-900">Personal Interests</h3>
+          </div>
           <?php if ($profile['personal_interests']): ?>
-            <div><?= tag_list_html($profile['personal_interests'], 'badge bg-rose-50 text-rose-600') ?></div>
+            <div class="flex flex-wrap gap-2 pl-11">
+              <?php foreach (array_filter(array_map('trim', explode(',', $profile['personal_interests']))) as $interest): ?>
+                <span class="bg-rose-50 text-rose-700 text-xs font-medium px-3.5 py-1.5 rounded-full border border-rose-100"><?= e($interest) ?></span>
+              <?php endforeach; ?>
+            </div>
           <?php else: ?>
-            <p class="text-xs text-slate-400">No personal interests listed yet.</p>
+            <p class="text-sm text-slate-400 pl-11">No personal interests listed yet.</p>
           <?php endif; ?>
         </div>
 
-        <div class="border-t border-slate-100 pt-6">
-          <h3 class="text-sm font-bold text-primary-navy flex items-center gap-2 mb-4"><span class="w-7 h-7 rounded-full bg-amber-100 text-amber-600 flex items-center justify-center flex-shrink-0 text-xs"><i class="fa-solid fa-briefcase"></i></span> Experience &amp; Background</h3>
+        <div class="card p-6">
+          <div class="flex items-center gap-3 mb-6">
+            <div class="w-8 h-8 rounded-full bg-blue-50 text-blue-500 flex items-center justify-center flex-shrink-0"><i class="fa-solid fa-timeline text-sm"></i></div>
+            <h3 class="text-base font-bold text-slate-900">Experience &amp; Background</h3>
+          </div>
           <?php if ($experience): ?>
-            <div class="space-y-5">
-              <?php foreach ($experience as $exp): ?>
-                <div class="flex flex-col sm:flex-row gap-4 bg-slate-50/60 rounded-lg p-4">
-                  <div class="flex gap-3 sm:w-2/5 flex-shrink-0">
-                    <div class="w-11 h-11 rounded-lg bg-primary-navy text-gold flex items-center justify-center flex-shrink-0 text-lg"><i class="fa-solid fa-building"></i></div>
-                    <div class="min-w-0">
-                      <p class="text-sm font-bold text-primary-navy"><?= e($exp['company']) ?></p>
-                      <p class="text-xs text-slate-600 font-medium"><?= e($exp['title']) ?></p>
-                      <p class="text-[0.68rem] text-slate-400 mt-0.5"><?= $exp['start_date'] ? e(format_date($exp['start_date'], 'M Y')) : '' ?> &ndash; <?= $exp['is_current'] ? 'Present' : ($exp['end_date'] ? e(format_date($exp['end_date'], 'M Y')) : '') ?></p>
-                      <?php if ($exp['location']): ?><p class="text-[0.68rem] text-slate-400"><i class="fa-solid fa-location-dot"></i> <?= e($exp['location']) ?></p><?php endif; ?>
+            <?php $lastExpKey = array_key_last($experience); ?>
+            <div class="space-y-6 pl-11">
+              <?php foreach ($experience as $expKey => $exp): ?>
+                <div class="grid grid-cols-1 md:grid-cols-12 gap-4 md:gap-6<?= $expKey !== $lastExpKey ? ' pb-6 border-b border-slate-100' : '' ?>">
+                  <div class="md:col-span-5 flex items-start gap-3">
+                    <div class="w-12 h-12 rounded-xl bg-slate-900 flex items-center justify-center text-amber-400 flex-shrink-0 shadow-sm"><i class="fa-solid fa-cube text-lg"></i></div>
+                    <div>
+                      <h4 class="text-sm font-bold text-slate-900"><?= e($exp['company']) ?></h4>
+                      <p class="text-xs font-medium text-slate-700"><?= e($exp['title']) ?></p>
+                      <p class="text-[11px] text-slate-400 mt-0.5"><?= $exp['start_date'] ? e(format_date($exp['start_date'], 'M Y')) : '' ?> &ndash; <?= $exp['is_current'] ? 'Present' : ($exp['end_date'] ? e(format_date($exp['end_date'], 'M Y')) : '') ?></p>
+                      <?php if ($exp['location']): ?><div class="flex items-center gap-1 text-[11px] text-slate-500 mt-1"><i class="fa-solid fa-location-dot"></i> <?= e($exp['location']) ?></div><?php endif; ?>
                     </div>
                   </div>
                   <?php if ($exp['description']): ?>
-                    <p class="text-xs text-slate-500 leading-relaxed sm:w-3/5"><?= nl2br(e($exp['description'])) ?></p>
+                    <div class="md:col-span-7">
+                      <p class="text-slate-600 text-xs sm:text-sm leading-relaxed"><?= nl2br(e($exp['description'])) ?></p>
+                    </div>
                   <?php endif; ?>
                 </div>
               <?php endforeach; ?>
             </div>
           <?php else: ?>
-            <p class="text-xs text-slate-400">No experience added yet.</p>
+            <p class="text-sm text-slate-400 pl-11">No experience added yet.</p>
           <?php endif; ?>
         </div>
       </div>
 
-      <div class="profile-tab-panel hidden" data-tab="education">
-        <h3 class="text-sm font-bold text-primary-navy flex items-center gap-2 mb-4"><span class="w-7 h-7 rounded-full bg-indigo-100 text-indigo-600 flex items-center justify-center flex-shrink-0 text-xs"><i class="fa-solid fa-graduation-cap"></i></span> Education</h3>
+      <div class="profile-tab-panel hidden card p-6" data-tab="education">
+        <div class="flex items-center gap-3 mb-4">
+          <div class="w-8 h-8 rounded-full bg-indigo-50 text-indigo-500 flex items-center justify-center flex-shrink-0"><i class="fa-solid fa-graduation-cap text-sm"></i></div>
+          <h3 class="text-base font-bold text-slate-900">Education</h3>
+        </div>
         <?php if ($education): ?>
-          <div class="space-y-4">
+          <div class="space-y-4 pl-11">
             <?php foreach ($education as $edu): ?>
               <div>
-                <p class="text-sm font-bold text-primary-navy"><?= e($edu['school']) ?></p>
+                <p class="text-sm font-bold text-slate-900"><?= e($edu['school']) ?></p>
                 <p class="text-xs text-slate-500"><?= e(trim(($edu['degree'] ?? '') . (($edu['degree'] && $edu['field_of_study']) ? ', ' : '') . ($edu['field_of_study'] ?? ''))) ?></p>
                 <p class="text-[0.68rem] text-slate-400 mt-0.5"><?= e($edu['start_year'] ?? '') ?><?= $edu['start_year'] || $edu['end_year'] ? ' – ' : '' ?><?= e($edu['end_year'] ?? '') ?></p>
               </div>
             <?php endforeach; ?>
           </div>
         <?php else: ?>
-          <p class="text-xs text-slate-400">No education added yet.</p>
+          <p class="text-sm text-slate-400 pl-11">No education added yet.</p>
         <?php endif; ?>
       </div>
     </div>
 
     <!-- Sidebar -->
-    <div class="space-y-4">
-      <div class="card p-5">
-        <h3 class="text-sm font-bold text-primary-navy flex items-center gap-2 mb-4"><span class="w-8 h-8 rounded-full bg-[var(--menu-accent-100)] text-[var(--menu-accent-600)] flex items-center justify-center flex-shrink-0"><i class="fa-regular fa-user"></i></span> Contact Information</h3>
-        <div class="space-y-3.5">
+    <div class="lg:col-span-1 space-y-6">
+      <div class="card p-6">
+        <div class="flex items-center gap-3 mb-4">
+          <div class="w-8 h-8 rounded-full bg-blue-50 text-blue-500 flex items-center justify-center flex-shrink-0"><i class="fa-regular fa-address-book text-sm"></i></div>
+          <h3 class="text-sm font-bold text-slate-900">Contact Information</h3>
+        </div>
+        <div class="space-y-3.5 pl-11 text-xs">
           <?php if (($isOwnerOrAdmin || $profile['show_phone']) && $profile['phone']): ?>
-            <div class="flex items-start gap-2.5">
-              <i class="fa-solid fa-phone text-slate-400 mt-0.5 w-4 text-center"></i>
-              <div><p class="text-sm text-slate-700"><?= e($profile['phone']) ?></p><p class="text-[0.68rem] text-slate-400">Phone</p></div>
+            <div class="flex items-start gap-3">
+              <i class="fa-solid fa-phone text-slate-400 mt-0.5"></i>
+              <div><a href="tel:<?= e($profile['phone']) ?>" class="font-medium text-slate-800 hover:text-blue-600"><?= e($profile['phone']) ?></a><p class="text-[11px] text-slate-400">Phone</p></div>
             </div>
           <?php endif; ?>
           <?php if ($isOwnerOrAdmin || $profile['show_email']): ?>
-            <div class="flex items-start gap-2.5">
-              <i class="fa-solid fa-envelope text-slate-400 mt-0.5 w-4 text-center"></i>
-              <div><p class="text-sm text-slate-700 break-all"><?= e($profile['email']) ?></p><p class="text-[0.68rem] text-slate-400">Email</p></div>
+            <div class="flex items-start gap-3">
+              <i class="fa-regular fa-envelope text-slate-400 mt-0.5"></i>
+              <div><a href="mailto:<?= e($profile['email']) ?>" class="font-medium text-slate-800 hover:text-blue-600 break-all"><?= e($profile['email']) ?></a><p class="text-[11px] text-slate-400">Email</p></div>
             </div>
           <?php endif; ?>
           <?php if (location_display($profile)): ?>
-            <div class="flex items-start gap-2.5">
-              <i class="fa-solid fa-location-dot text-slate-400 mt-0.5 w-4 text-center"></i>
-              <div><p class="text-sm text-slate-700"><?= e(location_display($profile)) ?></p><p class="text-[0.68rem] text-slate-400">Location</p></div>
+            <div class="flex items-start gap-3">
+              <i class="fa-solid fa-location-dot text-slate-400 mt-0.5"></i>
+              <div><span class="font-medium text-slate-800"><?= e(location_display($profile)) ?></span><p class="text-[11px] text-slate-400">Location</p></div>
             </div>
           <?php endif; ?>
           <?php if ($profile['linkedin_url']): ?>
-            <div class="flex items-start gap-2.5">
-              <i class="fa-brands fa-linkedin text-slate-400 mt-0.5 w-4 text-center"></i>
-              <div><a href="<?= e($profile['linkedin_url']) ?>" target="_blank" rel="noopener noreferrer" class="text-sm text-sky-600 hover:underline">LinkedIn Profile <i class="fa-solid fa-arrow-up-right-from-square text-[0.6rem]"></i></a><p class="text-[0.68rem] text-slate-400">View profile</p></div>
+            <div class="flex items-start gap-3">
+              <i class="fa-brands fa-linkedin text-slate-400 mt-0.5"></i>
+              <div><a href="<?= e($profile['linkedin_url']) ?>" target="_blank" rel="noopener noreferrer" class="font-medium text-blue-600 hover:underline flex items-center gap-1">LinkedIn Profile <i class="fa-solid fa-arrow-up-right-from-square text-[9px]"></i></a><p class="text-[11px] text-slate-400">View profile</p></div>
             </div>
           <?php endif; ?>
           <?php if (!$isOwnerOrAdmin && !$profile['show_email'] && !(($profile['show_phone']) && $profile['phone']) && !location_display($profile) && !$profile['linkedin_url']): ?>
-            <p class="text-xs text-slate-400">This alumnus hasn't shared contact details.</p>
+            <p class="text-slate-400">This alumnus hasn't shared contact details.</p>
           <?php endif; ?>
         </div>
       </div>
 
       <?php if ($showActions): ?>
-        <div class="card p-5 bg-[var(--menu-accent-50)] border-[var(--menu-accent-100)]">
-          <h3 class="text-sm font-bold text-primary-navy flex items-center gap-2 mb-2"><span class="w-8 h-8 rounded-full bg-white text-[var(--menu-accent-600)] flex items-center justify-center flex-shrink-0"><i class="fa-solid fa-people-group"></i></span> In your network</h3>
-          <p class="text-xs text-slate-500 mb-3">
-            <?= $mutualCount > 0 ? 'You are connected with ' . $mutualCount . ' mutual alumn' . ($mutualCount === 1 ? 'us' : 'i') . '.' : "You don't have any mutual connections yet." ?>
-          </p>
-          <?php if ($mutualCount > 0): ?>
-            <a href="<?= e(url('alumni/' . $profile['id'] . '/mutual-connections')) ?>" class="btn bg-white border border-slate-200 !text-slate-700 hover:bg-slate-50 !py-2 text-xs w-full text-center block">View Mutual Connections</a>
-          <?php endif; ?>
+        <div class="card p-6">
+          <div class="flex items-center gap-3 mb-3">
+            <div class="w-8 h-8 rounded-full bg-blue-50 text-blue-500 flex items-center justify-center flex-shrink-0"><i class="fa-solid fa-users text-sm"></i></div>
+            <h3 class="text-sm font-bold text-slate-900">In your network</h3>
+          </div>
+          <div class="pl-11 space-y-3">
+            <p class="text-xs text-slate-600">
+              <?= $mutualCount > 0 ? 'You are connected with ' . $mutualCount . ' mutual alumn' . ($mutualCount === 1 ? 'us' : 'i') . '.' : "You don't have any mutual connections yet." ?>
+            </p>
+            <a href="<?= e(url('alumni/' . $profile['id'] . '/mutual-connections')) ?>" class="block w-full text-center bg-slate-50 hover:bg-slate-100 text-blue-600 border border-blue-200/60 font-semibold text-xs py-2 rounded-lg transition">View Mutual Connections</a>
+          </div>
         </div>
 
-        <div class="card p-5">
-          <h3 class="text-sm font-bold text-primary-navy flex items-center gap-2 mb-3"><span class="w-8 h-8 rounded-full bg-sky-100 text-sky-600 flex items-center justify-center flex-shrink-0"><i class="fa-regular fa-id-badge"></i></span> Quick Actions</h3>
-          <div class="divide-y divide-slate-100">
-            <?php if ($connectionStatus !== null && $connectionStatus['status'] === 'accepted'): ?>
-              <a href="<?= e(url('messages/' . $profile['id'])) ?>" class="flex items-center justify-between py-2.5 text-sm text-slate-700 hover:text-gold">
-                <span><i class="fa-regular fa-envelope w-4 text-center text-slate-400"></i> Send a Message</span>
-                <i class="fa-solid fa-chevron-right text-[0.65rem] text-slate-300"></i>
-              </a>
-            <?php else: ?>
-              <span class="flex items-center justify-between py-2.5 text-sm text-slate-300 cursor-not-allowed" title="Connect first to send a message">
-                <span><i class="fa-regular fa-envelope w-4 text-center"></i> Send a Message</span>
-              </span>
-            <?php endif; ?>
+        <div class="card p-6">
+          <div class="flex items-center gap-3 mb-4">
+            <div class="w-8 h-8 rounded-full bg-amber-50 text-amber-500 flex items-center justify-center flex-shrink-0"><i class="fa-solid fa-bolt text-sm"></i></div>
+            <h3 class="text-sm font-bold text-slate-900">Quick Actions</h3>
+          </div>
+          <div class="space-y-1 pl-11">
+            <a href="<?= e(url('messages/' . $profile['id'])) ?>" class="flex items-center justify-between py-2 text-slate-700 hover:text-blue-600 text-xs font-medium transition group">
+              <span class="flex items-center gap-2.5"><i class="fa-regular fa-paper-plane text-blue-500"></i> Send a Message</span>
+              <i class="fa-solid fa-chevron-right text-[10px] text-slate-400 group-hover:translate-x-0.5 transition"></i>
+            </a>
 
             <?php if ($upcomingEvents): ?>
-              <button type="button" class="quick-action-toggle w-full flex items-center justify-between py-2.5 text-sm text-slate-700 hover:text-gold" data-target="invite-panel">
-                <span><i class="fa-regular fa-calendar w-4 text-center text-slate-400"></i> Invite to Event</span>
-                <i class="fa-solid fa-chevron-right text-[0.65rem] text-slate-300"></i>
+              <button type="button" class="quick-action-toggle w-full flex items-center justify-between py-2 text-slate-700 hover:text-blue-600 text-xs font-medium transition group" data-target="invite-panel">
+                <span class="flex items-center gap-2.5"><i class="fa-regular fa-calendar-plus text-blue-500"></i> Invite to Event</span>
+                <i class="fa-solid fa-chevron-right text-[10px] text-slate-400 group-hover:translate-x-0.5 transition"></i>
               </button>
               <div id="invite-panel" class="hidden py-3">
                 <form method="POST" action="<?= e(url('alumni/' . $profile['id'] . '/invite-to-event')) ?>" class="space-y-2">
@@ -283,9 +328,9 @@
               </div>
             <?php endif; ?>
 
-            <button type="button" class="quick-action-toggle w-full flex items-center justify-between py-2.5 text-sm text-slate-700 hover:text-red-600" data-target="report-panel">
-              <span><i class="fa-regular fa-flag w-4 text-center text-slate-400"></i> Report Profile</span>
-              <i class="fa-solid fa-chevron-right text-[0.65rem] text-slate-300"></i>
+            <button type="button" class="quick-action-toggle w-full flex items-center justify-between py-2 text-rose-600 hover:text-rose-700 text-xs font-medium transition group" data-target="report-panel">
+              <span class="flex items-center gap-2.5"><i class="fa-regular fa-flag text-rose-500"></i> Report Profile</span>
+              <i class="fa-solid fa-chevron-right text-[10px] text-slate-400 group-hover:translate-x-0.5 transition"></i>
             </button>
             <div id="report-panel" class="hidden py-3">
               <form method="POST" action="<?= e(url('alumni/' . $profile['id'] . '/report')) ?>" class="space-y-2">
