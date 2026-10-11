@@ -289,6 +289,20 @@
   </div>
 
   <div class="card p-6">
+    <h3 class="section-title text-xs mb-1">Alumni Profile Banner</h3>
+    <p class="text-xs text-slate-400 mb-4">Background photo shown behind the header on each alumni's profile page.</p>
+    <div>
+      <label class="form-label">Profile Page Banner Image</label>
+      <p class="text-xs text-slate-400 mb-2">Upload a file or paste an image URL — uploading a file takes priority. Leave blank to use the default plain background.</p>
+      <?php if (!empty($settings['profile_hero_background'])): ?>
+        <img src="<?= e($settings['profile_hero_background']) ?>" alt="" class="w-full max-w-xs h-24 object-cover rounded border border-slate-200 mb-2">
+      <?php endif; ?>
+      <input type="file" name="profile_hero_background" accept=".jpg,.jpeg,.png,.webp" class="text-sm block mb-2">
+      <input type="url" name="profile_hero_background_url" placeholder="...or paste an image URL" class="form-input">
+    </div>
+  </div>
+
+  <div class="card p-6">
     <h3 class="section-title text-xs mb-1">Homepage Display Counts</h3>
     <p class="text-xs text-slate-400 mb-4">How many items to show in each homepage section.</p>
     <div class="grid grid-cols-1 md:grid-cols-3 gap-4">

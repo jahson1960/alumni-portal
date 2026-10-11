@@ -139,6 +139,16 @@ class SettingsController extends AdminController
             $errors[] = $e->getMessage();
         }
 
+        $profileHeroBackground = null;
+        try {
+            $uploaded = Upload::image($this->file('profile_hero_background'), 'branding');
+            if ($uploaded) {
+                $profileHeroBackground = upload_url($uploaded);
+            }
+        } catch (\RuntimeException $e) {
+            $errors[] = $e->getMessage();
+        }
+
         if ($errors) {
             $_SESSION['_errors'] = $errors;
             $this->redirect('admin/settings');
@@ -167,6 +177,15 @@ class SettingsController extends AdminController
             $jobsExploreImageUrl = trim((string) $this->input('jobs_explore_image_url', ''));
             if ($jobsExploreImageUrl !== '') {
                 $data['jobs_explore_image'] = $jobsExploreImageUrl;
+            }
+        }
+
+        if ($profileHeroBackground) {
+            $data['profile_hero_background'] = $profileHeroBackground;
+        } else {
+            $profileHeroBackgroundUrl = trim((string) $this->input('profile_hero_background_url', ''));
+            if ($profileHeroBackgroundUrl !== '') {
+                $data['profile_hero_background'] = $profileHeroBackgroundUrl;
             }
         }
 
