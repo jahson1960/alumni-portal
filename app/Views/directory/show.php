@@ -12,8 +12,8 @@
       </div>
     </div>
 
-    <div class="relative flex items-start gap-5 md:max-w-[calc(100%-20rem)]">
-      <?= avatar_html($profile, 'w-24 h-24 text-2xl') ?>
+    <div class="relative flex items-start gap-3 sm:gap-5 md:max-w-[calc(100%-20rem)]">
+      <?= avatar_html($profile, 'w-16 h-16 sm:w-24 sm:h-24 text-lg sm:text-2xl') ?>
       <div class="min-w-0">
         <div class="flex items-center gap-2 flex-wrap">
           <h1 class="text-xl font-extrabold text-primary-navy"><?= e($profile['name']) ?></h1>
@@ -94,15 +94,15 @@
   </div>
 
   <!-- Tabs -->
-  <div class="flex flex-nowrap items-center gap-6 mb-6 border-b border-slate-200 overflow-x-auto overflow-y-hidden">
+  <div class="flex flex-nowrap items-center gap-4 sm:gap-6 mb-6 border-b border-slate-200 overflow-x-auto overflow-y-hidden">
     <button type="button" class="profile-tab-link flex items-center gap-1.5 text-sm font-semibold pb-2.5 border-b-2 -mb-px whitespace-nowrap text-gold border-gold" data-tab="about"><i class="fa-regular fa-clock"></i> About</button>
     <button type="button" class="profile-tab-link flex items-center gap-1.5 text-sm font-semibold pb-2.5 border-b-2 -mb-px whitespace-nowrap text-slate-500 border-transparent hover:text-primary-navy" data-tab="about"><i class="fa-regular fa-star"></i> Skills</button>
     <button type="button" class="profile-tab-link flex items-center gap-1.5 text-sm font-semibold pb-2.5 border-b-2 -mb-px whitespace-nowrap text-slate-500 border-transparent hover:text-primary-navy" data-tab="about"><i class="fa-solid fa-briefcase"></i> Experience</button>
     <button type="button" class="profile-tab-link flex items-center gap-1.5 text-sm font-semibold pb-2.5 border-b-2 -mb-px whitespace-nowrap text-slate-500 border-transparent hover:text-primary-navy" data-tab="about"><i class="fa-regular fa-heart"></i> Interests</button>
     <button type="button" class="profile-tab-link flex items-center gap-1.5 text-sm font-semibold pb-2.5 border-b-2 -mb-px whitespace-nowrap text-slate-500 border-transparent hover:text-primary-navy" data-tab="about"><i class="fa-regular fa-id-badge"></i> Contact</button>
-    <div class="relative group pb-2.5 -mb-px">
-      <button type="button" class="flex items-center gap-1.5 text-sm font-semibold whitespace-nowrap text-slate-500 hover:text-primary-navy">More <i class="fa-solid fa-chevron-down text-[0.6rem]"></i></button>
-      <div class="absolute left-0 top-full hidden group-hover:block z-20 pt-1">
+    <div class="relative pb-2.5 -mb-px">
+      <button type="button" class="profile-more-btn flex items-center gap-1.5 text-sm font-semibold whitespace-nowrap text-slate-500 hover:text-primary-navy">More <i class="fa-solid fa-chevron-down text-[0.6rem]"></i></button>
+      <div class="profile-more-menu hidden absolute left-0 top-full z-20 pt-1">
         <div class="bg-white min-w-[160px] shadow-lg rounded-md border border-slate-200 py-2">
           <button type="button" class="profile-tab-link block w-full text-left px-4 py-2 text-xs text-slate-700 hover:bg-slate-50 hover:text-gold" data-tab="education">Education</button>
         </div>
@@ -326,7 +326,10 @@
     }
 
     tabLinks.forEach(function (link) {
-      link.addEventListener('click', function () { activateTab(link.dataset.tab); });
+      link.addEventListener('click', function () {
+        activateTab(link.dataset.tab);
+        document.querySelectorAll('.profile-more-menu').forEach(function (m) { m.classList.add('hidden'); });
+      });
     });
 
     document.querySelectorAll('.profile-kebab-btn').forEach(function (btn) {
@@ -337,8 +340,18 @@
         menu.classList.toggle('hidden');
       });
     });
+
+    document.querySelectorAll('.profile-more-btn').forEach(function (btn) {
+      btn.addEventListener('click', function (e) {
+        e.stopPropagation();
+        var menu = btn.nextElementSibling;
+        document.querySelectorAll('.profile-more-menu').forEach(function (m) { if (m !== menu) m.classList.add('hidden'); });
+        menu.classList.toggle('hidden');
+      });
+    });
+
     document.addEventListener('click', function () {
-      document.querySelectorAll('.profile-kebab-menu').forEach(function (m) { m.classList.add('hidden'); });
+      document.querySelectorAll('.profile-kebab-menu, .profile-more-menu').forEach(function (m) { m.classList.add('hidden'); });
     });
 
     document.querySelectorAll('.quick-action-toggle').forEach(function (btn) {
