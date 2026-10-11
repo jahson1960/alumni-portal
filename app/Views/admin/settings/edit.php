@@ -300,6 +300,46 @@
       <input type="file" name="profile_hero_background" accept=".jpg,.jpeg,.png,.webp" class="text-sm block mb-2">
       <input type="url" name="profile_hero_background_url" placeholder="...or paste an image URL" class="form-input">
     </div>
+
+    <div class="mt-4 pt-4 border-t border-slate-100 grid grid-cols-1 sm:grid-cols-3 gap-4">
+      <div>
+        <label class="form-label" for="profile_hero_gradient_color">Overlay Color</label>
+        <input type="color" id="profile_hero_gradient_color" name="profile_hero_gradient_color" class="w-full h-10 rounded border border-slate-300 cursor-pointer" value="<?= e($settings['profile_hero_gradient_color'] ?? '#ffffff') ?>">
+      </div>
+      <div>
+        <label class="form-label" for="profile_hero_gradient_direction">Gradient Type</label>
+        <?php $gradientDirection = $settings['profile_hero_gradient_direction'] ?? 'to right'; ?>
+        <select id="profile_hero_gradient_direction" name="profile_hero_gradient_direction" class="form-input">
+          <option value="to right" <?= $gradientDirection === 'to right' ? 'selected' : '' ?>>Left to Right</option>
+          <option value="to left" <?= $gradientDirection === 'to left' ? 'selected' : '' ?>>Right to Left</option>
+          <option value="to bottom" <?= $gradientDirection === 'to bottom' ? 'selected' : '' ?>>Top to Bottom</option>
+          <option value="to top" <?= $gradientDirection === 'to top' ? 'selected' : '' ?>>Bottom to Top</option>
+          <option value="135deg" <?= $gradientDirection === '135deg' ? 'selected' : '' ?>>Diagonal</option>
+          <option value="radial" <?= $gradientDirection === 'radial' ? 'selected' : '' ?>>Radial (from right)</option>
+        </select>
+      </div>
+      <div>
+        <label class="form-label" for="profile_hero_gradient_strength">Gradient Strength</label>
+        <?php $gradientStrength = $settings['profile_hero_gradient_strength'] ?? 'medium'; ?>
+        <select id="profile_hero_gradient_strength" name="profile_hero_gradient_strength" class="form-input">
+          <option value="light" <?= $gradientStrength === 'light' ? 'selected' : '' ?>>Light (photo shows through more)</option>
+          <option value="medium" <?= $gradientStrength === 'medium' ? 'selected' : '' ?>>Medium</option>
+          <option value="strong" <?= $gradientStrength === 'strong' ? 'selected' : '' ?>>Strong (photo barely visible)</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="mt-4 pt-4 border-t border-slate-100 grid grid-cols-1 sm:grid-cols-2 gap-4">
+      <div>
+        <label class="form-label" for="profile_hero_tagline_title">Banner Tagline Title</label>
+        <input type="text" id="profile_hero_tagline_title" name="profile_hero_tagline_title" class="form-input" value="<?= e($settings['profile_hero_tagline_title'] ?? 'RBS Alumni') ?>">
+      </div>
+      <div>
+        <label class="form-label" for="profile_hero_tagline_subtitle">Banner Tagline Subtitle</label>
+        <textarea id="profile_hero_tagline_subtitle" name="profile_hero_tagline_subtitle" rows="2" class="form-textarea"><?= e($settings['profile_hero_tagline_subtitle'] ?? "A global network\nof changemakers") ?></textarea>
+        <p class="text-xs text-slate-400 mt-1">Shown on the right side of every alumni profile banner, vertically centered. Line breaks are kept as typed.</p>
+      </div>
+    </div>
   </div>
 
   <div class="card p-6">

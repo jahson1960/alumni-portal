@@ -13,9 +13,12 @@ class SettingsController extends AdminController
         'metric_alumni', 'metric_countries', 'metric_jobs', 'metric_connections', 'metric_events',
         'metric_scholarships', 'metric_mentors_engaged', 'metric_projects_funded',
         'giving_contact_email',
+        'profile_hero_tagline_title', 'profile_hero_tagline_subtitle',
     ];
 
     private const TRANSITIONS = ['fade', 'slide', 'slide-vertical', 'zoom', 'flip', 'wipe'];
+    private const GRADIENT_DIRECTIONS = ['to right', 'to left', 'to bottom', 'to top', '135deg', 'radial'];
+    private const GRADIENT_STRENGTHS = ['light', 'medium', 'strong'];
 
     public function edit(): void
     {
@@ -148,6 +151,12 @@ class SettingsController extends AdminController
         } catch (\RuntimeException $e) {
             $errors[] = $e->getMessage();
         }
+
+        $data['profile_hero_gradient_color'] = valid_hex_color($this->input('profile_hero_gradient_color'), '#ffffff');
+        $gradientDirection = (string) $this->input('profile_hero_gradient_direction', 'to right');
+        $data['profile_hero_gradient_direction'] = in_array($gradientDirection, self::GRADIENT_DIRECTIONS, true) ? $gradientDirection : 'to right';
+        $gradientStrength = (string) $this->input('profile_hero_gradient_strength', 'medium');
+        $data['profile_hero_gradient_strength'] = in_array($gradientStrength, self::GRADIENT_STRENGTHS, true) ? $gradientStrength : 'medium';
 
         if ($errors) {
             $_SESSION['_errors'] = $errors;

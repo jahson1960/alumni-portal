@@ -1,24 +1,29 @@
 <?php
 $showActions = $viewerId && !$isSelf;
 $heroBackground = \App\Models\Setting::get('profile_hero_background', '');
+$heroGradientColor = \App\Models\Setting::get('profile_hero_gradient_color', '#ffffff');
+$heroGradientDirection = \App\Models\Setting::get('profile_hero_gradient_direction', 'to right');
+$heroGradientStrength = \App\Models\Setting::get('profile_hero_gradient_strength', 'medium');
+$heroTaglineTitle = \App\Models\Setting::get('profile_hero_tagline_title', 'RBS Alumni');
+$heroTaglineSubtitle = \App\Models\Setting::get('profile_hero_tagline_subtitle', "A global network\nof changemakers");
 ?>
 <div class="max-w-[1400px] mx-auto px-4 md:px-8 py-8">
   <a href="<?= e($backUrl) ?>" class="text-xs text-slate-500 hover:text-gold mb-4 inline-block"><i class="fa-solid fa-arrow-left"></i> <?= e($backLabel) ?></a>
 
   <!-- Hero -->
-  <div class="card p-6 md:p-8 mb-6 relative overflow-hidden bg-cover bg-right" <?php if ($heroBackground): ?>style="background-image: linear-gradient(90deg, rgba(255,255,255,0.97) 0%, rgba(255,255,255,0.9) 40%, rgba(255,255,255,0.4) 100%), url('<?= e($heroBackground) ?>');"<?php endif; ?>>
+  <div class="card p-6 md:p-8 mb-6 relative overflow-hidden bg-cover bg-right" <?php if ($heroBackground): ?>style="background-image: <?= hero_gradient_css($heroGradientColor, $heroGradientDirection, $heroGradientStrength) ?>, url('<?= e($heroBackground) ?>');"<?php endif; ?>>
     <?php if (!$heroBackground): ?>
-      <div class="hidden md:block absolute top-0 right-0 bottom-0 w-80 bg-gradient-to-br from-primary-navy to-slate-800 overflow-hidden">
+      <div class="hidden md:flex absolute top-0 right-0 bottom-0 w-80 bg-gradient-to-br from-primary-navy to-slate-800 overflow-hidden flex-col justify-center">
         <i class="fa-solid fa-building-columns absolute -right-6 -top-6 text-white/5 text-[9rem]"></i>
-        <div class="absolute bottom-6 right-6 left-6 text-right">
-          <p class="font-serif italic text-white text-lg leading-snug">RBS Alumni</p>
-          <p class="font-serif italic text-white/60 text-xs leading-snug">A global network<br>of changemakers</p>
+        <div class="relative px-6 text-right">
+          <p class="font-serif italic text-white text-lg leading-snug"><?= e($heroTaglineTitle) ?></p>
+          <p class="font-serif italic text-white/60 text-xs leading-snug"><?= nl2br(e($heroTaglineSubtitle)) ?></p>
         </div>
       </div>
     <?php else: ?>
-      <div class="hidden md:block absolute bottom-6 right-6 text-right">
-        <p class="font-serif italic text-primary-navy text-lg leading-snug drop-shadow-[0_1px_2px_rgba(255,255,255,0.8)]">RBS Alumni</p>
-        <p class="font-serif italic text-slate-600 text-xs leading-snug drop-shadow-[0_1px_2px_rgba(255,255,255,0.8)]">A global network<br>of changemakers</p>
+      <div class="hidden md:flex absolute inset-y-0 right-6 flex-col justify-center text-right max-w-[14rem]">
+        <p class="font-serif italic text-primary-navy text-lg leading-snug drop-shadow-[0_1px_2px_rgba(255,255,255,0.8)]"><?= e($heroTaglineTitle) ?></p>
+        <p class="font-serif italic text-slate-600 text-xs leading-snug drop-shadow-[0_1px_2px_rgba(255,255,255,0.8)]"><?= nl2br(e($heroTaglineSubtitle)) ?></p>
       </div>
     <?php endif; ?>
 
