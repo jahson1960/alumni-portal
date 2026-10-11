@@ -301,7 +301,7 @@
       <input type="url" name="profile_hero_background_url" placeholder="...or paste an image URL" class="form-input">
     </div>
 
-    <div class="mt-4 pt-4 border-t border-slate-100 grid grid-cols-1 sm:grid-cols-3 gap-4">
+    <div class="mt-4 pt-4 border-t border-slate-100 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
       <div>
         <label class="form-label" for="profile_hero_gradient_color">Overlay Color</label>
         <input type="color" id="profile_hero_gradient_color" name="profile_hero_gradient_color" class="w-full h-10 rounded border border-slate-300 cursor-pointer" value="<?= e($settings['profile_hero_gradient_color'] ?? '#ffffff') ?>">
@@ -312,13 +312,19 @@
         <p class="text-[0.68rem] text-slate-400 mt-1">90&deg; = left to right, 180&deg; = right to left, 0&deg; = bottom to top, 270&deg; = top to bottom.</p>
       </div>
       <div>
+        <label class="form-label" for="profile_hero_gradient_transparent_zone">Transparent Zone <span id="profile_hero_gradient_transparent_zone_out" class="text-slate-400 font-normal"></span></label>
+        <input type="range" id="profile_hero_gradient_transparent_zone" name="profile_hero_gradient_transparent_zone" min="0" max="100" step="5" value="<?= e($settings['profile_hero_gradient_transparent_zone'] ?? '0') ?>" class="w-full accent-gold" oninput="document.getElementById('profile_hero_gradient_transparent_zone_out').textContent = this.value + '%'">
+        <p class="text-[0.68rem] text-slate-400 mt-1">How much of the start of the banner stays pure photo (no overlay at all) before the color starts fading in. E.g. 40% keeps the first 40% fully transparent.</p>
+      </div>
+      <div>
         <label class="form-label" for="profile_hero_gradient_intensity">Gradient Strength <span id="profile_hero_gradient_intensity_out" class="text-slate-400 font-normal"></span></label>
         <input type="range" id="profile_hero_gradient_intensity" name="profile_hero_gradient_intensity" min="0" max="100" step="5" value="<?= e($settings['profile_hero_gradient_intensity'] ?? '70') ?>" class="w-full accent-gold" oninput="document.getElementById('profile_hero_gradient_intensity_out').textContent = this.value + '%'">
-        <p class="text-[0.68rem] text-slate-400 mt-1">Higher = overlay color dominates more; lower = the photo shows through more.</p>
+        <p class="text-[0.68rem] text-slate-400 mt-1">How strong the overlay color gets by the far end of the banner, after the transparent zone.</p>
       </div>
     </div>
     <script>
       document.getElementById('profile_hero_gradient_angle_out').textContent = document.getElementById('profile_hero_gradient_angle').value + '°';
+      document.getElementById('profile_hero_gradient_transparent_zone_out').textContent = document.getElementById('profile_hero_gradient_transparent_zone').value + '%';
       document.getElementById('profile_hero_gradient_intensity_out').textContent = document.getElementById('profile_hero_gradient_intensity').value + '%';
     </script>
 
