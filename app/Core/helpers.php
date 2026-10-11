@@ -648,6 +648,7 @@ function notification_category(string $type): string
         'mentorship_declined' => 'mentorship',
         'resume_review_claimed' => 'mentorship',
         'resume_review_completed' => 'mentorship',
+        'event_invite' => 'connections',
     ];
     return $map[$type] ?? 'system';
 }
@@ -670,6 +671,8 @@ function notification_icon(string $type): string
         'job_rejected' => 'bi-briefcase',
         'resume_review_claimed' => 'bi-file-earmark-text',
         'resume_review_completed' => 'bi-file-earmark-check',
+        'event_invite' => 'bi-calendar-event',
+        'profile_reported' => 'bi-flag',
     ];
     return $map[$type] ?? 'bi-gear';
 }
@@ -692,6 +695,8 @@ function notification_email_subject(string $type): string
         'job_rejected' => 'Your job post was not approved',
         'resume_review_claimed' => 'Your resume review was claimed',
         'resume_review_completed' => 'Your resume review is ready',
+        'event_invite' => "You've been invited to an event",
+        'profile_reported' => 'A profile was reported for review',
     ];
     return $map[$type] ?? 'New notification';
 }

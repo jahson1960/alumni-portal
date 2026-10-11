@@ -1043,3 +1043,21 @@ CREATE TABLE email_queue (
   sent_at TIMESTAMP NULL,
   KEY status_idx (status)
 ) ENGINE=InnoDB;
+
+-- ---------------------------------------------------------------------
+-- profile_reports  (an alumnus flagging another profile for admin review,
+-- from the "Report Profile" quick action on the alumni profile page)
+-- ---------------------------------------------------------------------
+CREATE TABLE profile_reports (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  reporter_id INT NOT NULL,
+  reported_user_id INT NOT NULL,
+  reason VARCHAR(100) NOT NULL,
+  notes TEXT NULL,
+  status ENUM('pending','resolved','dismissed') NOT NULL DEFAULT 'pending',
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  resolved_at TIMESTAMP NULL,
+  KEY status_idx (status),
+  CONSTRAINT fk_profile_reports_reporter FOREIGN KEY (reporter_id) REFERENCES users(id) ON DELETE CASCADE,
+  CONSTRAINT fk_profile_reports_reported FOREIGN KEY (reported_user_id) REFERENCES users(id) ON DELETE CASCADE
+) ENGINE=InnoDB;

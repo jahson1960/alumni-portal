@@ -142,7 +142,9 @@ class Connection extends Model
     public static function mutualConnections(int $a, int $b, int $limit = 4): array
     {
         $stmt = static::db()->prepare(
-            "SELECT u.id, u.name, u.avatar FROM users u
+            "SELECT u.id, u.name, u.avatar, u.headline, u.company, u.city, u.state, u.country,
+                    u.program, u.graduation_year, u.last_active_at
+             FROM users u
              WHERE u.id IN (
                  SELECT IF(requester_id = ?, recipient_id, requester_id) FROM connections
                  WHERE (requester_id = ? OR recipient_id = ?) AND status = 'accepted'

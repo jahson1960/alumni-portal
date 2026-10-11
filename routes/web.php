@@ -31,6 +31,9 @@ $router->get('/directory', 'DirectoryController@index');
 $router->get('/directory/online-status', 'DirectoryController@onlineStatus');
 $router->get('/alumni/{id}', 'DirectoryController@show');
 $router->post('/alumni/{id}/save', 'DirectoryController@toggleSave');
+$router->get('/alumni/{id}/mutual-connections', 'DirectoryController@mutualConnections');
+$router->post('/alumni/{id}/invite-to-event', 'ProfileActionsController@inviteToEvent');
+$router->post('/alumni/{id}/report', 'ProfileActionsController@report');
 
 // Connections & Follow
 $router->get('/connections', 'ConnectionController@index');
@@ -181,6 +184,9 @@ $router->get('/admin/page-visibility', 'Admin\\PageVisibilityController@edit');
 $router->post('/admin/page-visibility', 'Admin\\PageVisibilityController@update');
 $router->get('/admin/email-queue', 'Admin\\EmailQueueController@index');
 $router->post('/admin/email-queue/{id}/retry', 'Admin\\EmailQueueController@retry');
+$router->get('/admin/profile-reports', 'Admin\\ProfileReportsController@index');
+$router->post('/admin/profile-reports/{id}/resolve', 'Admin\\ProfileReportsController@resolve');
+$router->post('/admin/profile-reports/{id}/dismiss', 'Admin\\ProfileReportsController@dismiss');
 
 // Admin: news
 $router->get('/admin/news', 'Admin\\NewsController@index');

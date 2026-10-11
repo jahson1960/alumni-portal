@@ -30,6 +30,7 @@ $navItems = [
     'alumni_roster' => ['label' => 'Alumni Roster', 'icon' => 'fa-id-card', 'href' => url('admin/alumni-roster')],
     'register_alumni' => ['label' => 'Register Alumni', 'icon' => 'fa-user-plus', 'href' => url('admin/register-alumni')],
     'email_queue' => ['label' => 'Email Queue', 'icon' => 'fa-envelope', 'href' => url('admin/email-queue')],
+    'profile_reports' => ['label' => 'Profile Reports', 'icon' => 'fa-flag', 'href' => url('admin/profile-reports')],
 ];
 
 // Editors only have this one admin-area capability — everything else here is admin-only,

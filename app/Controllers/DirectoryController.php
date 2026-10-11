@@ -5,9 +5,12 @@ namespace App\Controllers;
 use App\Core\Auth;
 use App\Core\Controller;
 use App\Models\Connection;
+use App\Models\Event;
 use App\Models\Follow;
 use App\Models\SavedAlumni;
 use App\Models\User;
+use App\Models\UserEducation;
+use App\Models\UserExperience;
 
 class DirectoryController extends Controller
 {
@@ -203,6 +206,13 @@ class DirectoryController extends Controller
 
         [$backUrl, $backLabel] = $this->smartBack(url('directory'), 'Back to Directory');
 
+        $mutualCount = 0;
+        $mutualConnections = [];
+        if ($viewerId && !$isOwnerOrAdmin) {
+            $mutualCount = Connection::countMutualConnections((int) $viewerId, (int) $id);
+            $mutualConnections = Connection::mutualConnections((int) $viewerId, (int) $id, 3);
+        }
+
         $this->view('directory.show', [
             'title' => $profile['name'] . ' - Alumni Profile',
             'activeNav' => 'directory',
@@ -211,6 +221,36 @@ class DirectoryController extends Controller
             'connectionStatus' => $connectionStatus,
             'isFollowing' => $isFollowing,
             'viewerId' => $viewerId,
+            'backUrl' => $backUrl,
+            'backLabel' => $backLabel,
+            'experience' => UserExperience::forUser((int) $id),
+            'education' => UserEducation::forUser((int) $id),
+            'mutualCount' => $mutualCount,
+            'mutualConnections' => $mutualConnections,
+            'upcomingEvents' => $viewerId && !$isOwnerOrAdmin ? Event::upcoming(20) : [],
+        ]);
+    }
+
+    public function mutualConnections(string $id): void
+    {
+        if (!Auth::check()) {
+            $this->redirect('login');
+        }
+        $viewerId = (int) Auth::id();
+        $profile = User::publicProfile((int) $id, Auth::isAdmin() || $viewerId === (int) $id, true);
+        if (!$profile) {
+            http_response_code(404);
+            (new ErrorController())->notFound();
+            return;
+        }
+
+        [$backUrl, $backLabel] = $this->smartBack(url('alumni/' . $id), 'Back to Profile');
+
+        $this->view('directory.mutual_connections', [
+            'title' => 'Mutual Connections with ' . $profile['name'],
+            'activeNav' => 'directory',
+            'profile' => $profile,
+            'mutuals' => Connection::mutualConnections($viewerId, (int) $id, 200),
             'backUrl' => $backUrl,
             'backLabel' => $backLabel,
         ]);
