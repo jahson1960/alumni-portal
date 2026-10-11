@@ -96,9 +96,6 @@
   <!-- Tabs -->
   <div class="flex flex-nowrap items-center gap-6 mb-6 border-b border-slate-200 overflow-x-auto overflow-y-hidden">
     <button type="button" class="profile-tab-link flex items-center gap-1.5 text-sm font-semibold pb-2.5 border-b-2 -mb-px whitespace-nowrap text-gold border-gold" data-tab="about"><i class="fa-regular fa-clock"></i> About</button>
-    <button type="button" class="profile-tab-link flex items-center gap-1.5 text-sm font-semibold pb-2.5 border-b-2 -mb-px whitespace-nowrap text-slate-500 border-transparent hover:text-primary-navy" data-tab="skills"><i class="fa-solid fa-wand-magic-sparkles"></i> Skills</button>
-    <button type="button" class="profile-tab-link flex items-center gap-1.5 text-sm font-semibold pb-2.5 border-b-2 -mb-px whitespace-nowrap text-slate-500 border-transparent hover:text-primary-navy" data-tab="experience"><i class="fa-solid fa-briefcase"></i> Experience</button>
-    <button type="button" class="profile-tab-link flex items-center gap-1.5 text-sm font-semibold pb-2.5 border-b-2 -mb-px whitespace-nowrap text-slate-500 border-transparent hover:text-primary-navy" data-tab="interests"><i class="fa-regular fa-heart"></i> Interests</button>
     <button type="button" class="profile-tab-link flex items-center gap-1.5 text-sm font-semibold pb-2.5 border-b-2 -mb-px whitespace-nowrap text-slate-500 border-transparent hover:text-primary-navy" data-tab="contact"><i class="fa-regular fa-id-badge"></i> Contact</button>
     <div class="relative group pb-2.5 -mb-px">
       <button type="button" class="flex items-center gap-1.5 text-sm font-semibold whitespace-nowrap text-slate-500 hover:text-primary-navy">More <i class="fa-solid fa-chevron-down text-[0.6rem]"></i></button>
@@ -113,17 +110,17 @@
   <div class="grid grid-cols-1 <?= $showActions ? 'lg:grid-cols-[1fr_320px]' : '' ?> gap-6 items-start">
     <!-- Main content -->
     <div class="card p-6 md:p-8">
-      <div class="profile-tab-panel" data-tab="about">
-        <h3 class="text-sm font-bold text-primary-navy flex items-center gap-2 mb-2"><span class="w-7 h-7 rounded-full bg-[var(--menu-accent-100)] text-[var(--menu-accent-600)] flex items-center justify-center flex-shrink-0 text-xs"><i class="fa-regular fa-user"></i></span> About</h3>
-        <?php if ($profile['bio']): ?>
-          <div class="prose prose-sm max-w-none prose-headings:text-primary-navy prose-a:text-gold text-slate-600"><?= $profile['bio'] ?></div>
-        <?php else: ?>
-          <p class="text-xs text-slate-400">No bio added yet.</p>
-        <?php endif; ?>
-      </div>
-
-      <div class="profile-tab-panel hidden space-y-4" data-tab="skills">
+      <div class="profile-tab-panel space-y-6" data-tab="about">
         <div>
+          <h3 class="text-sm font-bold text-primary-navy flex items-center gap-2 mb-2"><span class="w-7 h-7 rounded-full bg-[var(--menu-accent-100)] text-[var(--menu-accent-600)] flex items-center justify-center flex-shrink-0 text-xs"><i class="fa-regular fa-user"></i></span> About</h3>
+          <?php if ($profile['bio']): ?>
+            <div class="prose prose-sm max-w-none prose-headings:text-primary-navy prose-a:text-gold text-slate-600"><?= $profile['bio'] ?></div>
+          <?php else: ?>
+            <p class="text-xs text-slate-400">No bio added yet.</p>
+          <?php endif; ?>
+        </div>
+
+        <div class="border-t border-slate-100 pt-6">
           <h3 class="text-sm font-bold text-primary-navy flex items-center gap-2 mb-2"><span class="w-7 h-7 rounded-full bg-sky-100 text-sky-600 flex items-center justify-center flex-shrink-0 text-xs"><i class="fa-solid fa-tag"></i></span> Skills</h3>
           <?php if ($profile['skills']): ?>
             <div><?= tag_list_html($profile['skills']) ?></div>
@@ -131,7 +128,8 @@
             <p class="text-xs text-slate-400">No skills listed yet.</p>
           <?php endif; ?>
         </div>
-        <div>
+
+        <div class="border-t border-slate-100 pt-6">
           <h3 class="text-sm font-bold text-primary-navy flex items-center gap-2 mb-2"><span class="w-7 h-7 rounded-full bg-green-100 text-green-600 flex items-center justify-center flex-shrink-0 text-xs"><i class="fa-solid fa-bullseye"></i></span> Areas of Expertise</h3>
           <?php if ($profile['expertise_areas']): ?>
             <div><?= tag_list_html($profile['expertise_areas'], 'badge-gold') ?></div>
@@ -139,34 +137,8 @@
             <p class="text-xs text-slate-400">No areas of expertise listed yet.</p>
           <?php endif; ?>
         </div>
-      </div>
 
-      <div class="profile-tab-panel hidden" data-tab="experience">
-        <h3 class="text-sm font-bold text-primary-navy flex items-center gap-2 mb-4"><span class="w-7 h-7 rounded-full bg-amber-100 text-amber-600 flex items-center justify-center flex-shrink-0 text-xs"><i class="fa-solid fa-briefcase"></i></span> Experience &amp; Background</h3>
-        <?php if ($experience): ?>
-          <div class="space-y-5">
-            <?php foreach ($experience as $exp): ?>
-              <div class="flex gap-4">
-                <div class="w-12 h-12 rounded-lg bg-slate-100 text-slate-400 flex items-center justify-center flex-shrink-0"><i class="fa-solid fa-building"></i></div>
-                <div class="min-w-0">
-                  <p class="text-sm font-bold text-primary-navy"><?= e($exp['company']) ?></p>
-                  <p class="text-xs text-slate-600 font-medium"><?= e($exp['title']) ?></p>
-                  <p class="text-[0.68rem] text-slate-400 mt-0.5">
-                    <?= $exp['start_date'] ? e(format_date($exp['start_date'], 'M Y')) : '' ?> &ndash; <?= $exp['is_current'] ? 'Present' : ($exp['end_date'] ? e(format_date($exp['end_date'], 'M Y')) : '') ?>
-                    <?= $exp['location'] ? ' &middot; ' . e($exp['location']) : '' ?>
-                  </p>
-                  <?php if ($exp['description']): ?><p class="text-xs text-slate-500 mt-1.5 leading-relaxed"><?= nl2br(e($exp['description'])) ?></p><?php endif; ?>
-                </div>
-              </div>
-            <?php endforeach; ?>
-          </div>
-        <?php else: ?>
-          <p class="text-xs text-slate-400">No experience added yet.</p>
-        <?php endif; ?>
-      </div>
-
-      <div class="profile-tab-panel hidden space-y-4" data-tab="interests">
-        <div>
+        <div class="border-t border-slate-100 pt-6">
           <h3 class="text-sm font-bold text-primary-navy flex items-center gap-2 mb-2"><span class="w-7 h-7 rounded-full bg-purple-100 text-purple-600 flex items-center justify-center flex-shrink-0 text-xs"><i class="fa-solid fa-people-group"></i></span> Business Interests</h3>
           <?php if ($profile['business_interests']): ?>
             <div><?= tag_list_html($profile['business_interests']) ?></div>
@@ -174,12 +146,37 @@
             <p class="text-xs text-slate-400">No business interests listed yet.</p>
           <?php endif; ?>
         </div>
-        <div>
+
+        <div class="border-t border-slate-100 pt-6">
           <h3 class="text-sm font-bold text-primary-navy flex items-center gap-2 mb-2"><span class="w-7 h-7 rounded-full bg-rose-100 text-rose-600 flex items-center justify-center flex-shrink-0 text-xs"><i class="fa-regular fa-heart"></i></span> Personal Interests</h3>
           <?php if ($profile['personal_interests']): ?>
             <div><?= tag_list_html($profile['personal_interests'], 'badge bg-rose-50 text-rose-600') ?></div>
           <?php else: ?>
             <p class="text-xs text-slate-400">No personal interests listed yet.</p>
+          <?php endif; ?>
+        </div>
+
+        <div class="border-t border-slate-100 pt-6">
+          <h3 class="text-sm font-bold text-primary-navy flex items-center gap-2 mb-4"><span class="w-7 h-7 rounded-full bg-amber-100 text-amber-600 flex items-center justify-center flex-shrink-0 text-xs"><i class="fa-solid fa-briefcase"></i></span> Experience &amp; Background</h3>
+          <?php if ($experience): ?>
+            <div class="space-y-5">
+              <?php foreach ($experience as $exp): ?>
+                <div class="flex gap-4">
+                  <div class="w-12 h-12 rounded-lg bg-slate-100 text-slate-400 flex items-center justify-center flex-shrink-0"><i class="fa-solid fa-building"></i></div>
+                  <div class="min-w-0">
+                    <p class="text-sm font-bold text-primary-navy"><?= e($exp['company']) ?></p>
+                    <p class="text-xs text-slate-600 font-medium"><?= e($exp['title']) ?></p>
+                    <p class="text-[0.68rem] text-slate-400 mt-0.5">
+                      <?= $exp['start_date'] ? e(format_date($exp['start_date'], 'M Y')) : '' ?> &ndash; <?= $exp['is_current'] ? 'Present' : ($exp['end_date'] ? e(format_date($exp['end_date'], 'M Y')) : '') ?>
+                      <?= $exp['location'] ? ' &middot; ' . e($exp['location']) : '' ?>
+                    </p>
+                    <?php if ($exp['description']): ?><p class="text-xs text-slate-500 mt-1.5 leading-relaxed"><?= nl2br(e($exp['description'])) ?></p><?php endif; ?>
+                  </div>
+                </div>
+              <?php endforeach; ?>
+            </div>
+          <?php else: ?>
+            <p class="text-xs text-slate-400">No experience added yet.</p>
           <?php endif; ?>
         </div>
       </div>
