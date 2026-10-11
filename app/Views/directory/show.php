@@ -31,8 +31,8 @@ $heroTaglineSubtitleColor = \App\Models\Setting::get('profile_hero_tagline_subti
     <?php endif; ?>
 
     <div class="relative flex items-start gap-3 sm:gap-5 md:max-w-[calc(100%-20rem)]">
-      <?= avatar_html($profile, 'w-16 h-16 sm:w-24 sm:h-24 text-lg sm:text-2xl') ?>
-      <div class="min-w-0">
+      <?= avatar_html($profile, 'w-16 h-16 sm:w-24 sm:h-24 text-lg sm:text-2xl' . ($heroBackground ? ' ring-4 ring-white/80' : '')) ?>
+      <div class="min-w-0" <?php if ($heroBackground): ?>style="text-shadow: 0 1px 3px rgba(255,255,255,0.95), 0 1px 10px rgba(255,255,255,0.8);"<?php endif; ?>>
         <div class="flex items-center gap-2 flex-wrap">
           <h1 class="text-xl font-extrabold text-primary-navy"><?= e($profile['name']) ?></h1>
           <i class="fa-solid fa-circle-check text-sky-500 text-sm" title="Verified Alumni"></i>
