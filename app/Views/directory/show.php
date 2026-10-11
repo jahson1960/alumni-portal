@@ -99,7 +99,7 @@
     <button type="button" class="profile-tab-link flex items-center gap-1.5 text-sm font-semibold pb-2.5 border-b-2 -mb-px whitespace-nowrap text-slate-500 border-transparent hover:text-primary-navy" data-tab="about"><i class="fa-regular fa-star"></i> Skills</button>
     <button type="button" class="profile-tab-link flex items-center gap-1.5 text-sm font-semibold pb-2.5 border-b-2 -mb-px whitespace-nowrap text-slate-500 border-transparent hover:text-primary-navy" data-tab="about"><i class="fa-solid fa-briefcase"></i> Experience</button>
     <button type="button" class="profile-tab-link flex items-center gap-1.5 text-sm font-semibold pb-2.5 border-b-2 -mb-px whitespace-nowrap text-slate-500 border-transparent hover:text-primary-navy" data-tab="about"><i class="fa-regular fa-heart"></i> Interests</button>
-    <button type="button" class="profile-tab-link flex items-center gap-1.5 text-sm font-semibold pb-2.5 border-b-2 -mb-px whitespace-nowrap text-slate-500 border-transparent hover:text-primary-navy" data-tab="contact"><i class="fa-regular fa-id-badge"></i> Contact</button>
+    <button type="button" class="profile-tab-link flex items-center gap-1.5 text-sm font-semibold pb-2.5 border-b-2 -mb-px whitespace-nowrap text-slate-500 border-transparent hover:text-primary-navy" data-tab="about"><i class="fa-regular fa-id-badge"></i> Contact</button>
     <div class="relative group pb-2.5 -mb-px">
       <button type="button" class="flex items-center gap-1.5 text-sm font-semibold whitespace-nowrap text-slate-500 hover:text-primary-navy">More <i class="fa-solid fa-chevron-down text-[0.6rem]"></i></button>
       <div class="absolute left-0 top-full hidden group-hover:block z-20 pt-1">
@@ -110,7 +110,7 @@
     </div>
   </div>
 
-  <div class="grid grid-cols-1 <?= $showActions ? 'lg:grid-cols-[1fr_320px]' : '' ?> gap-6 items-start">
+  <div class="grid grid-cols-1 lg:grid-cols-[1fr_320px] gap-6 items-start">
     <!-- Main content -->
     <div class="card p-6 md:p-8">
       <div class="profile-tab-panel space-y-6" data-tab="about">
@@ -186,8 +186,28 @@
         </div>
       </div>
 
-      <div class="profile-tab-panel hidden" data-tab="contact">
-        <h3 class="text-sm font-bold text-primary-navy flex items-center gap-2 mb-4"><span class="w-7 h-7 rounded-full bg-sky-600 text-white flex items-center justify-center flex-shrink-0 text-xs"><i class="fa-regular fa-user"></i></span> Contact Information</h3>
+      <div class="profile-tab-panel hidden" data-tab="education">
+        <h3 class="text-sm font-bold text-primary-navy flex items-center gap-2 mb-4"><span class="w-7 h-7 rounded-full bg-indigo-100 text-indigo-600 flex items-center justify-center flex-shrink-0 text-xs"><i class="fa-solid fa-graduation-cap"></i></span> Education</h3>
+        <?php if ($education): ?>
+          <div class="space-y-4">
+            <?php foreach ($education as $edu): ?>
+              <div>
+                <p class="text-sm font-bold text-primary-navy"><?= e($edu['school']) ?></p>
+                <p class="text-xs text-slate-500"><?= e(trim(($edu['degree'] ?? '') . (($edu['degree'] && $edu['field_of_study']) ? ', ' : '') . ($edu['field_of_study'] ?? ''))) ?></p>
+                <p class="text-[0.68rem] text-slate-400 mt-0.5"><?= e($edu['start_year'] ?? '') ?><?= $edu['start_year'] || $edu['end_year'] ? ' – ' : '' ?><?= e($edu['end_year'] ?? '') ?></p>
+              </div>
+            <?php endforeach; ?>
+          </div>
+        <?php else: ?>
+          <p class="text-xs text-slate-400">No education added yet.</p>
+        <?php endif; ?>
+      </div>
+    </div>
+
+    <!-- Sidebar -->
+    <div class="space-y-4">
+      <div class="card p-5">
+        <h3 class="text-sm font-bold text-primary-navy flex items-center gap-2 mb-4"><span class="w-8 h-8 rounded-full bg-sky-600 text-white flex items-center justify-center flex-shrink-0"><i class="fa-regular fa-user"></i></span> Contact Information</h3>
         <div class="space-y-3.5">
           <?php if (($isOwnerOrAdmin || $profile['show_phone']) && $profile['phone']): ?>
             <div class="flex items-start gap-2.5">
@@ -219,26 +239,6 @@
         </div>
       </div>
 
-      <div class="profile-tab-panel hidden" data-tab="education">
-        <h3 class="text-sm font-bold text-primary-navy flex items-center gap-2 mb-4"><span class="w-7 h-7 rounded-full bg-indigo-100 text-indigo-600 flex items-center justify-center flex-shrink-0 text-xs"><i class="fa-solid fa-graduation-cap"></i></span> Education</h3>
-        <?php if ($education): ?>
-          <div class="space-y-4">
-            <?php foreach ($education as $edu): ?>
-              <div>
-                <p class="text-sm font-bold text-primary-navy"><?= e($edu['school']) ?></p>
-                <p class="text-xs text-slate-500"><?= e(trim(($edu['degree'] ?? '') . (($edu['degree'] && $edu['field_of_study']) ? ', ' : '') . ($edu['field_of_study'] ?? ''))) ?></p>
-                <p class="text-[0.68rem] text-slate-400 mt-0.5"><?= e($edu['start_year'] ?? '') ?><?= $edu['start_year'] || $edu['end_year'] ? ' – ' : '' ?><?= e($edu['end_year'] ?? '') ?></p>
-              </div>
-            <?php endforeach; ?>
-          </div>
-        <?php else: ?>
-          <p class="text-xs text-slate-400">No education added yet.</p>
-        <?php endif; ?>
-      </div>
-    </div>
-
-    <!-- Sidebar -->
-    <div class="space-y-4">
       <?php if ($showActions): ?>
         <div class="card p-5 bg-[var(--menu-accent-50)] border-[var(--menu-accent-100)]">
           <h3 class="text-sm font-bold text-primary-navy flex items-center gap-2 mb-2"><span class="w-8 h-8 rounded-full bg-[var(--menu-accent-600)] text-white flex items-center justify-center flex-shrink-0"><i class="fa-solid fa-people-group"></i></span> In your network</h3>
