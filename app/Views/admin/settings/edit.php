@@ -307,37 +307,36 @@
         <input type="color" id="profile_hero_gradient_color" name="profile_hero_gradient_color" class="w-full h-10 rounded border border-slate-300 cursor-pointer" value="<?= e($settings['profile_hero_gradient_color'] ?? '#ffffff') ?>">
       </div>
       <div>
-        <label class="form-label" for="profile_hero_gradient_direction">Gradient Type</label>
-        <?php $gradientDirection = $settings['profile_hero_gradient_direction'] ?? 'to right'; ?>
-        <select id="profile_hero_gradient_direction" name="profile_hero_gradient_direction" class="form-input">
-          <option value="to right" <?= $gradientDirection === 'to right' ? 'selected' : '' ?>>Left to Right</option>
-          <option value="to left" <?= $gradientDirection === 'to left' ? 'selected' : '' ?>>Right to Left</option>
-          <option value="to bottom" <?= $gradientDirection === 'to bottom' ? 'selected' : '' ?>>Top to Bottom</option>
-          <option value="to top" <?= $gradientDirection === 'to top' ? 'selected' : '' ?>>Bottom to Top</option>
-          <option value="135deg" <?= $gradientDirection === '135deg' ? 'selected' : '' ?>>Diagonal</option>
-          <option value="radial" <?= $gradientDirection === 'radial' ? 'selected' : '' ?>>Radial (from right)</option>
-        </select>
+        <label class="form-label" for="profile_hero_gradient_angle">Gradient Movement <span id="profile_hero_gradient_angle_out" class="text-slate-400 font-normal"></span></label>
+        <input type="range" id="profile_hero_gradient_angle" name="profile_hero_gradient_angle" min="0" max="360" step="5" value="<?= e($settings['profile_hero_gradient_angle'] ?? '90') ?>" class="w-full accent-gold" oninput="document.getElementById('profile_hero_gradient_angle_out').textContent = this.value + '°'">
+        <p class="text-[0.68rem] text-slate-400 mt-1">90&deg; = left to right, 180&deg; = right to left, 0&deg; = bottom to top, 270&deg; = top to bottom.</p>
       </div>
       <div>
-        <label class="form-label" for="profile_hero_gradient_strength">Gradient Strength</label>
-        <?php $gradientStrength = $settings['profile_hero_gradient_strength'] ?? 'medium'; ?>
-        <select id="profile_hero_gradient_strength" name="profile_hero_gradient_strength" class="form-input">
-          <option value="light" <?= $gradientStrength === 'light' ? 'selected' : '' ?>>Light (photo shows through more)</option>
-          <option value="medium" <?= $gradientStrength === 'medium' ? 'selected' : '' ?>>Medium</option>
-          <option value="strong" <?= $gradientStrength === 'strong' ? 'selected' : '' ?>>Strong (photo barely visible)</option>
-        </select>
+        <label class="form-label" for="profile_hero_gradient_intensity">Gradient Strength <span id="profile_hero_gradient_intensity_out" class="text-slate-400 font-normal"></span></label>
+        <input type="range" id="profile_hero_gradient_intensity" name="profile_hero_gradient_intensity" min="0" max="100" step="5" value="<?= e($settings['profile_hero_gradient_intensity'] ?? '70') ?>" class="w-full accent-gold" oninput="document.getElementById('profile_hero_gradient_intensity_out').textContent = this.value + '%'">
+        <p class="text-[0.68rem] text-slate-400 mt-1">Higher = overlay color dominates more; lower = the photo shows through more.</p>
       </div>
     </div>
+    <script>
+      document.getElementById('profile_hero_gradient_angle_out').textContent = document.getElementById('profile_hero_gradient_angle').value + '°';
+      document.getElementById('profile_hero_gradient_intensity_out').textContent = document.getElementById('profile_hero_gradient_intensity').value + '%';
+    </script>
 
     <div class="mt-4 pt-4 border-t border-slate-100 grid grid-cols-1 sm:grid-cols-2 gap-4">
       <div>
         <label class="form-label" for="profile_hero_tagline_title">Banner Tagline Title</label>
-        <input type="text" id="profile_hero_tagline_title" name="profile_hero_tagline_title" class="form-input" value="<?= e($settings['profile_hero_tagline_title'] ?? 'RBS Alumni') ?>">
+        <div class="flex gap-2">
+          <input type="text" id="profile_hero_tagline_title" name="profile_hero_tagline_title" class="form-input flex-1" value="<?= e($settings['profile_hero_tagline_title'] ?? 'RBS Alumni') ?>">
+          <input type="color" name="profile_hero_tagline_title_color" class="w-12 h-10 rounded border border-slate-300 cursor-pointer flex-shrink-0" value="<?= e($settings['profile_hero_tagline_title_color'] ?? '#000000') ?>">
+        </div>
       </div>
       <div>
         <label class="form-label" for="profile_hero_tagline_subtitle">Banner Tagline Subtitle</label>
-        <textarea id="profile_hero_tagline_subtitle" name="profile_hero_tagline_subtitle" rows="2" class="form-textarea"><?= e($settings['profile_hero_tagline_subtitle'] ?? "A global network\nof changemakers") ?></textarea>
-        <p class="text-xs text-slate-400 mt-1">Shown on the right side of every alumni profile banner, vertically centered. Line breaks are kept as typed.</p>
+        <div class="flex gap-2">
+          <textarea id="profile_hero_tagline_subtitle" name="profile_hero_tagline_subtitle" rows="2" class="form-textarea flex-1"><?= e($settings['profile_hero_tagline_subtitle'] ?? "A global network\nof changemakers") ?></textarea>
+          <input type="color" name="profile_hero_tagline_subtitle_color" class="w-12 h-10 rounded border border-slate-300 cursor-pointer flex-shrink-0" value="<?= e($settings['profile_hero_tagline_subtitle_color'] ?? '#000000') ?>">
+        </div>
+        <p class="text-xs text-slate-400 mt-1">Shown on the right side of every alumni profile banner (only when a banner image is set), vertically centered. Line breaks are kept as typed.</p>
       </div>
     </div>
   </div>

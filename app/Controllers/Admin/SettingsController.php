@@ -17,8 +17,6 @@ class SettingsController extends AdminController
     ];
 
     private const TRANSITIONS = ['fade', 'slide', 'slide-vertical', 'zoom', 'flip', 'wipe'];
-    private const GRADIENT_DIRECTIONS = ['to right', 'to left', 'to bottom', 'to top', '135deg', 'radial'];
-    private const GRADIENT_STRENGTHS = ['light', 'medium', 'strong'];
 
     public function edit(): void
     {
@@ -153,10 +151,12 @@ class SettingsController extends AdminController
         }
 
         $data['profile_hero_gradient_color'] = valid_hex_color($this->input('profile_hero_gradient_color'), '#ffffff');
-        $gradientDirection = (string) $this->input('profile_hero_gradient_direction', 'to right');
-        $data['profile_hero_gradient_direction'] = in_array($gradientDirection, self::GRADIENT_DIRECTIONS, true) ? $gradientDirection : 'to right';
-        $gradientStrength = (string) $this->input('profile_hero_gradient_strength', 'medium');
-        $data['profile_hero_gradient_strength'] = in_array($gradientStrength, self::GRADIENT_STRENGTHS, true) ? $gradientStrength : 'medium';
+        $gradientAngle = (int) $this->input('profile_hero_gradient_angle', 90);
+        $data['profile_hero_gradient_angle'] = (string) max(0, min(360, $gradientAngle));
+        $gradientIntensity = (int) $this->input('profile_hero_gradient_intensity', 70);
+        $data['profile_hero_gradient_intensity'] = (string) max(0, min(100, $gradientIntensity));
+        $data['profile_hero_tagline_title_color'] = valid_hex_color($this->input('profile_hero_tagline_title_color'), '#000000');
+        $data['profile_hero_tagline_subtitle_color'] = valid_hex_color($this->input('profile_hero_tagline_subtitle_color'), '#000000');
 
         if ($errors) {
             $_SESSION['_errors'] = $errors;

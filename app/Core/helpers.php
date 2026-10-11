@@ -115,23 +115,19 @@ function hex_to_rgba(string $hex, float $alpha): string
 }
 
 /**
- * Builds the gradient() CSS function used to overlay the alumni profile hero's background photo
- * (so the header text stays legible regardless of what the photo looks like underneath).
+ * Builds the linear-gradient() CSS function used to overlay the alumni profile hero's background
+ * photo (so the header text stays legible regardless of what the photo looks like underneath).
+ * $angle is a CSS gradient angle in degrees (90deg = left to right); $intensity is 0-100.
  */
-function hero_gradient_css(string $color, string $direction, string $strength): string
+function hero_gradient_css(string $color, int $angle, int $intensity): string
 {
-    [$near, $mid, $far] = match ($strength) {
-        'light' => [0.85, 0.7, 0.15],
-        'strong' => [0.99, 0.97, 0.75],
-        default => [0.97, 0.9, 0.4],
-    };
+    $intensity = max(0, min(100, $intensity)) / 100;
+    $near = $intensity * 0.99;
+    $mid = $intensity * 0.85;
+    $far = $intensity * 0.45;
+    $angle = (($angle % 360) + 360) % 360;
 
-    if ($direction === 'radial') {
-        return 'radial-gradient(circle at right, ' . hex_to_rgba($color, $far) . ' 0%, ' . hex_to_rgba($color, $near) . ' 100%)';
-    }
-
-    $cssDirection = in_array($direction, ['to right', 'to left', 'to bottom', 'to top'], true) ? $direction : '135deg';
-    return "linear-gradient({$cssDirection}, " . hex_to_rgba($color, $near) . ' 0%, ' . hex_to_rgba($color, $mid) . ' 40%, ' . hex_to_rgba($color, $far) . ' 100%)';
+    return "linear-gradient({$angle}deg, " . hex_to_rgba($color, $near) . ' 0%, ' . hex_to_rgba($color, $mid) . ' 40%, ' . hex_to_rgba($color, $far) . ' 100%)';
 }
 
 function valid_align(?string $value, array $allowed, string $default): string
