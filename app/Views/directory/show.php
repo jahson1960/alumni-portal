@@ -100,62 +100,50 @@
     <a href="#experience" class="profile-jump flex items-center gap-1.5 text-sm font-semibold pb-2.5 border-b-2 -mb-px whitespace-nowrap text-slate-500 border-transparent hover:text-primary-navy" data-tab="experience"><i class="fa-solid fa-briefcase"></i> Experience</a>
     <a href="#interests" class="profile-jump flex items-center gap-1.5 text-sm font-semibold pb-2.5 border-b-2 -mb-px whitespace-nowrap text-slate-500 border-transparent hover:text-primary-navy" data-tab="interests"><i class="fa-regular fa-heart"></i> Interests</a>
     <a href="#contact-info" class="profile-jump flex items-center gap-1.5 text-sm font-semibold pb-2.5 border-b-2 -mb-px whitespace-nowrap text-slate-500 border-transparent hover:text-primary-navy" data-tab="contact"><i class="fa-regular fa-id-badge"></i> Contact</a>
-    <?php if ($education): ?>
-      <div class="relative group pb-2.5 -mb-px">
-        <button type="button" class="flex items-center gap-1.5 text-sm font-semibold whitespace-nowrap text-slate-500 hover:text-primary-navy">More <i class="fa-solid fa-chevron-down text-[0.6rem]"></i></button>
-        <div class="absolute left-0 top-full hidden group-hover:block z-20 pt-1">
-          <div class="bg-white min-w-[160px] shadow-lg rounded-md border border-slate-200 py-2">
-            <a href="#education" class="profile-jump block px-4 py-2 text-xs text-slate-700 hover:bg-slate-50 hover:text-gold" data-tab="education">Education</a>
-          </div>
+    <div class="relative group pb-2.5 -mb-px">
+      <button type="button" class="flex items-center gap-1.5 text-sm font-semibold whitespace-nowrap text-slate-500 hover:text-primary-navy">More <i class="fa-solid fa-chevron-down text-[0.6rem]"></i></button>
+      <div class="absolute left-0 top-full hidden group-hover:block z-20 pt-1">
+        <div class="bg-white min-w-[160px] shadow-lg rounded-md border border-slate-200 py-2">
+          <a href="#education" class="profile-jump block px-4 py-2 text-xs text-slate-700 hover:bg-slate-50 hover:text-gold" data-tab="education">Education</a>
         </div>
       </div>
-    <?php endif; ?>
+    </div>
   </div>
 
   <div class="grid grid-cols-1 lg:grid-cols-[1fr_320px] gap-6 items-start">
     <!-- Main content -->
     <div class="card p-6 md:p-8 space-y-6">
-      <?php if ($profile['bio']): ?>
-        <div id="about">
-          <h3 class="text-sm font-bold text-primary-navy flex items-center gap-2 mb-2"><span class="w-7 h-7 rounded-full bg-[var(--menu-accent-100)] text-[var(--menu-accent-600)] flex items-center justify-center flex-shrink-0 text-xs"><i class="fa-regular fa-user"></i></span> About</h3>
+      <div id="about">
+        <h3 class="text-sm font-bold text-primary-navy flex items-center gap-2 mb-2"><span class="w-7 h-7 rounded-full bg-[var(--menu-accent-100)] text-[var(--menu-accent-600)] flex items-center justify-center flex-shrink-0 text-xs"><i class="fa-regular fa-user"></i></span> About</h3>
+        <?php if ($profile['bio']): ?>
           <div class="prose prose-sm max-w-none prose-headings:text-primary-navy prose-a:text-gold text-slate-600"><?= $profile['bio'] ?></div>
-        </div>
-      <?php endif; ?>
+        <?php else: ?>
+          <p class="text-xs text-slate-400">No bio added yet.</p>
+        <?php endif; ?>
+      </div>
 
-      <?php if ($profile['skills']): ?>
-        <div id="skills" class="<?= $profile['bio'] ? 'border-t border-slate-100 pt-6' : '' ?>">
+      <div id="skills" class="border-t border-slate-100 pt-6 space-y-4">
+        <div>
           <h3 class="text-sm font-bold text-primary-navy flex items-center gap-2 mb-2"><span class="w-7 h-7 rounded-full bg-sky-100 text-sky-600 flex items-center justify-center flex-shrink-0 text-xs"><i class="fa-solid fa-tag"></i></span> Skills</h3>
-          <div><?= tag_list_html($profile['skills']) ?></div>
+          <?php if ($profile['skills']): ?>
+            <div><?= tag_list_html($profile['skills']) ?></div>
+          <?php else: ?>
+            <p class="text-xs text-slate-400">No skills listed yet.</p>
+          <?php endif; ?>
         </div>
-      <?php endif; ?>
-
-      <?php if ($profile['expertise_areas']): ?>
-        <div class="border-t border-slate-100 pt-6">
+        <div>
           <h3 class="text-sm font-bold text-primary-navy flex items-center gap-2 mb-2"><span class="w-7 h-7 rounded-full bg-green-100 text-green-600 flex items-center justify-center flex-shrink-0 text-xs"><i class="fa-solid fa-bullseye"></i></span> Areas of Expertise</h3>
-          <div><?= tag_list_html($profile['expertise_areas'], 'badge-gold') ?></div>
-        </div>
-      <?php endif; ?>
-
-      <?php if ($profile['business_interests'] || $profile['personal_interests']): ?>
-        <div id="interests" class="border-t border-slate-100 pt-6 space-y-4">
-          <?php if ($profile['business_interests']): ?>
-            <div>
-              <h3 class="text-sm font-bold text-primary-navy flex items-center gap-2 mb-2"><span class="w-7 h-7 rounded-full bg-purple-100 text-purple-600 flex items-center justify-center flex-shrink-0 text-xs"><i class="fa-solid fa-people-group"></i></span> Business Interests</h3>
-              <div><?= tag_list_html($profile['business_interests']) ?></div>
-            </div>
-          <?php endif; ?>
-          <?php if ($profile['personal_interests']): ?>
-            <div>
-              <h3 class="text-sm font-bold text-primary-navy flex items-center gap-2 mb-2"><span class="w-7 h-7 rounded-full bg-rose-100 text-rose-600 flex items-center justify-center flex-shrink-0 text-xs"><i class="fa-regular fa-heart"></i></span> Personal Interests</h3>
-              <div><?= tag_list_html($profile['personal_interests'], 'badge bg-rose-50 text-rose-600') ?></div>
-            </div>
+          <?php if ($profile['expertise_areas']): ?>
+            <div><?= tag_list_html($profile['expertise_areas'], 'badge-gold') ?></div>
+          <?php else: ?>
+            <p class="text-xs text-slate-400">No areas of expertise listed yet.</p>
           <?php endif; ?>
         </div>
-      <?php endif; ?>
+      </div>
 
-      <?php if ($experience): ?>
-        <div id="experience" class="border-t border-slate-100 pt-6">
-          <h3 class="text-sm font-bold text-primary-navy flex items-center gap-2 mb-4"><span class="w-7 h-7 rounded-full bg-amber-100 text-amber-600 flex items-center justify-center flex-shrink-0 text-xs"><i class="fa-solid fa-briefcase"></i></span> Experience &amp; Background</h3>
+      <div id="experience" class="border-t border-slate-100 pt-6">
+        <h3 class="text-sm font-bold text-primary-navy flex items-center gap-2 mb-4"><span class="w-7 h-7 rounded-full bg-amber-100 text-amber-600 flex items-center justify-center flex-shrink-0 text-xs"><i class="fa-solid fa-briefcase"></i></span> Experience &amp; Background</h3>
+        <?php if ($experience): ?>
           <div class="space-y-5">
             <?php foreach ($experience as $exp): ?>
               <div class="flex gap-4">
@@ -172,12 +160,33 @@
               </div>
             <?php endforeach; ?>
           </div>
-        </div>
-      <?php endif; ?>
+        <?php else: ?>
+          <p class="text-xs text-slate-400">No experience added yet.</p>
+        <?php endif; ?>
+      </div>
 
-      <?php if ($education): ?>
-        <div id="education" class="border-t border-slate-100 pt-6">
-          <h3 class="text-sm font-bold text-primary-navy flex items-center gap-2 mb-4"><span class="w-7 h-7 rounded-full bg-indigo-100 text-indigo-600 flex items-center justify-center flex-shrink-0 text-xs"><i class="fa-solid fa-graduation-cap"></i></span> Education</h3>
+      <div id="interests" class="border-t border-slate-100 pt-6 space-y-4">
+        <div>
+          <h3 class="text-sm font-bold text-primary-navy flex items-center gap-2 mb-2"><span class="w-7 h-7 rounded-full bg-purple-100 text-purple-600 flex items-center justify-center flex-shrink-0 text-xs"><i class="fa-solid fa-people-group"></i></span> Business Interests</h3>
+          <?php if ($profile['business_interests']): ?>
+            <div><?= tag_list_html($profile['business_interests']) ?></div>
+          <?php else: ?>
+            <p class="text-xs text-slate-400">No business interests listed yet.</p>
+          <?php endif; ?>
+        </div>
+        <div>
+          <h3 class="text-sm font-bold text-primary-navy flex items-center gap-2 mb-2"><span class="w-7 h-7 rounded-full bg-rose-100 text-rose-600 flex items-center justify-center flex-shrink-0 text-xs"><i class="fa-regular fa-heart"></i></span> Personal Interests</h3>
+          <?php if ($profile['personal_interests']): ?>
+            <div><?= tag_list_html($profile['personal_interests'], 'badge bg-rose-50 text-rose-600') ?></div>
+          <?php else: ?>
+            <p class="text-xs text-slate-400">No personal interests listed yet.</p>
+          <?php endif; ?>
+        </div>
+      </div>
+
+      <div id="education" class="border-t border-slate-100 pt-6">
+        <h3 class="text-sm font-bold text-primary-navy flex items-center gap-2 mb-4"><span class="w-7 h-7 rounded-full bg-indigo-100 text-indigo-600 flex items-center justify-center flex-shrink-0 text-xs"><i class="fa-solid fa-graduation-cap"></i></span> Education</h3>
+        <?php if ($education): ?>
           <div class="space-y-4">
             <?php foreach ($education as $edu): ?>
               <div>
@@ -187,8 +196,10 @@
               </div>
             <?php endforeach; ?>
           </div>
-        </div>
-      <?php endif; ?>
+        <?php else: ?>
+          <p class="text-xs text-slate-400">No education added yet.</p>
+        <?php endif; ?>
+      </div>
     </div>
 
     <!-- Sidebar -->
