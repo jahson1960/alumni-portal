@@ -309,7 +309,7 @@
       <div>
         <label class="form-label" for="profile_hero_gradient_angle">Gradient Movement <span id="profile_hero_gradient_angle_out" class="text-slate-400 font-normal"></span></label>
         <input type="range" id="profile_hero_gradient_angle" name="profile_hero_gradient_angle" min="0" max="360" step="5" value="<?= e($settings['profile_hero_gradient_angle'] ?? '90') ?>" class="w-full accent-gold" oninput="document.getElementById('profile_hero_gradient_angle_out').textContent = this.value + '°'">
-        <p class="text-[0.68rem] text-slate-400 mt-1">90&deg; = left to right, 180&deg; = right to left, 0&deg; = bottom to top, 270&deg; = top to bottom.</p>
+        <p class="text-[0.68rem] text-slate-400 mt-1">90&deg; = left to right, 270&deg; = right to left, 0&deg; = bottom to top, 180&deg; = top to bottom. The transparent zone starts at the 0% end of this direction.</p>
       </div>
       <div>
         <label class="form-label" for="profile_hero_gradient_transparent_zone">Transparent Zone <span id="profile_hero_gradient_transparent_zone_out" class="text-slate-400 font-normal"></span></label>
