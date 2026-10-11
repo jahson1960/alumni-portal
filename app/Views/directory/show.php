@@ -93,27 +93,27 @@
     </div>
   </div>
 
-  <!-- Section nav -->
+  <!-- Tabs -->
   <div class="flex flex-nowrap items-center gap-6 mb-6 border-b border-slate-200 overflow-x-auto overflow-y-hidden">
-    <a href="#about" class="profile-jump flex items-center gap-1.5 text-sm font-semibold pb-2.5 border-b-2 -mb-px whitespace-nowrap text-gold border-gold" data-tab="about"><i class="fa-regular fa-clock"></i> About</a>
-    <a href="#skills" class="profile-jump flex items-center gap-1.5 text-sm font-semibold pb-2.5 border-b-2 -mb-px whitespace-nowrap text-slate-500 border-transparent hover:text-primary-navy" data-tab="skills"><i class="fa-solid fa-wand-magic-sparkles"></i> Skills</a>
-    <a href="#experience" class="profile-jump flex items-center gap-1.5 text-sm font-semibold pb-2.5 border-b-2 -mb-px whitespace-nowrap text-slate-500 border-transparent hover:text-primary-navy" data-tab="experience"><i class="fa-solid fa-briefcase"></i> Experience</a>
-    <a href="#interests" class="profile-jump flex items-center gap-1.5 text-sm font-semibold pb-2.5 border-b-2 -mb-px whitespace-nowrap text-slate-500 border-transparent hover:text-primary-navy" data-tab="interests"><i class="fa-regular fa-heart"></i> Interests</a>
-    <a href="#contact-info" class="profile-jump flex items-center gap-1.5 text-sm font-semibold pb-2.5 border-b-2 -mb-px whitespace-nowrap text-slate-500 border-transparent hover:text-primary-navy" data-tab="contact"><i class="fa-regular fa-id-badge"></i> Contact</a>
+    <button type="button" class="profile-tab-link flex items-center gap-1.5 text-sm font-semibold pb-2.5 border-b-2 -mb-px whitespace-nowrap text-gold border-gold" data-tab="about"><i class="fa-regular fa-clock"></i> About</button>
+    <button type="button" class="profile-tab-link flex items-center gap-1.5 text-sm font-semibold pb-2.5 border-b-2 -mb-px whitespace-nowrap text-slate-500 border-transparent hover:text-primary-navy" data-tab="skills"><i class="fa-solid fa-wand-magic-sparkles"></i> Skills</button>
+    <button type="button" class="profile-tab-link flex items-center gap-1.5 text-sm font-semibold pb-2.5 border-b-2 -mb-px whitespace-nowrap text-slate-500 border-transparent hover:text-primary-navy" data-tab="experience"><i class="fa-solid fa-briefcase"></i> Experience</button>
+    <button type="button" class="profile-tab-link flex items-center gap-1.5 text-sm font-semibold pb-2.5 border-b-2 -mb-px whitespace-nowrap text-slate-500 border-transparent hover:text-primary-navy" data-tab="interests"><i class="fa-regular fa-heart"></i> Interests</button>
+    <button type="button" class="profile-tab-link flex items-center gap-1.5 text-sm font-semibold pb-2.5 border-b-2 -mb-px whitespace-nowrap text-slate-500 border-transparent hover:text-primary-navy" data-tab="contact"><i class="fa-regular fa-id-badge"></i> Contact</button>
     <div class="relative group pb-2.5 -mb-px">
       <button type="button" class="flex items-center gap-1.5 text-sm font-semibold whitespace-nowrap text-slate-500 hover:text-primary-navy">More <i class="fa-solid fa-chevron-down text-[0.6rem]"></i></button>
       <div class="absolute left-0 top-full hidden group-hover:block z-20 pt-1">
         <div class="bg-white min-w-[160px] shadow-lg rounded-md border border-slate-200 py-2">
-          <a href="#education" class="profile-jump block px-4 py-2 text-xs text-slate-700 hover:bg-slate-50 hover:text-gold" data-tab="education">Education</a>
+          <button type="button" class="profile-tab-link block w-full text-left px-4 py-2 text-xs text-slate-700 hover:bg-slate-50 hover:text-gold" data-tab="education">Education</button>
         </div>
       </div>
     </div>
   </div>
 
-  <div class="grid grid-cols-1 lg:grid-cols-[1fr_320px] gap-6 items-start">
+  <div class="grid grid-cols-1 <?= $showActions ? 'lg:grid-cols-[1fr_320px]' : '' ?> gap-6 items-start">
     <!-- Main content -->
-    <div class="card p-6 md:p-8 space-y-6">
-      <div id="about">
+    <div class="card p-6 md:p-8">
+      <div class="profile-tab-panel" data-tab="about">
         <h3 class="text-sm font-bold text-primary-navy flex items-center gap-2 mb-2"><span class="w-7 h-7 rounded-full bg-[var(--menu-accent-100)] text-[var(--menu-accent-600)] flex items-center justify-center flex-shrink-0 text-xs"><i class="fa-regular fa-user"></i></span> About</h3>
         <?php if ($profile['bio']): ?>
           <div class="prose prose-sm max-w-none prose-headings:text-primary-navy prose-a:text-gold text-slate-600"><?= $profile['bio'] ?></div>
@@ -122,7 +122,7 @@
         <?php endif; ?>
       </div>
 
-      <div id="skills" class="border-t border-slate-100 pt-6 space-y-4">
+      <div class="profile-tab-panel hidden space-y-4" data-tab="skills">
         <div>
           <h3 class="text-sm font-bold text-primary-navy flex items-center gap-2 mb-2"><span class="w-7 h-7 rounded-full bg-sky-100 text-sky-600 flex items-center justify-center flex-shrink-0 text-xs"><i class="fa-solid fa-tag"></i></span> Skills</h3>
           <?php if ($profile['skills']): ?>
@@ -141,7 +141,7 @@
         </div>
       </div>
 
-      <div id="experience" class="border-t border-slate-100 pt-6">
+      <div class="profile-tab-panel hidden" data-tab="experience">
         <h3 class="text-sm font-bold text-primary-navy flex items-center gap-2 mb-4"><span class="w-7 h-7 rounded-full bg-amber-100 text-amber-600 flex items-center justify-center flex-shrink-0 text-xs"><i class="fa-solid fa-briefcase"></i></span> Experience &amp; Background</h3>
         <?php if ($experience): ?>
           <div class="space-y-5">
@@ -165,7 +165,7 @@
         <?php endif; ?>
       </div>
 
-      <div id="interests" class="border-t border-slate-100 pt-6 space-y-4">
+      <div class="profile-tab-panel hidden space-y-4" data-tab="interests">
         <div>
           <h3 class="text-sm font-bold text-primary-navy flex items-center gap-2 mb-2"><span class="w-7 h-7 rounded-full bg-purple-100 text-purple-600 flex items-center justify-center flex-shrink-0 text-xs"><i class="fa-solid fa-people-group"></i></span> Business Interests</h3>
           <?php if ($profile['business_interests']): ?>
@@ -184,28 +184,8 @@
         </div>
       </div>
 
-      <div id="education" class="border-t border-slate-100 pt-6">
-        <h3 class="text-sm font-bold text-primary-navy flex items-center gap-2 mb-4"><span class="w-7 h-7 rounded-full bg-indigo-100 text-indigo-600 flex items-center justify-center flex-shrink-0 text-xs"><i class="fa-solid fa-graduation-cap"></i></span> Education</h3>
-        <?php if ($education): ?>
-          <div class="space-y-4">
-            <?php foreach ($education as $edu): ?>
-              <div>
-                <p class="text-sm font-bold text-primary-navy"><?= e($edu['school']) ?></p>
-                <p class="text-xs text-slate-500"><?= e(trim(($edu['degree'] ?? '') . (($edu['degree'] && $edu['field_of_study']) ? ', ' : '') . ($edu['field_of_study'] ?? ''))) ?></p>
-                <p class="text-[0.68rem] text-slate-400 mt-0.5"><?= e($edu['start_year'] ?? '') ?><?= $edu['start_year'] || $edu['end_year'] ? ' – ' : '' ?><?= e($edu['end_year'] ?? '') ?></p>
-              </div>
-            <?php endforeach; ?>
-          </div>
-        <?php else: ?>
-          <p class="text-xs text-slate-400">No education added yet.</p>
-        <?php endif; ?>
-      </div>
-    </div>
-
-    <!-- Sidebar -->
-    <div class="space-y-4">
-      <div id="contact-info" class="card p-5">
-        <h3 class="text-sm font-bold text-primary-navy flex items-center gap-2 mb-4"><span class="w-8 h-8 rounded-full bg-[var(--menu-accent-100)] text-[var(--menu-accent-600)] flex items-center justify-center flex-shrink-0"><i class="fa-regular fa-user"></i></span> Contact Information</h3>
+      <div class="profile-tab-panel hidden" data-tab="contact">
+        <h3 class="text-sm font-bold text-primary-navy flex items-center gap-2 mb-4"><span class="w-7 h-7 rounded-full bg-[var(--menu-accent-100)] text-[var(--menu-accent-600)] flex items-center justify-center flex-shrink-0 text-xs"><i class="fa-regular fa-user"></i></span> Contact Information</h3>
         <div class="space-y-3.5">
           <?php if (($isOwnerOrAdmin || $profile['show_phone']) && $profile['phone']): ?>
             <div class="flex items-start gap-2.5">
@@ -237,6 +217,26 @@
         </div>
       </div>
 
+      <div class="profile-tab-panel hidden" data-tab="education">
+        <h3 class="text-sm font-bold text-primary-navy flex items-center gap-2 mb-4"><span class="w-7 h-7 rounded-full bg-indigo-100 text-indigo-600 flex items-center justify-center flex-shrink-0 text-xs"><i class="fa-solid fa-graduation-cap"></i></span> Education</h3>
+        <?php if ($education): ?>
+          <div class="space-y-4">
+            <?php foreach ($education as $edu): ?>
+              <div>
+                <p class="text-sm font-bold text-primary-navy"><?= e($edu['school']) ?></p>
+                <p class="text-xs text-slate-500"><?= e(trim(($edu['degree'] ?? '') . (($edu['degree'] && $edu['field_of_study']) ? ', ' : '') . ($edu['field_of_study'] ?? ''))) ?></p>
+                <p class="text-[0.68rem] text-slate-400 mt-0.5"><?= e($edu['start_year'] ?? '') ?><?= $edu['start_year'] || $edu['end_year'] ? ' – ' : '' ?><?= e($edu['end_year'] ?? '') ?></p>
+              </div>
+            <?php endforeach; ?>
+          </div>
+        <?php else: ?>
+          <p class="text-xs text-slate-400">No education added yet.</p>
+        <?php endif; ?>
+      </div>
+    </div>
+
+    <!-- Sidebar -->
+    <div class="space-y-4">
       <?php if ($showActions): ?>
         <div class="card p-5 bg-[var(--menu-accent-50)] border-[var(--menu-accent-100)]">
           <h3 class="text-sm font-bold text-primary-navy flex items-center gap-2 mb-2"><span class="w-8 h-8 rounded-full bg-white text-[var(--menu-accent-600)] flex items-center justify-center flex-shrink-0"><i class="fa-solid fa-people-group"></i></span> In your network</h3>
@@ -309,19 +309,22 @@
 
 <script>
   document.addEventListener('DOMContentLoaded', function () {
-    document.querySelectorAll('.profile-jump').forEach(function (link) {
-      link.addEventListener('click', function (e) {
-        e.preventDefault();
-        var target = document.getElementById(link.getAttribute('href').slice(1));
-        if (!target) return;
-        document.querySelectorAll('.profile-jump').forEach(function (l) {
-          l.classList.toggle('text-gold', l === link);
-          l.classList.toggle('border-gold', l === link);
-          l.classList.toggle('text-slate-500', l !== link);
-          l.classList.toggle('border-transparent', l !== link);
-        });
-        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    var tabLinks = document.querySelectorAll('.profile-tab-link');
+    var tabPanels = document.querySelectorAll('.profile-tab-panel');
+
+    function activateTab(tab) {
+      tabPanels.forEach(function (p) { p.classList.toggle('hidden', p.dataset.tab !== tab); });
+      tabLinks.forEach(function (l) {
+        var active = l.dataset.tab === tab;
+        l.classList.toggle('text-gold', active);
+        l.classList.toggle('border-gold', active);
+        l.classList.toggle('text-slate-500', !active);
+        l.classList.toggle('border-transparent', !active);
       });
+    }
+
+    tabLinks.forEach(function (link) {
+      link.addEventListener('click', function () { activateTab(link.dataset.tab); });
     });
 
     document.querySelectorAll('.profile-kebab-btn').forEach(function (btn) {
