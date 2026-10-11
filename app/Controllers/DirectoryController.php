@@ -197,9 +197,13 @@ class DirectoryController extends Controller
         }
 
         $viewerId = Auth::id();
+        // Distinct from $isOwnerOrAdmin (which also bypasses privacy settings for any admin, on
+        // any profile): this is specifically "am I looking at my own profile", so an admin viewing
+        // someone else's profile still sees Connect/Follow/Quick Actions like any other viewer.
+        $isSelf = $viewerId !== null && (int) $viewerId === (int) $id;
         $connectionStatus = null;
         $isFollowing = false;
-        if ($viewerId && !$isOwnerOrAdmin) {
+        if ($viewerId && !$isSelf) {
             $connectionStatus = Connection::statusBetween((int) $viewerId, (int) $id);
             $isFollowing = Follow::isFollowing((int) $viewerId, (int) $id);
         }
@@ -208,7 +212,7 @@ class DirectoryController extends Controller
 
         $mutualCount = 0;
         $mutualConnections = [];
-        if ($viewerId && !$isOwnerOrAdmin) {
+        if ($viewerId && !$isSelf) {
             $mutualCount = Connection::countMutualConnections((int) $viewerId, (int) $id);
             $mutualConnections = Connection::mutualConnections((int) $viewerId, (int) $id, 3);
         }
@@ -218,6 +222,7 @@ class DirectoryController extends Controller
             'activeNav' => 'directory',
             'profile' => $profile,
             'isOwnerOrAdmin' => $isOwnerOrAdmin,
+            'isSelf' => $isSelf,
             'connectionStatus' => $connectionStatus,
             'isFollowing' => $isFollowing,
             'viewerId' => $viewerId,

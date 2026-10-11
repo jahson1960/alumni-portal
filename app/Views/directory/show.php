@@ -1,4 +1,4 @@
-<?php $showActions = $viewerId && !$isOwnerOrAdmin; ?>
+<?php $showActions = $viewerId && !$isSelf; ?>
 <div class="max-w-[1400px] mx-auto px-4 md:px-8 py-8">
   <a href="<?= e($backUrl) ?>" class="text-xs text-slate-500 hover:text-gold mb-4 inline-block"><i class="fa-solid fa-arrow-left"></i> <?= e($backLabel) ?></a>
 
@@ -28,7 +28,7 @@
           <?php if ($profile['graduation_year']): ?><span><i class="fa-solid fa-graduation-cap"></i> Class of <?= e($profile['graduation_year']) ?></span><?php endif; ?>
         </div>
 
-        <?php if (!$isOwnerOrAdmin): ?>
+        <?php if (!$isSelf): ?>
           <div class="flex flex-wrap items-center gap-2 mt-4">
             <?php if (!$viewerId): ?>
               <a href="<?= e(url('login')) ?>" class="btn-gold !px-4 !py-2 text-xs"><i class="fa-solid fa-user-plus"></i> Log in to Connect</a>
