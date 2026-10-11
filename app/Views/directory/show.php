@@ -247,7 +247,7 @@
     </div>
 
     <!-- Sidebar -->
-    <div class="lg:col-span-1 space-y-6">
+    <div class="lg:col-span-1 space-y-6 lg:sticky lg:top-[calc(var(--header-height)+1rem)] lg:self-start">
       <div class="card p-6">
         <div class="flex items-center gap-3 mb-4">
           <div class="w-8 h-8 rounded-full bg-blue-50 text-blue-500 flex items-center justify-center flex-shrink-0"><i class="fa-regular fa-address-book text-sm"></i></div>
