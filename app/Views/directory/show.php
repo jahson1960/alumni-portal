@@ -96,6 +96,9 @@
   <!-- Tabs -->
   <div class="flex flex-nowrap items-center gap-6 mb-6 border-b border-slate-200 overflow-x-auto overflow-y-hidden">
     <button type="button" class="profile-tab-link flex items-center gap-1.5 text-sm font-semibold pb-2.5 border-b-2 -mb-px whitespace-nowrap text-gold border-gold" data-tab="about"><i class="fa-regular fa-clock"></i> About</button>
+    <button type="button" class="profile-tab-link flex items-center gap-1.5 text-sm font-semibold pb-2.5 border-b-2 -mb-px whitespace-nowrap text-slate-500 border-transparent hover:text-primary-navy" data-tab="about"><i class="fa-regular fa-star"></i> Skills</button>
+    <button type="button" class="profile-tab-link flex items-center gap-1.5 text-sm font-semibold pb-2.5 border-b-2 -mb-px whitespace-nowrap text-slate-500 border-transparent hover:text-primary-navy" data-tab="about"><i class="fa-solid fa-briefcase"></i> Experience</button>
+    <button type="button" class="profile-tab-link flex items-center gap-1.5 text-sm font-semibold pb-2.5 border-b-2 -mb-px whitespace-nowrap text-slate-500 border-transparent hover:text-primary-navy" data-tab="about"><i class="fa-regular fa-heart"></i> Interests</button>
     <button type="button" class="profile-tab-link flex items-center gap-1.5 text-sm font-semibold pb-2.5 border-b-2 -mb-px whitespace-nowrap text-slate-500 border-transparent hover:text-primary-navy" data-tab="contact"><i class="fa-regular fa-id-badge"></i> Contact</button>
     <div class="relative group pb-2.5 -mb-px">
       <button type="button" class="flex items-center gap-1.5 text-sm font-semibold whitespace-nowrap text-slate-500 hover:text-primary-navy">More <i class="fa-solid fa-chevron-down text-[0.6rem]"></i></button>
@@ -161,17 +164,19 @@
           <?php if ($experience): ?>
             <div class="space-y-5">
               <?php foreach ($experience as $exp): ?>
-                <div class="flex gap-4">
-                  <div class="w-12 h-12 rounded-lg bg-slate-100 text-slate-400 flex items-center justify-center flex-shrink-0"><i class="fa-solid fa-building"></i></div>
-                  <div class="min-w-0">
-                    <p class="text-sm font-bold text-primary-navy"><?= e($exp['company']) ?></p>
-                    <p class="text-xs text-slate-600 font-medium"><?= e($exp['title']) ?></p>
-                    <p class="text-[0.68rem] text-slate-400 mt-0.5">
-                      <?= $exp['start_date'] ? e(format_date($exp['start_date'], 'M Y')) : '' ?> &ndash; <?= $exp['is_current'] ? 'Present' : ($exp['end_date'] ? e(format_date($exp['end_date'], 'M Y')) : '') ?>
-                      <?= $exp['location'] ? ' &middot; ' . e($exp['location']) : '' ?>
-                    </p>
-                    <?php if ($exp['description']): ?><p class="text-xs text-slate-500 mt-1.5 leading-relaxed"><?= nl2br(e($exp['description'])) ?></p><?php endif; ?>
+                <div class="flex flex-col sm:flex-row gap-4 bg-slate-50/60 rounded-lg p-4">
+                  <div class="flex gap-3 sm:w-2/5 flex-shrink-0">
+                    <div class="w-11 h-11 rounded-lg bg-primary-navy text-gold flex items-center justify-center flex-shrink-0 text-lg"><i class="fa-solid fa-building"></i></div>
+                    <div class="min-w-0">
+                      <p class="text-sm font-bold text-primary-navy"><?= e($exp['company']) ?></p>
+                      <p class="text-xs text-slate-600 font-medium"><?= e($exp['title']) ?></p>
+                      <p class="text-[0.68rem] text-slate-400 mt-0.5"><?= $exp['start_date'] ? e(format_date($exp['start_date'], 'M Y')) : '' ?> &ndash; <?= $exp['is_current'] ? 'Present' : ($exp['end_date'] ? e(format_date($exp['end_date'], 'M Y')) : '') ?></p>
+                      <?php if ($exp['location']): ?><p class="text-[0.68rem] text-slate-400"><i class="fa-solid fa-location-dot"></i> <?= e($exp['location']) ?></p><?php endif; ?>
+                    </div>
                   </div>
+                  <?php if ($exp['description']): ?>
+                    <p class="text-xs text-slate-500 leading-relaxed sm:w-3/5"><?= nl2br(e($exp['description'])) ?></p>
+                  <?php endif; ?>
                 </div>
               <?php endforeach; ?>
             </div>
@@ -182,7 +187,7 @@
       </div>
 
       <div class="profile-tab-panel hidden" data-tab="contact">
-        <h3 class="text-sm font-bold text-primary-navy flex items-center gap-2 mb-4"><span class="w-7 h-7 rounded-full bg-[var(--menu-accent-100)] text-[var(--menu-accent-600)] flex items-center justify-center flex-shrink-0 text-xs"><i class="fa-regular fa-user"></i></span> Contact Information</h3>
+        <h3 class="text-sm font-bold text-primary-navy flex items-center gap-2 mb-4"><span class="w-7 h-7 rounded-full bg-sky-600 text-white flex items-center justify-center flex-shrink-0 text-xs"><i class="fa-regular fa-user"></i></span> Contact Information</h3>
         <div class="space-y-3.5">
           <?php if (($isOwnerOrAdmin || $profile['show_phone']) && $profile['phone']): ?>
             <div class="flex items-start gap-2.5">
@@ -236,7 +241,7 @@
     <div class="space-y-4">
       <?php if ($showActions): ?>
         <div class="card p-5 bg-[var(--menu-accent-50)] border-[var(--menu-accent-100)]">
-          <h3 class="text-sm font-bold text-primary-navy flex items-center gap-2 mb-2"><span class="w-8 h-8 rounded-full bg-white text-[var(--menu-accent-600)] flex items-center justify-center flex-shrink-0"><i class="fa-solid fa-people-group"></i></span> In your network</h3>
+          <h3 class="text-sm font-bold text-primary-navy flex items-center gap-2 mb-2"><span class="w-8 h-8 rounded-full bg-[var(--menu-accent-600)] text-white flex items-center justify-center flex-shrink-0"><i class="fa-solid fa-people-group"></i></span> In your network</h3>
           <p class="text-xs text-slate-500 mb-3">
             <?= $mutualCount > 0 ? 'You are connected with ' . $mutualCount . ' mutual alumn' . ($mutualCount === 1 ? 'us' : 'i') . '.' : "You don't have any mutual connections yet." ?>
           </p>
@@ -246,11 +251,11 @@
         </div>
 
         <div class="card p-5">
-          <h3 class="text-sm font-bold text-primary-navy flex items-center gap-2 mb-3"><span class="w-8 h-8 rounded-full bg-sky-100 text-sky-600 flex items-center justify-center flex-shrink-0"><i class="fa-regular fa-id-badge"></i></span> Quick Actions</h3>
+          <h3 class="text-sm font-bold text-primary-navy flex items-center gap-2 mb-3"><span class="w-8 h-8 rounded-full bg-sky-600 text-white flex items-center justify-center flex-shrink-0"><i class="fa-regular fa-id-badge"></i></span> Quick Actions</h3>
           <div class="divide-y divide-slate-100">
             <?php if ($connectionStatus !== null && $connectionStatus['status'] === 'accepted'): ?>
               <a href="<?= e(url('messages/' . $profile['id'])) ?>" class="flex items-center justify-between py-2.5 text-sm text-slate-700 hover:text-gold">
-                <span><i class="fa-regular fa-envelope w-4 text-center text-slate-400"></i> Send a Message</span>
+                <span><i class="fa-regular fa-envelope w-4 text-center text-sky-500"></i> Send a Message</span>
                 <i class="fa-solid fa-chevron-right text-[0.65rem] text-slate-300"></i>
               </a>
             <?php else: ?>
@@ -261,7 +266,7 @@
 
             <?php if ($upcomingEvents): ?>
               <button type="button" class="quick-action-toggle w-full flex items-center justify-between py-2.5 text-sm text-slate-700 hover:text-gold" data-target="invite-panel">
-                <span><i class="fa-regular fa-calendar w-4 text-center text-slate-400"></i> Invite to Event</span>
+                <span><i class="fa-regular fa-calendar w-4 text-center text-sky-500"></i> Invite to Event</span>
                 <i class="fa-solid fa-chevron-right text-[0.65rem] text-slate-300"></i>
               </button>
               <div id="invite-panel" class="hidden py-3">
