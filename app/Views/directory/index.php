@@ -60,6 +60,15 @@ $qs = function (array $overrides) use ($filters, $sort, $perPage, $view) {
 
         <?php if (!in_array($view, ['programme', 'cohort'], true)): ?>
           <div class="relative">
+            <i class="bi bi-people absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-sm z-10"></i>
+            <select name="cohort" class="form-input !pl-9 text-sm">
+              <option value="">Cohort (programme + year)</option>
+              <?php foreach ($cohortOptions as $c): $cohortValue = $c['program'] . '|' . $c['graduation_year']; ?>
+                <option value="<?= e($cohortValue) ?>" <?= $selectedCohort === $cohortValue ? 'selected' : '' ?>><?= e($c['program']) ?> &mdash; <?= e($c['graduation_year']) ?> (<?= (int) $c['member_count'] ?>)</option>
+              <?php endforeach; ?>
+            </select>
+          </div>
+          <div class="relative">
             <i class="bi bi-book absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-sm z-10"></i>
             <select name="program" class="form-input !pl-9 text-sm">
               <option value="">Programme</option>

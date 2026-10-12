@@ -32,6 +32,21 @@ class DirectoryController extends Controller
             }
         }
 
+        // The "Cohort" filter is a convenience selector combining programme + graduation year into
+        // one dropdown; it isn't its own column, so translate it into the program/graduation_year
+        // filters those already query against rather than threading a new filter key through User.
+        $cohortInput = trim((string) $this->input('cohort', ''));
+        if ($cohortInput !== '' && str_contains($cohortInput, '|')) {
+            [$cohortProgram, $cohortYear] = explode('|', $cohortInput, 2);
+            if ($cohortProgram !== '' && $cohortYear !== '') {
+                $filters['program'] = $cohortProgram;
+                $filters['graduation_year'] = $cohortYear;
+            }
+        }
+        $selectedCohort = (($filters['program'] ?? '') !== '' && ($filters['graduation_year'] ?? '') !== '')
+            ? $filters['program'] . '|' . $filters['graduation_year']
+            : '';
+
         $view = in_array($this->input('view'), self::VIEWS, true) ? $this->input('view') : 'all';
         $perPageInput = (int) $this->input('per_page', 12);
         $perPage = in_array($perPageInput, self::PER_PAGE_OPTIONS, true) ? $perPageInput : 12;
@@ -141,6 +156,8 @@ class DirectoryController extends Controller
             'isDrilledIn' => $isDrilledIn,
             'savedIds' => $savedIds,
             'filters' => $filters,
+            'selectedCohort' => $selectedCohort,
+            'cohortOptions' => User::cohorts(),
             'programOptions' => User::distinctFilterValues('program'),
             'yearOptions' => User::distinctFilterValues('graduation_year'),
             'industryOptions' => User::distinctFilterValues('industry'),
