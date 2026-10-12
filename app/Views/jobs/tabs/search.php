@@ -112,7 +112,7 @@ $popularSearches = [
     </form>
 
     <!-- Sidebar -->
-    <aside class="space-y-6">
+    <aside class="space-y-6 lg:sticky lg:top-[calc(var(--header-height)+1rem)] lg:self-start">
       <div class="card p-4">
         <h3 class="text-sm font-bold text-primary-navy mb-3">Popular Searches</h3>
         <div class="space-y-2.5">

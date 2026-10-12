@@ -109,7 +109,7 @@ $exploreImage = \App\Models\Setting::get('jobs_explore_image', 'https://images.u
     </div>
 
     <!-- Sidebar -->
-    <aside class="space-y-6">
+    <aside class="space-y-6 lg:sticky lg:top-[calc(var(--header-height)+1rem)] lg:self-start">
       <div class="card p-5 !bg-amber-50 !border-amber-100">
         <div class="w-11 h-11 rounded-lg bg-white text-gold flex items-center justify-center mb-3 text-lg"><i class="fa-solid fa-briefcase"></i></div>
         <h3 class="text-sm font-extrabold text-primary-navy mb-1.5">Build Your Future</h3>

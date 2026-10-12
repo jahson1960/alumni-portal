@@ -126,7 +126,7 @@ $existingAreas = array_values(array_filter(array_map('trim', explode(',', (strin
       <?php endif; ?>
     </div>
 
-    <div>
+    <div class="lg:sticky lg:top-[calc(var(--header-height)+1rem)] lg:self-start">
       <div class="card p-5 mb-5">
         <h3 class="text-base font-bold text-primary-navy mb-4">Why become a mentor?</h3>
         <div class="space-y-4">

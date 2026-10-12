@@ -253,7 +253,7 @@ $isMentor = isset($pendingQueue, $myClaims);
     </div>
   </div>
 
-  <aside class="card p-4 !bg-indigo-50 !border-indigo-100">
+  <aside class="card p-4 !bg-indigo-50 !border-indigo-100 lg:sticky lg:top-[calc(var(--header-height)+1rem)] lg:self-start">
     <div class="flex items-center gap-2 mb-1.5">
       <i class="fa-solid fa-lightbulb text-indigo-500"></i>
       <h3 class="text-sm font-bold text-primary-navy">Resume Tips</h3>

@@ -118,7 +118,7 @@ $tagline = $event['description'] ? mb_strimwidth($event['description'], 0, 70, '
       </div>
     </div>
 
-    <div>
+    <div class="lg:sticky lg:top-[calc(var(--header-height)+1rem)] lg:self-start">
       <div class="card p-5 mb-5">
         <h3 class="text-sm font-bold text-primary-navy mb-1">Who's Registered (<?= count($attendees) ?>)</h3>
         <div class="w-8 h-0.5 bg-gold rounded-full mb-4"></div>

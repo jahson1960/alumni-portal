@@ -66,7 +66,7 @@
 <?php endif; ?>
 
 <div class="grid grid-cols-1 lg:grid-cols-[240px_1fr] gap-6 items-start">
-  <aside class="card p-2">
+  <aside class="card p-2 lg:sticky lg:top-[calc(var(--header-height)+1rem)] lg:self-start">
     <h3 class="text-xs font-bold text-slate-500 uppercase tracking-wide px-3 pt-2 pb-1">Browse by Category</h3>
     <a href="<?= e(url('resources?tab=career') . '#resource-list') ?>" class="flex items-center justify-between gap-2 px-3 py-2.5 rounded-lg text-sm font-semibold <?= empty($filters['category']) ? 'bg-gold/10 text-gold' : 'text-slate-600 hover:bg-slate-50' ?>">
       <span class="flex items-center gap-2.5"><i class="bi bi-grid"></i> All Resources</span>

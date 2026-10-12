@@ -43,7 +43,7 @@ $industryOptions = \App\Models\User::distinctFilterValues('industry');
   <div class="grid grid-cols-1 lg:grid-cols-[220px_1fr_300px] gap-6 items-start">
 
     <!-- Left: tab nav -->
-    <div>
+    <div class="lg:sticky lg:top-[calc(var(--header-height)+1rem)] lg:self-start">
       <nav class="card p-2 space-y-1">
         <?php foreach ($tabLabels as $key => $meta): ?>
           <button type="button" class="profile-tab-link w-full flex items-center gap-2.5 px-3 py-2.5 rounded-lg text-sm font-semibold text-slate-600 hover:bg-slate-50 <?= $key === 'profile_information' ? '!bg-[var(--menu-accent-50)] !text-[var(--menu-accent-600)]' : '' ?>" data-tab="<?= e($key) ?>">
@@ -517,7 +517,7 @@ $industryOptions = \App\Models\User::distinctFilterValues('industry');
     </div>
 
     <!-- Right: widgets -->
-    <div class="space-y-4">
+    <div class="space-y-4 lg:sticky lg:top-[calc(var(--header-height)+1rem)] lg:self-start">
       <div class="card p-5">
         <h4 class="text-sm font-bold text-primary-navy mb-4">Profile Completion</h4>
         <div class="flex items-center gap-4 mb-4">

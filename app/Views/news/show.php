@@ -51,7 +51,7 @@ $primaryCategory = $categories[0] ?? null;
     </div>
 
     <!-- Sidebar -->
-    <aside class="space-y-6">
+    <aside class="space-y-6 lg:sticky lg:top-[calc(var(--header-height)+1rem)] lg:self-start">
       <div class="card p-5">
         <h3 class="text-sm font-extrabold text-primary-navy mb-4 flex items-center gap-2"><i class="fa-regular fa-file-lines text-gold"></i> Quick Information</h3>
         <div class="space-y-4">

@@ -148,7 +148,7 @@ $experienceLabel = !empty($job['experience_level']) ? (\App\Models\Job::EXPERIEN
     </div>
 
     <!-- Sidebar: desktop only. Mobile shows Job Summary and Share within the stacked block below instead. -->
-    <aside class="hidden lg:block space-y-6">
+    <aside class="hidden lg:block space-y-6 lg:sticky lg:top-[calc(var(--header-height)+1rem)] lg:self-start">
       <div class="card p-5 !bg-sky-50 !border-sky-100">
         <div class="flex items-start gap-3">
           <div class="w-11 h-11 rounded-full bg-white text-sky-600 flex items-center justify-center flex-shrink-0 text-lg"><i class="fa-solid fa-building"></i></div>

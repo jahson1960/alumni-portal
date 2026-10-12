@@ -56,7 +56,7 @@ $practiceTools = [
     </div>
   </div>
 
-  <aside class="card p-4 !bg-emerald-50 !border-emerald-100">
+  <aside class="card p-4 !bg-emerald-50 !border-emerald-100 lg:sticky lg:top-[calc(var(--header-height)+1rem)] lg:self-start">
     <div class="flex items-center gap-2 mb-1.5">
       <i class="fa-solid fa-bullseye text-emerald-500"></i>
       <h3 class="text-sm font-bold text-primary-navy">Practice makes perfect!</h3>
