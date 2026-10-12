@@ -117,30 +117,141 @@ $heroTaglineSubtitleColor = \App\Models\Setting::get('profile_hero_tagline_subti
       <button type="button" class="profile-tab-link py-4 text-slate-500 hover:text-slate-900 border-b-2 border-transparent transition flex items-center gap-2" data-tab="skills"><i class="fa-solid fa-wand-magic-sparkles text-xs"></i> Skills</button>
       <button type="button" class="profile-tab-link py-4 text-slate-500 hover:text-slate-900 border-b-2 border-transparent transition flex items-center gap-2" data-tab="experience"><i class="fa-solid fa-briefcase text-xs"></i> Experience</button>
       <button type="button" class="profile-tab-link py-4 text-slate-500 hover:text-slate-900 border-b-2 border-transparent transition flex items-center gap-2" data-tab="interests"><i class="fa-regular fa-heart text-xs"></i> Interests</button>
-      <div class="relative">
-        <button type="button" class="profile-more-btn py-4 text-slate-500 hover:text-slate-900 transition flex items-center gap-2">More <i class="fa-solid fa-chevron-down text-xs ml-1"></i></button>
-        <div class="profile-more-menu hidden absolute left-0 top-full z-20">
-          <div class="bg-white min-w-[160px] shadow-lg rounded-md border border-slate-200 py-2">
-            <button type="button" class="profile-tab-link block w-full text-left px-4 py-2 text-xs text-slate-700 hover:bg-slate-50 hover:text-gold" data-tab="education">Education</button>
-          </div>
-        </div>
-      </div>
+      <button type="button" class="profile-tab-link py-4 text-slate-500 hover:text-slate-900 border-b-2 border-transparent transition flex items-center gap-2" data-tab="education"><i class="fa-solid fa-graduation-cap text-xs"></i> Education</button>
     </div>
   </div>
 
   <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 items-start">
     <!-- Main content -->
     <div class="lg:col-span-2 space-y-6">
-      <div class="profile-tab-panel card p-6" data-tab="about">
-        <div class="flex items-center gap-3 mb-3">
-          <div class="w-8 h-8 rounded-full bg-amber-50 text-amber-500 flex items-center justify-center flex-shrink-0"><i class="fa-regular fa-user text-sm"></i></div>
-          <h3 class="text-base font-bold text-slate-900">About</h3>
+      <div class="profile-tab-panel space-y-6" data-tab="about">
+        <div class="card p-6">
+          <div class="flex items-center gap-3 mb-3">
+            <div class="w-8 h-8 rounded-full bg-amber-50 text-amber-500 flex items-center justify-center flex-shrink-0"><i class="fa-regular fa-user text-sm"></i></div>
+            <h3 class="text-base font-bold text-slate-900">About</h3>
+          </div>
+          <?php if ($profile['bio']): ?>
+            <div class="prose prose-sm max-w-none prose-headings:text-slate-900 prose-a:text-gold text-slate-600 pl-11"><?= $profile['bio'] ?></div>
+          <?php else: ?>
+            <p class="text-sm text-slate-400 pl-11">No bio added yet.</p>
+          <?php endif; ?>
         </div>
-        <?php if ($profile['bio']): ?>
-          <div class="prose prose-sm max-w-none prose-headings:text-slate-900 prose-a:text-gold text-slate-600 pl-11"><?= $profile['bio'] ?></div>
-        <?php else: ?>
-          <p class="text-sm text-slate-400 pl-11">No bio added yet.</p>
-        <?php endif; ?>
+
+        <div class="card p-6">
+          <div class="flex items-center gap-3 mb-4">
+            <div class="w-8 h-8 rounded-full bg-blue-50 text-blue-500 flex items-center justify-center flex-shrink-0"><i class="fa-solid fa-tag text-sm"></i></div>
+            <h3 class="text-base font-bold text-slate-900">Skills</h3>
+          </div>
+          <?php if ($profile['skills']): ?>
+            <div class="flex flex-wrap gap-2 pl-11">
+              <?php foreach (array_filter(array_map('trim', explode(',', $profile['skills']))) as $skill): ?>
+                <span class="bg-sky-50 text-blue-600 text-xs font-medium px-3.5 py-1.5 rounded-full border border-sky-100"><?= e($skill) ?></span>
+              <?php endforeach; ?>
+            </div>
+          <?php else: ?>
+            <p class="text-sm text-slate-400 pl-11">No skills listed yet.</p>
+          <?php endif; ?>
+        </div>
+
+        <div class="card p-6">
+          <div class="flex items-center gap-3 mb-4">
+            <div class="w-8 h-8 rounded-full bg-emerald-50 text-emerald-500 flex items-center justify-center flex-shrink-0"><i class="fa-solid fa-bullseye text-sm"></i></div>
+            <h3 class="text-base font-bold text-slate-900">Areas of Expertise</h3>
+          </div>
+          <?php if ($profile['expertise_areas']): ?>
+            <div class="flex flex-wrap gap-2 pl-11">
+              <?php foreach (array_filter(array_map('trim', explode(',', $profile['expertise_areas']))) as $area): ?>
+                <span class="bg-amber-50 text-amber-800 text-xs font-medium px-3.5 py-1.5 rounded-full border border-amber-200/50"><?= e($area) ?></span>
+              <?php endforeach; ?>
+            </div>
+          <?php else: ?>
+            <p class="text-sm text-slate-400 pl-11">No areas of expertise listed yet.</p>
+          <?php endif; ?>
+        </div>
+
+        <div class="card p-6">
+          <div class="flex items-center gap-3 mb-6">
+            <div class="w-8 h-8 rounded-full bg-blue-50 text-blue-500 flex items-center justify-center flex-shrink-0"><i class="fa-solid fa-timeline text-sm"></i></div>
+            <h3 class="text-base font-bold text-slate-900">Experience &amp; Background</h3>
+          </div>
+          <?php if ($experience): ?>
+            <?php $lastExpKeyAbout = array_key_last($experience); ?>
+            <div class="space-y-6 pl-11">
+              <?php foreach ($experience as $expKey => $exp): ?>
+                <div class="grid grid-cols-1 md:grid-cols-12 gap-4 md:gap-6<?= $expKey !== $lastExpKeyAbout ? ' pb-6 border-b border-slate-100' : '' ?>">
+                  <div class="md:col-span-5 flex items-start gap-3">
+                    <div class="w-12 h-12 rounded-xl bg-slate-900 flex items-center justify-center text-amber-400 flex-shrink-0 shadow-sm"><i class="fa-solid fa-cube text-lg"></i></div>
+                    <div>
+                      <h4 class="text-sm font-bold text-slate-900"><?= e($exp['company']) ?></h4>
+                      <p class="text-xs font-medium text-slate-700"><?= e($exp['title']) ?></p>
+                      <p class="text-[11px] text-slate-400 mt-0.5"><?= $exp['start_date'] ? e(format_date($exp['start_date'], 'M Y')) : '' ?> &ndash; <?= $exp['is_current'] ? 'Present' : ($exp['end_date'] ? e(format_date($exp['end_date'], 'M Y')) : '') ?></p>
+                      <?php if ($exp['location']): ?><div class="flex items-center gap-1 text-[11px] text-slate-500 mt-1"><i class="fa-solid fa-location-dot"></i> <?= e($exp['location']) ?></div><?php endif; ?>
+                    </div>
+                  </div>
+                  <?php if ($exp['description']): ?>
+                    <div class="md:col-span-7">
+                      <p class="text-slate-600 text-xs sm:text-sm leading-relaxed"><?= nl2br(e($exp['description'])) ?></p>
+                    </div>
+                  <?php endif; ?>
+                </div>
+              <?php endforeach; ?>
+            </div>
+          <?php else: ?>
+            <p class="text-sm text-slate-400 pl-11">No experience added yet.</p>
+          <?php endif; ?>
+        </div>
+
+        <div class="card p-6">
+          <div class="flex items-center gap-3 mb-4">
+            <div class="w-8 h-8 rounded-full bg-purple-50 text-purple-500 flex items-center justify-center flex-shrink-0"><i class="fa-solid fa-briefcase text-sm"></i></div>
+            <h3 class="text-base font-bold text-slate-900">Business Interests</h3>
+          </div>
+          <?php if ($profile['business_interests']): ?>
+            <div class="flex flex-wrap gap-2 pl-11">
+              <?php foreach (array_filter(array_map('trim', explode(',', $profile['business_interests']))) as $interest): ?>
+                <span class="bg-purple-50 text-purple-700 text-xs font-medium px-3.5 py-1.5 rounded-full border border-purple-100"><?= e($interest) ?></span>
+              <?php endforeach; ?>
+            </div>
+          <?php else: ?>
+            <p class="text-sm text-slate-400 pl-11">No business interests listed yet.</p>
+          <?php endif; ?>
+        </div>
+
+        <div class="card p-6">
+          <div class="flex items-center gap-3 mb-4">
+            <div class="w-8 h-8 rounded-full bg-rose-50 text-rose-500 flex items-center justify-center flex-shrink-0"><i class="fa-regular fa-heart text-sm"></i></div>
+            <h3 class="text-base font-bold text-slate-900">Personal Interests</h3>
+          </div>
+          <?php if ($profile['personal_interests']): ?>
+            <div class="flex flex-wrap gap-2 pl-11">
+              <?php foreach (array_filter(array_map('trim', explode(',', $profile['personal_interests']))) as $interest): ?>
+                <span class="bg-rose-50 text-rose-700 text-xs font-medium px-3.5 py-1.5 rounded-full border border-rose-100"><?= e($interest) ?></span>
+              <?php endforeach; ?>
+            </div>
+          <?php else: ?>
+            <p class="text-sm text-slate-400 pl-11">No personal interests listed yet.</p>
+          <?php endif; ?>
+        </div>
+
+        <div class="card p-6">
+          <div class="flex items-center gap-3 mb-4">
+            <div class="w-8 h-8 rounded-full bg-indigo-50 text-indigo-500 flex items-center justify-center flex-shrink-0"><i class="fa-solid fa-graduation-cap text-sm"></i></div>
+            <h3 class="text-base font-bold text-slate-900">Education</h3>
+          </div>
+          <?php if ($education): ?>
+            <div class="space-y-4 pl-11">
+              <?php foreach ($education as $edu): ?>
+                <div>
+                  <p class="text-sm font-bold text-slate-900"><?= e($edu['school']) ?></p>
+                  <p class="text-xs text-slate-500"><?= e(trim(($edu['degree'] ?? '') . (($edu['degree'] && $edu['field_of_study']) ? ', ' : '') . ($edu['field_of_study'] ?? ''))) ?></p>
+                  <p class="text-[0.68rem] text-slate-400 mt-0.5"><?= e($edu['start_year'] ?? '') ?><?= $edu['start_year'] || $edu['end_year'] ? ' – ' : '' ?><?= e($edu['end_year'] ?? '') ?></p>
+                </div>
+              <?php endforeach; ?>
+            </div>
+          <?php else: ?>
+            <p class="text-sm text-slate-400 pl-11">No education added yet.</p>
+          <?php endif; ?>
+        </div>
       </div>
 
       <div class="profile-tab-panel hidden space-y-6" data-tab="skills">
@@ -391,7 +502,6 @@ $heroTaglineSubtitleColor = \App\Models\Setting::get('profile_hero_tagline_subti
     tabLinks.forEach(function (link) {
       link.addEventListener('click', function () {
         activateTab(link.dataset.tab);
-        document.querySelectorAll('.profile-more-menu').forEach(function (m) { m.classList.add('hidden'); });
       });
     });
 
@@ -404,17 +514,8 @@ $heroTaglineSubtitleColor = \App\Models\Setting::get('profile_hero_tagline_subti
       });
     });
 
-    document.querySelectorAll('.profile-more-btn').forEach(function (btn) {
-      btn.addEventListener('click', function (e) {
-        e.stopPropagation();
-        var menu = btn.nextElementSibling;
-        document.querySelectorAll('.profile-more-menu').forEach(function (m) { if (m !== menu) m.classList.add('hidden'); });
-        menu.classList.toggle('hidden');
-      });
-    });
-
     document.addEventListener('click', function () {
-      document.querySelectorAll('.profile-kebab-menu, .profile-more-menu').forEach(function (m) { m.classList.add('hidden'); });
+      document.querySelectorAll('.profile-kebab-menu').forEach(function (m) { m.classList.add('hidden'); });
     });
 
     document.querySelectorAll('.quick-action-toggle').forEach(function (btn) {
