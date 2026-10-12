@@ -114,10 +114,10 @@ $heroTaglineSubtitleColor = \App\Models\Setting::get('profile_hero_tagline_subti
   <div class="card overflow-x-auto mb-6">
     <div class="flex items-center px-6 gap-8 min-w-max text-sm font-medium">
       <button type="button" class="profile-tab-link py-4 text-gold border-b-2 border-gold font-semibold flex items-center gap-2" data-tab="about"><i class="fa-regular fa-clock text-xs"></i> About</button>
+      <button type="button" class="profile-tab-link py-4 text-slate-500 hover:text-slate-900 border-b-2 border-transparent transition flex items-center gap-2" data-tab="education"><i class="fa-solid fa-graduation-cap text-xs"></i> Education</button>
       <button type="button" class="profile-tab-link py-4 text-slate-500 hover:text-slate-900 border-b-2 border-transparent transition flex items-center gap-2" data-tab="skills"><i class="fa-solid fa-wand-magic-sparkles text-xs"></i> Skills</button>
       <button type="button" class="profile-tab-link py-4 text-slate-500 hover:text-slate-900 border-b-2 border-transparent transition flex items-center gap-2" data-tab="experience"><i class="fa-solid fa-briefcase text-xs"></i> Experience</button>
       <button type="button" class="profile-tab-link py-4 text-slate-500 hover:text-slate-900 border-b-2 border-transparent transition flex items-center gap-2" data-tab="interests"><i class="fa-regular fa-heart text-xs"></i> Interests</button>
-      <button type="button" class="profile-tab-link py-4 text-slate-500 hover:text-slate-900 border-b-2 border-transparent transition flex items-center gap-2" data-tab="education"><i class="fa-solid fa-graduation-cap text-xs"></i> Education</button>
     </div>
   </div>
 
@@ -254,6 +254,26 @@ $heroTaglineSubtitleColor = \App\Models\Setting::get('profile_hero_tagline_subti
         </div>
       </div>
 
+      <div class="profile-tab-panel hidden card p-6" data-tab="education">
+        <div class="flex items-center gap-3 mb-4">
+          <div class="w-8 h-8 rounded-full bg-indigo-50 text-indigo-500 flex items-center justify-center flex-shrink-0"><i class="fa-solid fa-graduation-cap text-sm"></i></div>
+          <h3 class="text-base font-bold text-slate-900">Education</h3>
+        </div>
+        <?php if ($education): ?>
+          <div class="space-y-4 pl-11">
+            <?php foreach ($education as $edu): ?>
+              <div>
+                <p class="text-sm font-bold text-slate-900"><?= e($edu['school']) ?></p>
+                <p class="text-xs text-slate-500"><?= e(trim(($edu['degree'] ?? '') . (($edu['degree'] && $edu['field_of_study']) ? ', ' : '') . ($edu['field_of_study'] ?? ''))) ?></p>
+                <p class="text-[0.68rem] text-slate-400 mt-0.5"><?= e($edu['start_year'] ?? '') ?><?= $edu['start_year'] || $edu['end_year'] ? ' – ' : '' ?><?= e($edu['end_year'] ?? '') ?></p>
+              </div>
+            <?php endforeach; ?>
+          </div>
+        <?php else: ?>
+          <p class="text-sm text-slate-400 pl-11">No education added yet.</p>
+        <?php endif; ?>
+      </div>
+
       <div class="profile-tab-panel hidden space-y-6" data-tab="skills">
         <div class="card p-6">
           <div class="flex items-center gap-3 mb-4">
@@ -351,26 +371,6 @@ $heroTaglineSubtitleColor = \App\Models\Setting::get('profile_hero_tagline_subti
           </div>
         <?php else: ?>
           <p class="text-sm text-slate-400 pl-11">No experience added yet.</p>
-        <?php endif; ?>
-      </div>
-
-      <div class="profile-tab-panel hidden card p-6" data-tab="education">
-        <div class="flex items-center gap-3 mb-4">
-          <div class="w-8 h-8 rounded-full bg-indigo-50 text-indigo-500 flex items-center justify-center flex-shrink-0"><i class="fa-solid fa-graduation-cap text-sm"></i></div>
-          <h3 class="text-base font-bold text-slate-900">Education</h3>
-        </div>
-        <?php if ($education): ?>
-          <div class="space-y-4 pl-11">
-            <?php foreach ($education as $edu): ?>
-              <div>
-                <p class="text-sm font-bold text-slate-900"><?= e($edu['school']) ?></p>
-                <p class="text-xs text-slate-500"><?= e(trim(($edu['degree'] ?? '') . (($edu['degree'] && $edu['field_of_study']) ? ', ' : '') . ($edu['field_of_study'] ?? ''))) ?></p>
-                <p class="text-[0.68rem] text-slate-400 mt-0.5"><?= e($edu['start_year'] ?? '') ?><?= $edu['start_year'] || $edu['end_year'] ? ' – ' : '' ?><?= e($edu['end_year'] ?? '') ?></p>
-              </div>
-            <?php endforeach; ?>
-          </div>
-        <?php else: ?>
-          <p class="text-sm text-slate-400 pl-11">No education added yet.</p>
         <?php endif; ?>
       </div>
     </div>
