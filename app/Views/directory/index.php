@@ -169,7 +169,7 @@ $qs = function (array $overrides) use ($filters, $sort, $perPage, $view) {
         ?>
         <div class="directory-card card p-5 relative">
           <a href="<?= e(url('alumni/' . $person['id'])) ?>" class="absolute inset-0 z-0" aria-label="<?= e($person['name']) ?>"></a>
-          <div class="relative z-10 flex items-start justify-between pointer-events-none">
+          <div class="relative z-20 flex items-start justify-between pointer-events-none">
             <?= avatar_html($person, 'w-12 h-12') ?>
             <?php if ($authUser && !$isSelf): ?>
               <div class="relative pointer-events-auto">
