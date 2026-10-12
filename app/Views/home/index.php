@@ -175,13 +175,12 @@ $heroBtnVClasses = hero_btn_v_classes(
         <p class="text-xs text-slate-500">Find a mentor or become one</p>
       </div>
     </a>
-    <a href="<?= e(url('events')) ?>" class="card p-4 md:p-5 flex items-center text-left gap-4 hover:-translate-y-0.5 hover:shadow-md transition-all col-span-2 md:col-span-1">
+    <a href="<?= e(url('events')) ?>" class="card p-4 md:p-5 flex flex-col md:flex-row items-center md:items-center text-center md:text-left gap-2 md:gap-4 hover:-translate-y-0.5 hover:shadow-md transition-all">
       <div class="w-11 h-11 rounded-lg bg-slate-100 text-primary-navy flex items-center justify-center text-xl flex-shrink-0"><i class="fa-solid fa-calendar-days"></i></div>
       <div class="flex-1 min-w-0">
         <h4 class="text-sm font-bold text-primary-navy">Events</h4>
         <p class="text-xs text-slate-500">Join upcoming events and reunions</p>
       </div>
-      <i class="fa-solid fa-chevron-right text-slate-400 text-xs"></i>
     </a>
   </div>
 
