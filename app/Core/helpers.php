@@ -117,20 +117,19 @@ function hex_to_rgba(string $hex, float $alpha): string
 /**
  * Builds the linear-gradient() CSS function used to overlay the alumni profile hero's background
  * photo (so the header text stays legible regardless of what the photo looks like underneath).
- * $angle is a CSS gradient angle in degrees (90deg = left to right); $intensity is the alpha
- * (0-100) the overlay reaches by the far end; $transparentZone (0-100) is how much of the start
- * of the gradient stays fully transparent — pure photo — before the overlay starts fading in.
+ * Always left to right. $intensity is the alpha (0-100) the overlay reaches by the right edge;
+ * $movement (0-100) is how far across, from the left, the overlay stays fully transparent — pure
+ * photo — before it starts fading in (e.g. 10 = the left 10% is untouched, then it fades in).
  */
-function hero_gradient_css(string $color, int $angle, int $intensity, int $transparentZone = 0): string
+function hero_gradient_css(string $color, int $intensity, int $movement = 0): string
 {
     $intensity = max(0, min(100, $intensity)) / 100;
-    $transparentZone = max(0, min(100, $transparentZone));
-    $angle = (($angle % 360) + 360) % 360;
+    $movement = max(0, min(100, $movement));
 
     $transparent = hex_to_rgba($color, 0);
     $full = hex_to_rgba($color, $intensity);
 
-    return "linear-gradient({$angle}deg, {$transparent} 0%, {$transparent} {$transparentZone}%, {$full} 100%)";
+    return "linear-gradient(90deg, {$transparent} 0%, {$transparent} {$movement}%, {$full} 100%)";
 }
 
 function valid_align(?string $value, array $allowed, string $default): string

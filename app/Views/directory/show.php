@@ -2,9 +2,8 @@
 $showActions = $viewerId && !$isSelf;
 $heroBackground = \App\Models\Setting::get('profile_hero_background', '');
 $heroGradientColor = \App\Models\Setting::get('profile_hero_gradient_color', '#ffffff');
-$heroGradientAngle = (int) \App\Models\Setting::get('profile_hero_gradient_angle', '90');
 $heroGradientIntensity = (int) \App\Models\Setting::get('profile_hero_gradient_intensity', '70');
-$heroGradientTransparentZone = (int) \App\Models\Setting::get('profile_hero_gradient_transparent_zone', '0');
+$heroGradientMovement = (int) \App\Models\Setting::get('profile_hero_gradient_transparent_zone', '0');
 $heroTaglineTitle = \App\Models\Setting::get('profile_hero_tagline_title', 'RBS Alumni');
 $heroTaglineSubtitle = \App\Models\Setting::get('profile_hero_tagline_subtitle', "A global network\nof changemakers");
 $heroTaglineTitleColor = \App\Models\Setting::get('profile_hero_tagline_title_color', '#000000');
@@ -14,7 +13,7 @@ $heroTaglineSubtitleColor = \App\Models\Setting::get('profile_hero_tagline_subti
   <a href="<?= e($backUrl) ?>" class="text-xs text-slate-500 hover:text-gold mb-4 inline-block"><i class="fa-solid fa-arrow-left"></i> <?= e($backLabel) ?></a>
 
   <!-- Hero -->
-  <div class="card p-6 md:p-8 mb-6 relative overflow-hidden bg-cover bg-right" <?php if ($heroBackground): ?>style="background-image: <?= hero_gradient_css($heroGradientColor, $heroGradientAngle, $heroGradientIntensity, $heroGradientTransparentZone) ?>, url('<?= e($heroBackground) ?>');"<?php endif; ?>>
+  <div class="card p-6 md:p-8 mb-6 relative overflow-hidden bg-cover bg-right" <?php if ($heroBackground): ?>style="background-image: <?= hero_gradient_css($heroGradientColor, $heroGradientIntensity, $heroGradientMovement) ?>, url('<?= e($heroBackground) ?>');"<?php endif; ?>>
     <?php if (!$heroBackground): ?>
       <div class="hidden md:flex absolute top-0 right-0 bottom-0 w-80 bg-gradient-to-br from-primary-navy to-slate-800 overflow-hidden flex-col justify-center">
         <i class="fa-solid fa-building-columns absolute -right-6 -top-6 text-white/5 text-[9rem]"></i>

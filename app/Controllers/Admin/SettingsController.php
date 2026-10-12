@@ -151,8 +151,6 @@ class SettingsController extends AdminController
         }
 
         $data['profile_hero_gradient_color'] = valid_hex_color($this->input('profile_hero_gradient_color'), '#ffffff');
-        $gradientAngle = (int) $this->input('profile_hero_gradient_angle', 90);
-        $data['profile_hero_gradient_angle'] = (string) max(0, min(360, $gradientAngle));
         $gradientIntensity = (int) $this->input('profile_hero_gradient_intensity', 70);
         $data['profile_hero_gradient_intensity'] = (string) max(0, min(100, $gradientIntensity));
         $gradientTransparentZone = (int) $this->input('profile_hero_gradient_transparent_zone', 0);
