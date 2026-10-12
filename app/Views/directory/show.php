@@ -139,6 +139,54 @@ $heroTaglineSubtitleColor = \App\Models\Setting::get('profile_hero_tagline_subti
 
         <div class="card p-6">
           <div class="flex items-center gap-3 mb-4">
+            <div class="w-8 h-8 rounded-full bg-indigo-50 text-indigo-500 flex items-center justify-center flex-shrink-0"><i class="fa-solid fa-graduation-cap text-sm"></i></div>
+            <h3 class="text-base font-bold text-slate-900">Education</h3>
+          </div>
+          <?php if ($education): ?>
+            <?php $lastEduKeyAbout = array_key_last($education); ?>
+            <div class="relative pl-11">
+              <?php foreach ($education as $eduKey => $edu): ?>
+                <div class="relative pl-8<?= $eduKey !== $lastEduKeyAbout ? ' pb-8' : '' ?>">
+                  <?php if ($eduKey !== $lastEduKeyAbout): ?><span class="absolute left-[11px] top-6 bottom-0 w-px bg-slate-200"></span><?php endif; ?>
+                  <span class="absolute left-0 top-0 w-6 h-6 rounded-full flex items-center justify-center bg-indigo-500 ring-4 ring-white"><i class="fa-solid fa-graduation-cap text-[10px] text-white"></i></span>
+                  <p class="text-sm font-bold text-slate-900"><?= e($edu['school']) ?></p>
+                  <p class="text-xs text-slate-500"><?= e(trim(($edu['degree'] ?? '') . (($edu['degree'] && $edu['field_of_study']) ? ', ' : '') . ($edu['field_of_study'] ?? ''))) ?></p>
+                  <p class="text-[11px] text-slate-400 mt-0.5"><?= e($edu['start_year'] ?? '') ?><?= $edu['start_year'] || $edu['end_year'] ? ' – ' : '' ?><?= e($edu['end_year'] ?? '') ?></p>
+                </div>
+              <?php endforeach; ?>
+            </div>
+          <?php else: ?>
+            <p class="text-sm text-slate-400 pl-11">No education added yet.</p>
+          <?php endif; ?>
+        </div>
+
+        <div class="card p-6">
+          <div class="flex items-center gap-3 mb-6">
+            <div class="w-8 h-8 rounded-full bg-blue-50 text-blue-500 flex items-center justify-center flex-shrink-0"><i class="fa-solid fa-timeline text-sm"></i></div>
+            <h3 class="text-base font-bold text-slate-900">Experience &amp; Background</h3>
+          </div>
+          <?php if ($experience): ?>
+            <?php $lastExpKeyAbout = array_key_last($experience); ?>
+            <div class="relative pl-11">
+              <?php foreach ($experience as $expKey => $exp): ?>
+                <div class="relative pl-8<?= $expKey !== $lastExpKeyAbout ? ' pb-8' : '' ?>">
+                  <?php if ($expKey !== $lastExpKeyAbout): ?><span class="absolute left-[11px] top-6 bottom-0 w-px bg-slate-200"></span><?php endif; ?>
+                  <span class="absolute left-0 top-0 w-6 h-6 rounded-full flex items-center justify-center <?= $exp['is_current'] ? 'bg-amber-400' : 'bg-slate-900' ?> ring-4 ring-white"><i class="fa-solid fa-briefcase text-[10px] <?= $exp['is_current'] ? 'text-slate-900' : 'text-amber-400' ?>"></i></span>
+                  <h4 class="text-sm font-bold text-slate-900"><?= e($exp['company']) ?></h4>
+                  <p class="text-xs font-medium text-slate-700"><?= e($exp['title']) ?></p>
+                  <p class="text-[11px] text-slate-400 mt-0.5"><?= $exp['start_date'] ? e(format_date($exp['start_date'], 'M Y')) : '' ?> &ndash; <?= $exp['is_current'] ? 'Present' : ($exp['end_date'] ? e(format_date($exp['end_date'], 'M Y')) : '') ?></p>
+                  <?php if ($exp['location']): ?><div class="flex items-center gap-1 text-[11px] text-slate-500 mt-1"><i class="fa-solid fa-location-dot"></i> <?= e($exp['location']) ?></div><?php endif; ?>
+                  <?php if ($exp['description']): ?><p class="text-slate-600 text-xs sm:text-sm leading-relaxed mt-2"><?= nl2br(e($exp['description'])) ?></p><?php endif; ?>
+                </div>
+              <?php endforeach; ?>
+            </div>
+          <?php else: ?>
+            <p class="text-sm text-slate-400 pl-11">No experience added yet.</p>
+          <?php endif; ?>
+        </div>
+
+        <div class="card p-6">
+          <div class="flex items-center gap-3 mb-4">
             <div class="w-8 h-8 rounded-full bg-blue-50 text-blue-500 flex items-center justify-center flex-shrink-0"><i class="fa-solid fa-tag text-sm"></i></div>
             <h3 class="text-base font-bold text-slate-900">Skills</h3>
           </div>
@@ -166,31 +214,6 @@ $heroTaglineSubtitleColor = \App\Models\Setting::get('profile_hero_tagline_subti
             </div>
           <?php else: ?>
             <p class="text-sm text-slate-400 pl-11">No areas of expertise listed yet.</p>
-          <?php endif; ?>
-        </div>
-
-        <div class="card p-6">
-          <div class="flex items-center gap-3 mb-6">
-            <div class="w-8 h-8 rounded-full bg-blue-50 text-blue-500 flex items-center justify-center flex-shrink-0"><i class="fa-solid fa-timeline text-sm"></i></div>
-            <h3 class="text-base font-bold text-slate-900">Experience &amp; Background</h3>
-          </div>
-          <?php if ($experience): ?>
-            <?php $lastExpKeyAbout = array_key_last($experience); ?>
-            <div class="relative pl-11">
-              <?php foreach ($experience as $expKey => $exp): ?>
-                <div class="relative pl-8<?= $expKey !== $lastExpKeyAbout ? ' pb-8' : '' ?>">
-                  <?php if ($expKey !== $lastExpKeyAbout): ?><span class="absolute left-[11px] top-6 bottom-0 w-px bg-slate-200"></span><?php endif; ?>
-                  <span class="absolute left-0 top-0 w-6 h-6 rounded-full flex items-center justify-center <?= $exp['is_current'] ? 'bg-amber-400' : 'bg-slate-900' ?> ring-4 ring-white"><i class="fa-solid fa-briefcase text-[10px] <?= $exp['is_current'] ? 'text-slate-900' : 'text-amber-400' ?>"></i></span>
-                  <h4 class="text-sm font-bold text-slate-900"><?= e($exp['company']) ?></h4>
-                  <p class="text-xs font-medium text-slate-700"><?= e($exp['title']) ?></p>
-                  <p class="text-[11px] text-slate-400 mt-0.5"><?= $exp['start_date'] ? e(format_date($exp['start_date'], 'M Y')) : '' ?> &ndash; <?= $exp['is_current'] ? 'Present' : ($exp['end_date'] ? e(format_date($exp['end_date'], 'M Y')) : '') ?></p>
-                  <?php if ($exp['location']): ?><div class="flex items-center gap-1 text-[11px] text-slate-500 mt-1"><i class="fa-solid fa-location-dot"></i> <?= e($exp['location']) ?></div><?php endif; ?>
-                  <?php if ($exp['description']): ?><p class="text-slate-600 text-xs sm:text-sm leading-relaxed mt-2"><?= nl2br(e($exp['description'])) ?></p><?php endif; ?>
-                </div>
-              <?php endforeach; ?>
-            </div>
-          <?php else: ?>
-            <p class="text-sm text-slate-400 pl-11">No experience added yet.</p>
           <?php endif; ?>
         </div>
 
@@ -223,29 +246,6 @@ $heroTaglineSubtitleColor = \App\Models\Setting::get('profile_hero_tagline_subti
             </div>
           <?php else: ?>
             <p class="text-sm text-slate-400 pl-11">No personal interests listed yet.</p>
-          <?php endif; ?>
-        </div>
-
-        <div class="card p-6">
-          <div class="flex items-center gap-3 mb-4">
-            <div class="w-8 h-8 rounded-full bg-indigo-50 text-indigo-500 flex items-center justify-center flex-shrink-0"><i class="fa-solid fa-graduation-cap text-sm"></i></div>
-            <h3 class="text-base font-bold text-slate-900">Education</h3>
-          </div>
-          <?php if ($education): ?>
-            <?php $lastEduKeyAbout = array_key_last($education); ?>
-            <div class="relative pl-11">
-              <?php foreach ($education as $eduKey => $edu): ?>
-                <div class="relative pl-8<?= $eduKey !== $lastEduKeyAbout ? ' pb-8' : '' ?>">
-                  <?php if ($eduKey !== $lastEduKeyAbout): ?><span class="absolute left-[11px] top-6 bottom-0 w-px bg-slate-200"></span><?php endif; ?>
-                  <span class="absolute left-0 top-0 w-6 h-6 rounded-full flex items-center justify-center bg-indigo-500 ring-4 ring-white"><i class="fa-solid fa-graduation-cap text-[10px] text-white"></i></span>
-                  <p class="text-sm font-bold text-slate-900"><?= e($edu['school']) ?></p>
-                  <p class="text-xs text-slate-500"><?= e(trim(($edu['degree'] ?? '') . (($edu['degree'] && $edu['field_of_study']) ? ', ' : '') . ($edu['field_of_study'] ?? ''))) ?></p>
-                  <p class="text-[11px] text-slate-400 mt-0.5"><?= e($edu['start_year'] ?? '') ?><?= $edu['start_year'] || $edu['end_year'] ? ' – ' : '' ?><?= e($edu['end_year'] ?? '') ?></p>
-                </div>
-              <?php endforeach; ?>
-            </div>
-          <?php else: ?>
-            <p class="text-sm text-slate-400 pl-11">No education added yet.</p>
           <?php endif; ?>
         </div>
       </div>
