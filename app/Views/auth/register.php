@@ -21,6 +21,7 @@
       <input type="password" id="password" name="password" class="form-input !pr-10" required minlength="8">
       <button type="button" class="password-toggle absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600" data-target="password" tabindex="-1"><i class="fa-regular fa-eye"></i></button>
     </div>
+    <p class="text-xs text-slate-400 mt-1">Must be at least 8 characters.</p>
   </div>
   <div>
     <label class="form-label" for="password_confirmation">Confirm Password</label>
