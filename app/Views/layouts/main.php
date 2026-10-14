@@ -1027,65 +1027,11 @@ if ($authUser && $authUser['program']) {
     </script>
   </header>
 
-  <?php if ($activeNav === 'home'): ?>
-    <?php require dirname(__DIR__) . '/partials/flash.php'; ?>
+  <?php require dirname(__DIR__) . '/partials/flash.php'; ?>
 
-    <main class="flex-1">
-      <?= $content ?>
-    </main>
-  <?php else: ?>
-    <?php
-      $sidebarKnowledgeOpen = $activeNav === 'knowledge';
-      $sidebarCurrentPath = parse_url($_SERVER['REQUEST_URI'] ?? '', PHP_URL_PATH) ?? '';
-      $sidebarOnSubmitPage = str_contains($sidebarCurrentPath, 'knowledge/submit');
-      $sidebarNavLink = function (string $nav, string $href, string $icon, string $label) use ($activeNav) {
-        $active = $activeNav === $nav;
-        echo '<a href="' . e($href) . '" class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-semibold transition '
-          . ($active ? 'bg-[var(--menu-accent-50)] text-[var(--menu-accent-600)]' : 'text-slate-600 hover:bg-slate-50') . '">'
-          . '<i class="' . e($icon) . ' w-4 text-center"></i> ' . e($label) . '</a>';
-      };
-    ?>
-    <div class="flex-1 flex items-start">
-      <aside class="hidden lg:flex lg:flex-col w-64 flex-shrink-0 border-r border-slate-200 bg-white lg:sticky lg:top-[var(--header-height)] lg:self-start lg:max-h-[calc(100vh-var(--header-height))] lg:overflow-y-auto">
-        <nav class="flex-1 px-3 py-4 space-y-1">
-          <?php $sidebarNavLink('home', url('/'), 'fa-solid fa-house', 'Home'); ?>
-          <?php $sidebarNavLink('profile', url($authUser ? 'profile/edit' : 'login'), 'fa-solid fa-user', 'My Profile'); ?>
-          <?php $sidebarNavLink('directory', url('directory'), 'fa-solid fa-user-group', 'Alumni Directory'); ?>
-          <?php $sidebarNavLink('events', url('events'), 'fa-solid fa-calendar-days', 'Events'); ?>
-          <?php $sidebarNavLink('jobs', url('jobs'), 'fa-solid fa-briefcase', 'Jobs & Opportunities'); ?>
-
-          <details class="group" <?= $sidebarKnowledgeOpen ? 'open' : '' ?>>
-            <summary class="flex items-center justify-between gap-3 px-3 py-2.5 rounded-lg text-sm font-semibold cursor-pointer list-none marker:hidden [&::-webkit-details-marker]:hidden transition <?= $sidebarKnowledgeOpen ? 'bg-[var(--menu-accent-50)] text-[var(--menu-accent-600)]' : 'text-slate-600 hover:bg-slate-50' ?>">
-              <span class="flex items-center gap-3"><i class="fa-solid fa-book-open w-4 text-center"></i> Knowledge Hub</span>
-              <i class="fa-solid fa-chevron-down text-[0.65rem] transition-transform group-open:rotate-180"></i>
-            </summary>
-            <div class="pl-7 mt-1 space-y-1">
-              <a href="<?= e(url('knowledge')) ?>" class="block px-3 py-2 rounded-lg text-xs font-medium <?= $sidebarKnowledgeOpen && !$sidebarOnSubmitPage ? 'text-[var(--menu-accent-600)]' : 'text-slate-500 hover:text-[var(--menu-accent-600)]' ?>">Latest Articles</a>
-              <a href="<?= e(url($authUser ? 'knowledge/submit' : 'login')) ?>" class="block px-3 py-2 rounded-lg text-xs font-medium <?= $sidebarOnSubmitPage ? 'text-[var(--menu-accent-600)]' : 'text-slate-500 hover:text-[var(--menu-accent-600)]' ?>">Submit an Article</a>
-              <a href="<?= e(url($authUser ? 'knowledge/submit' : 'login') . '#my-submissions') ?>" class="block px-3 py-2 rounded-lg text-xs font-medium text-slate-500 hover:text-[var(--menu-accent-600)]">My Articles</a>
-            </div>
-          </details>
-
-          <?php $sidebarNavLink('mentorship', url('mentorship'), 'fa-solid fa-chalkboard-user', 'Mentorship'); ?>
-          <?php $sidebarNavLink('benefits', url('benefits'), 'fa-solid fa-gem', 'Benefits'); ?>
-          <?php $sidebarNavLink('giving', url('give'), 'fa-solid fa-hand-holding-heart', 'Give Back'); ?>
-        </nav>
-
-        <div class="m-3 rounded-xl bg-gradient-to-br from-primary-navy to-slate-800 p-4 text-center relative overflow-hidden flex-shrink-0">
-          <i class="fa-solid fa-building-columns absolute -right-3 -bottom-3 text-white/5 text-5xl"></i>
-          <p class="relative text-xs font-bold text-white leading-snug">Stronger Together for a Greater Tomorrow</p>
-        </div>
-      </aside>
-
-      <div class="flex-1 min-w-0">
-        <?php require dirname(__DIR__) . '/partials/flash.php'; ?>
-
-        <main>
-          <?= $content ?>
-        </main>
-      </div>
-    </div>
-  <?php endif; ?>
+  <main class="flex-1">
+    <?= $content ?>
+  </main>
 
   <footer class="bg-primary-navy text-white mt-12 py-6">
     <div class="max-w-[1280px] mx-auto px-4 md:px-8 grid grid-cols-2 md:grid-cols-4 gap-6">
