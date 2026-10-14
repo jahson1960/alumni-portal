@@ -1076,7 +1076,7 @@ if ($authUser && $authUser['program']) {
 
   <div id="confirm-modal" class="hidden fixed inset-0 z-[100] items-center justify-center bg-slate-900/60 px-4">
     <div class="bg-white rounded-xl shadow-2xl max-w-sm w-full p-6 text-center">
-      <div class="w-12 h-12 rounded-full bg-red-50 text-red-500 flex items-center justify-center text-xl mx-auto mb-4"><i class="fa-solid fa-trash-can"></i></div>
+      <div id="confirm-modal-icon-wrap" class="w-12 h-12 rounded-full bg-red-50 text-red-500 flex items-center justify-center text-xl mx-auto mb-4"><i id="confirm-modal-icon" class="fa-solid fa-trash-can"></i></div>
       <p id="confirm-modal-message" class="text-sm text-slate-700 mb-6">Are you sure?</p>
       <div class="flex gap-3 justify-center">
         <button type="button" id="confirm-modal-cancel" class="btn bg-slate-100 text-slate-600 hover:bg-slate-200 !px-5 !py-2 text-xs">Cancel</button>
@@ -1089,6 +1089,8 @@ if ($authUser && $authUser['program']) {
     (function () {
       var modal = document.getElementById('confirm-modal');
       var message = document.getElementById('confirm-modal-message');
+      var iconWrap = document.getElementById('confirm-modal-icon-wrap');
+      var icon = document.getElementById('confirm-modal-icon');
       var okBtn = document.getElementById('confirm-modal-ok');
       var cancelBtn = document.getElementById('confirm-modal-cancel');
       var pendingForm = null;
@@ -1106,6 +1108,17 @@ if ($authUser && $authUser['program']) {
         e.preventDefault();
         pendingForm = form;
         message.textContent = form.getAttribute('data-confirm') || 'Are you sure?';
+
+        // Defaults match the original destructive (delete) styling; a form can opt into a
+        // neutral tone (e.g. confirming an event registration, not a destructive action)
+        // via data-confirm-tone="neutral" plus its own icon/button label.
+        var tone = form.getAttribute('data-confirm-tone') || 'danger';
+        var isDanger = tone !== 'neutral';
+        iconWrap.className = 'w-12 h-12 rounded-full flex items-center justify-center text-xl mx-auto mb-4 ' + (isDanger ? 'bg-red-50 text-red-500' : 'bg-amber-50 text-gold');
+        icon.className = form.getAttribute('data-confirm-icon') || (isDanger ? 'fa-solid fa-trash-can' : 'fa-solid fa-circle-check');
+        okBtn.className = 'btn !px-5 !py-2 text-xs ' + (isDanger ? 'bg-red-500 text-white hover:bg-red-600' : 'btn-gold');
+        okBtn.textContent = form.getAttribute('data-confirm-ok-label') || (isDanger ? 'Delete' : 'Confirm');
+
         modal.classList.remove('hidden');
         modal.classList.add('flex');
       });

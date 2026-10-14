@@ -51,7 +51,7 @@ $tagline = $event['description'] ? mb_strimwidth($event['description'], 0, 70, '
 
         <?php if (!$isPast): ?>
           <div class="flex flex-wrap items-center gap-3 mt-6">
-            <form method="POST" action="<?= e(url('events/' . $event['id'] . '/rsvp')) ?>">
+            <form method="POST" action="<?= e(url('events/' . $event['id'] . '/rsvp')) ?>"<?php if (!$isAttending): ?> data-confirm="Register for &ldquo;<?= e($event['title']) ?>&rdquo;? You can cancel anytime from My Events." data-confirm-tone="neutral" data-confirm-icon="fa-regular fa-calendar-check" data-confirm-ok-label="Register"<?php endif; ?>>
               <?= csrf_field() ?>
               <button type="submit" class="btn <?= $isAttending ? 'bg-emerald-100 text-emerald-700' : 'btn-gold' ?> !px-5 !py-2.5 text-sm flex items-center gap-2">
                 <?= $isAttending ? '✓ Registered' : 'Register Now' ?> <?php if (!$isAttending): ?><i class="fa-solid fa-arrow-right"></i><?php endif; ?>
@@ -129,7 +129,7 @@ $tagline = $event['description'] ? mb_strimwidth($event['description'], 0, 70, '
             <p class="text-sm font-semibold text-primary-navy">No one has registered yet.</p>
             <p class="text-xs text-slate-400 mt-1 mb-4">Be the first to register and join!</p>
             <?php if (!$isPast): ?>
-              <form method="POST" action="<?= e(url('events/' . $event['id'] . '/rsvp')) ?>">
+              <form method="POST" action="<?= e(url('events/' . $event['id'] . '/rsvp')) ?>"<?php if (!$isAttending): ?> data-confirm="Register for &ldquo;<?= e($event['title']) ?>&rdquo;? You can cancel anytime from My Events." data-confirm-tone="neutral" data-confirm-icon="fa-regular fa-calendar-check" data-confirm-ok-label="Register"<?php endif; ?>>
                 <?= csrf_field() ?>
                 <button type="submit" class="btn bg-white border border-gold !text-gold hover:bg-gold/5 !px-4 !py-2 text-xs w-full"><?= $isAttending ? '✓ Registered' : 'Register Now' ?></button>
               </form>
@@ -174,7 +174,7 @@ $tagline = $event['description'] ? mb_strimwidth($event['description'], 0, 70, '
           <p class="text-xs text-slate-500">Spaces may be limited. Register now to secure your spot.</p>
         </div>
       </div>
-      <form method="POST" action="<?= e(url('events/' . $event['id'] . '/rsvp')) ?>">
+      <form method="POST" action="<?= e(url('events/' . $event['id'] . '/rsvp')) ?>" data-confirm="Register for &ldquo;<?= e($event['title']) ?>&rdquo;? You can cancel anytime from My Events." data-confirm-tone="neutral" data-confirm-icon="fa-regular fa-calendar-check" data-confirm-ok-label="Register">
         <?= csrf_field() ?>
         <button type="submit" class="btn-gold !px-5 !py-2.5 text-sm flex items-center gap-2">Register Now <i class="fa-solid fa-arrow-right"></i></button>
       </form>

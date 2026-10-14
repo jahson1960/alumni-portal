@@ -32,7 +32,7 @@
             <?php if ($preview['count'] > 0): ?><span class="text-[0.65rem] text-slate-400 ml-2 whitespace-nowrap">+<?= $preview['count'] ?> going</span><?php endif; ?>
           </div>
           <div class="flex items-center gap-2 flex-shrink-0">
-            <form method="POST" action="<?= e(url('events/' . $event['id'] . '/rsvp')) ?>">
+            <form method="POST" action="<?= e(url('events/' . $event['id'] . '/rsvp')) ?>"<?php if (!$isAttending): ?> data-confirm="Register for &ldquo;<?= e($event['title']) ?>&rdquo;? You can cancel anytime from My Events." data-confirm-tone="neutral" data-confirm-icon="fa-regular fa-calendar-check" data-confirm-ok-label="Register"<?php endif; ?>>
               <?= csrf_field() ?>
               <button type="submit" class="btn !px-3 !py-1.5 text-[0.7rem] whitespace-nowrap <?= $isAttending ? '!bg-emerald-100 !text-emerald-700' : '!bg-gold !text-white hover:!bg-gold/90' ?>"><?= $isAttending ? '✓ Registered' : 'Register' ?></button>
             </form>
