@@ -2,6 +2,9 @@
   <a href="<?= e(url('knowledge')) ?>" class="text-xs text-slate-500 hover:text-gold mb-4 inline-block"><i class="fa-solid fa-arrow-left"></i> Back to Insights</a>
 
   <article class="card p-6 md:p-8">
+    <?php if (!empty($article['image'])): ?>
+      <img src="<?= e($article['image']) ?>" alt="" class="w-full h-56 md:h-72 object-cover rounded-xl mb-5">
+    <?php endif; ?>
     <span class="badge-gold mb-3"><?= e(article_category_label($article['category'])) ?></span>
     <h1 class="text-xl md:text-2xl font-extrabold text-primary-navy leading-snug mb-3"><?= e($article['title']) ?></h1>
     <div class="flex items-center gap-2 mb-6">

@@ -25,13 +25,18 @@
 
   <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
     <?php foreach ($articles as $article): ?>
-      <a href="<?= e(url('knowledge/' . $article['id'])) ?>" class="card p-5 block">
+      <a href="<?= e(url('knowledge/' . $article['id'])) ?>" class="card !p-0 overflow-hidden block">
+        <?php if (!empty($article['image'])): ?>
+          <img src="<?= e($article['image']) ?>" alt="" class="w-full h-32 object-cover">
+        <?php endif; ?>
+        <div class="p-5">
         <span class="badge-gold mb-2"><?= e(article_category_label($article['category'])) ?></span>
         <h4 class="text-sm font-bold text-primary-navy leading-snug mb-2"><?= e($article['title']) ?></h4>
         <div class="flex items-center gap-2">
           <?= avatar_html(['name' => $article['author_name'], 'avatar' => $article['author_avatar']], 'w-6 h-6') ?>
           <span class="text-xs text-slate-500"><?= e($article['author_name']) ?></span>
           <span class="text-[0.65rem] text-slate-400 ml-auto"><?= e(format_date($article['published_at'])) ?></span>
+        </div>
         </div>
       </a>
     <?php endforeach; ?>

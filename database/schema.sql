@@ -405,7 +405,8 @@ CREATE TABLE articles (
   title VARCHAR(255) NOT NULL,
   category ENUM('article','research','case_study','white_paper') NOT NULL DEFAULT 'article',
   body MEDIUMTEXT NOT NULL,
-  status ENUM('pending','published') NOT NULL DEFAULT 'pending',
+  image VARCHAR(255) NULL,
+  status ENUM('draft','pending','published') NOT NULL DEFAULT 'pending',
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   published_at TIMESTAMP NULL,
   FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE

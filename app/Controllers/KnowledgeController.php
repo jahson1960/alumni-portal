@@ -5,6 +5,7 @@ namespace App\Controllers;
 use App\Core\Auth;
 use App\Core\Controller;
 use App\Core\Sanitizer;
+use App\Core\Upload;
 use App\Models\Article;
 
 class KnowledgeController extends Controller
@@ -61,6 +62,8 @@ class KnowledgeController extends Controller
         $this->requireCsrf();
         $this->guard();
 
+        $isDraft = $this->input('action') === 'draft';
+
         $title = trim((string) $this->input('title', ''));
         $category = in_array($this->input('category'), self::CATEGORIES, true) ? $this->input('category') : 'article';
         $body = Sanitizer::html(trim((string) $this->input('body', '')));
@@ -68,9 +71,24 @@ class KnowledgeController extends Controller
         $errors = [];
         if ($title === '') {
             $errors[] = 'Title is required.';
+        } elseif (mb_strlen($title) > 150) {
+            $errors[] = 'Title must be 150 characters or fewer.';
         }
-        if (!$body) {
+        if (!$isDraft && !$body) {
             $errors[] = 'Body is required.';
+        }
+        if (!$isDraft && !$this->input('original_confirm')) {
+            $errors[] = 'Please confirm the content is original before submitting.';
+        }
+
+        $image = null;
+        try {
+            $uploaded = Upload::image($this->file('image'), 'articles');
+            if ($uploaded) {
+                $image = upload_url($uploaded);
+            }
+        } catch (\RuntimeException $e) {
+            $errors[] = $e->getMessage();
         }
 
         if ($errors) {
@@ -78,14 +96,21 @@ class KnowledgeController extends Controller
             $this->redirect('knowledge/submit');
         }
 
-        Article::create([
+        $data = [
             'user_id' => Auth::id(),
             'title' => $title,
             'category' => $category,
             'body' => $body,
-        ]);
+            'status' => $isDraft ? 'draft' : 'pending',
+        ];
+        if ($image) {
+            $data['image'] = $image;
+        }
+        Article::create($data);
 
-        $this->flash('success', 'Your submission has been sent for review. It will appear once approved by an admin.');
+        $this->flash('success', $isDraft
+            ? 'Your article has been saved as a draft. You can find it under My Submissions.'
+            : 'Your submission has been sent for review. It will appear once approved by an admin.');
         $this->redirect('knowledge/submit');
     }
 
