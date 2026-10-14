@@ -1,20 +1,32 @@
 <?php
+$knowledgeBannerVisible = \App\Models\Setting::get('knowledge_banner_visible', '0') === '1';
 $knowledgeBannerImage = \App\Models\Setting::get('knowledge_banner_image', 'https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&w=1200&q=80');
 $knowledgeBannerHeight = (int) \App\Models\Setting::get('knowledge_banner_height', '220');
 ?>
 <div class="max-w-[1400px] mx-auto px-4 md:px-8 py-8">
   <a href="<?= e(url('knowledge')) ?>" class="text-sm text-slate-500 hover:text-gold mb-4 inline-flex items-center gap-2"><i class="fa-solid fa-arrow-left"></i> Back to Knowledge Hub</a>
 
-  <div class="relative rounded-2xl overflow-hidden mb-6 border border-amber-100 bg-amber-50 flex flex-col justify-center" style="min-height: <?= $knowledgeBannerHeight ?>px;">
-    <div class="absolute inset-0 bg-cover bg-right" style="background-image: linear-gradient(90deg, #fffbeb 0%, #fffbeb 42%, rgba(255,251,235,0.55) 65%, rgba(255,251,235,0) 100%), url('<?= e($knowledgeBannerImage) ?>');"></div>
-    <div class="relative p-6 md:p-8 max-w-xl">
-      <div class="w-14 h-14 rounded-full bg-amber-100 text-gold flex items-center justify-center text-xl mb-4"><i class="fa-solid fa-pen-to-square"></i></div>
-      <p class="text-xs font-extrabold text-gold uppercase tracking-wide mb-1.5">Share Your Expertise</p>
-      <h1 class="text-2xl md:text-3xl font-extrabold text-primary-navy mb-3">Submit an Article</h1>
-      <p class="text-sm text-slate-600">Share your insights, experiences and expertise with the RBS alumni community.</p>
-      <p class="text-sm text-slate-600">Your article can inspire, inform and create value for fellow alumni around the world.</p>
+  <?php if ($knowledgeBannerVisible): ?>
+    <div class="relative rounded-2xl overflow-hidden mb-6 border border-amber-100 bg-amber-50 flex flex-col justify-center" style="min-height: <?= $knowledgeBannerHeight ?>px;">
+      <div class="absolute inset-0 bg-cover bg-right" style="background-image: linear-gradient(90deg, #fffbeb 0%, #fffbeb 42%, rgba(255,251,235,0.55) 65%, rgba(255,251,235,0) 100%), url('<?= e($knowledgeBannerImage) ?>');"></div>
+      <div class="relative p-6 md:p-8 max-w-xl">
+        <div class="w-14 h-14 rounded-full bg-amber-100 text-gold flex items-center justify-center text-xl mb-4"><i class="fa-solid fa-pen-to-square"></i></div>
+        <p class="text-xs font-extrabold text-gold uppercase tracking-wide mb-1.5">Share Your Expertise</p>
+        <h1 class="text-2xl md:text-3xl font-extrabold text-primary-navy mb-3">Submit an Article</h1>
+        <p class="text-sm text-slate-600">Share your insights, experiences and expertise with the RBS alumni community.</p>
+        <p class="text-sm text-slate-600">Your article can inspire, inform and create value for fellow alumni around the world.</p>
+      </div>
     </div>
-  </div>
+  <?php else: ?>
+    <div class="flex items-start gap-4 mb-6">
+      <div class="w-14 h-14 rounded-full bg-amber-100 text-gold flex items-center justify-center text-xl flex-shrink-0"><i class="fa-solid fa-pen-to-square"></i></div>
+      <div>
+        <h1 class="text-xl md:text-2xl font-extrabold text-primary-navy">Submit an Article</h1>
+        <p class="text-sm text-slate-500 mt-1">Share your insights, experiences and expertise with the RBS alumni community.</p>
+        <p class="text-sm text-slate-500">Your article can inspire, inform and create value for fellow alumni around the world.</p>
+      </div>
+    </div>
+  <?php endif; ?>
 
   <?php require dirname(__DIR__) . '/partials/errors.php'; ?>
 

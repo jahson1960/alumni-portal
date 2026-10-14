@@ -352,6 +352,13 @@
   <div class="card p-6">
     <h3 class="section-title text-xs mb-1">Submit an Article Banner</h3>
     <p class="text-xs text-slate-400 mb-4">Background photo behind the "Submit an Article" page header in the Knowledge Hub.</p>
+    <label class="flex items-start gap-2 mb-4 pb-4 border-b border-slate-100">
+      <input type="checkbox" name="knowledge_banner_visible" value="1" <?= ($settings['knowledge_banner_visible'] ?? '0') === '1' ? 'checked' : '' ?> class="mt-1 rounded border-slate-300 text-gold focus:ring-gold">
+      <span>
+        <span class="block text-sm font-semibold text-primary-navy">Show this banner</span>
+        <span class="block text-xs text-slate-500">Off by default. When off, the Submit an Article page header is just plain text with no photo.</span>
+      </span>
+    </label>
     <div>
       <label class="form-label">Banner Image</label>
       <p class="text-xs text-slate-400 mb-2">Upload a file or paste an image URL — uploading a file takes priority.</p>

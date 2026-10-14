@@ -178,6 +178,7 @@ class SettingsController extends AdminController
         $data['profile_hero_height'] = (string) max(120, min(500, $profileHeroHeight ?: 200));
         $knowledgeBannerHeight = (int) $this->input('knowledge_banner_height', 220);
         $data['knowledge_banner_height'] = (string) max(120, min(500, $knowledgeBannerHeight ?: 220));
+        $data['knowledge_banner_visible'] = $this->input('knowledge_banner_visible') ? '1' : '0';
 
         if ($errors) {
             $_SESSION['_errors'] = $errors;
