@@ -26,8 +26,9 @@ if ($authUser) {
 $jobTabs = array_filter($jobTabs, fn ($label, $key) => \App\Models\PageTabVisibility::isVisible('jobs', $key), ARRAY_FILTER_USE_BOTH);
 [$heroTitle, $heroSubtitle] = $jobTabHero[$tab] ?? $jobTabHero['board'];
 $jobsBannerImage = \App\Models\Setting::get('jobs_banner_image', 'https://images.unsplash.com/photo-1519389950473-47ba0277781c?auto=format&fit=crop&w=1600&q=80');
+$jobsBannerHeight = (int) \App\Models\Setting::get('jobs_banner_height', '220');
 ?>
-<div class="relative text-white overflow-hidden bg-primary-navy bg-cover bg-center" style="background-image: linear-gradient(90deg, rgba(9,26,46,0.97) 0%, rgba(9,26,46,0.9) 40%, rgba(9,26,46,0.55) 100%), url('<?= e($jobsBannerImage) ?>');">
+<div class="relative text-white overflow-hidden bg-primary-navy bg-cover bg-center flex items-center" style="min-height: <?= $jobsBannerHeight ?>px; background-image: linear-gradient(90deg, rgba(9,26,46,0.97) 0%, rgba(9,26,46,0.9) 40%, rgba(9,26,46,0.55) 100%), url('<?= e($jobsBannerImage) ?>');">
   <div class="max-w-[1280px] mx-auto px-4 md:px-8 py-10 md:py-14 relative">
     <p class="text-xs font-bold text-gold uppercase tracking-wide mb-2">Careers</p>
     <h1 class="text-3xl md:text-4xl font-extrabold mb-2"><?= e($heroTitle) ?></h1>

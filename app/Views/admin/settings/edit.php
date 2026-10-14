@@ -276,6 +276,10 @@
       <?php endif; ?>
       <input type="file" name="jobs_banner_image" accept=".jpg,.jpeg,.png,.webp" class="text-sm block mb-2">
       <input type="url" name="jobs_banner_image_url" placeholder="...or paste an image URL" class="form-input">
+      <div class="mt-3 max-w-[160px]">
+        <label class="form-label" for="jobs_banner_height">Banner Height (px)</label>
+        <input type="number" id="jobs_banner_height" name="jobs_banner_height" min="120" max="500" step="10" class="form-input" value="<?= e($settings['jobs_banner_height'] ?? '220') ?>">
+      </div>
     </div>
     <div class="mt-4 pt-4 border-t border-slate-100">
       <label class="form-label">"Explore Career Opportunities" Sidebar Image</label>
@@ -299,6 +303,10 @@
       <?php endif; ?>
       <input type="file" name="profile_hero_background" accept=".jpg,.jpeg,.png,.webp" class="text-sm block mb-2">
       <input type="url" name="profile_hero_background_url" placeholder="...or paste an image URL" class="form-input">
+      <div class="mt-3 max-w-[160px]">
+        <label class="form-label" for="profile_hero_height">Banner Height (px)</label>
+        <input type="number" id="profile_hero_height" name="profile_hero_height" min="120" max="500" step="10" class="form-input" value="<?= e($settings['profile_hero_height'] ?? '200') ?>">
+      </div>
     </div>
 
     <div class="mt-4 pt-4 border-t border-slate-100 grid grid-cols-1 sm:grid-cols-3 gap-4">
@@ -337,6 +345,24 @@
           <input type="color" name="profile_hero_tagline_subtitle_color" class="w-12 h-10 rounded border border-slate-300 cursor-pointer flex-shrink-0" value="<?= e($settings['profile_hero_tagline_subtitle_color'] ?? '#000000') ?>">
         </div>
         <p class="text-xs text-slate-400 mt-1">Shown on the right side of every alumni profile banner (only when a banner image is set), vertically centered. Line breaks are kept as typed.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="card p-6">
+    <h3 class="section-title text-xs mb-1">Submit an Article Banner</h3>
+    <p class="text-xs text-slate-400 mb-4">Background photo behind the "Submit an Article" page header in the Knowledge Hub.</p>
+    <div>
+      <label class="form-label">Banner Image</label>
+      <p class="text-xs text-slate-400 mb-2">Upload a file or paste an image URL — uploading a file takes priority.</p>
+      <?php if (!empty($settings['knowledge_banner_image'])): ?>
+        <img src="<?= e($settings['knowledge_banner_image']) ?>" alt="" class="w-full max-w-xs h-24 object-cover rounded border border-slate-200 mb-2">
+      <?php endif; ?>
+      <input type="file" name="knowledge_banner_image" accept=".jpg,.jpeg,.png,.webp" class="text-sm block mb-2">
+      <input type="url" name="knowledge_banner_image_url" placeholder="...or paste an image URL" class="form-input">
+      <div class="mt-3 max-w-[160px]">
+        <label class="form-label" for="knowledge_banner_height">Banner Height (px)</label>
+        <input type="number" id="knowledge_banner_height" name="knowledge_banner_height" min="120" max="500" step="10" class="form-input" value="<?= e($settings['knowledge_banner_height'] ?? '220') ?>">
       </div>
     </div>
   </div>

@@ -158,6 +158,27 @@ class SettingsController extends AdminController
         $data['profile_hero_tagline_title_color'] = valid_hex_color($this->input('profile_hero_tagline_title_color'), '#000000');
         $data['profile_hero_tagline_subtitle_color'] = valid_hex_color($this->input('profile_hero_tagline_subtitle_color'), '#000000');
 
+        $knowledgeBanner = null;
+        try {
+            $uploaded = Upload::image($this->file('knowledge_banner_image'), 'branding');
+            if ($uploaded) {
+                $knowledgeBanner = upload_url($uploaded);
+            }
+        } catch (\RuntimeException $e) {
+            $errors[] = $e->getMessage();
+        }
+
+        // Banner heights (min-height in px) for the hero-style photo banners across the
+        // site: Job Board, Alumni Profile, and Submit an Article. Default values match
+        // each banner's existing visual height so saving settings without touching these
+        // fields doesn't change anything.
+        $jobsBannerHeight = (int) $this->input('jobs_banner_height', 220);
+        $data['jobs_banner_height'] = (string) max(120, min(500, $jobsBannerHeight ?: 220));
+        $profileHeroHeight = (int) $this->input('profile_hero_height', 200);
+        $data['profile_hero_height'] = (string) max(120, min(500, $profileHeroHeight ?: 200));
+        $knowledgeBannerHeight = (int) $this->input('knowledge_banner_height', 220);
+        $data['knowledge_banner_height'] = (string) max(120, min(500, $knowledgeBannerHeight ?: 220));
+
         if ($errors) {
             $_SESSION['_errors'] = $errors;
             $this->redirect('admin/settings');
@@ -195,6 +216,15 @@ class SettingsController extends AdminController
             $profileHeroBackgroundUrl = trim((string) $this->input('profile_hero_background_url', ''));
             if ($profileHeroBackgroundUrl !== '') {
                 $data['profile_hero_background'] = $profileHeroBackgroundUrl;
+            }
+        }
+
+        if ($knowledgeBanner) {
+            $data['knowledge_banner_image'] = $knowledgeBanner;
+        } else {
+            $knowledgeBannerUrl = trim((string) $this->input('knowledge_banner_image_url', ''));
+            if ($knowledgeBannerUrl !== '') {
+                $data['knowledge_banner_image'] = $knowledgeBannerUrl;
             }
         }
 
