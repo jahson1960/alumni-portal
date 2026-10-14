@@ -29,6 +29,7 @@ class ProfileController extends Controller
 
         $this->view('profile.edit', [
             'title' => 'Edit Profile',
+            'activeNav' => 'profile',
             'user' => Auth::user(),
             'education' => UserEducation::forUser($userId),
             'experience' => UserExperience::forUser($userId),

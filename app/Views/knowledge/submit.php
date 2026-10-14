@@ -1,12 +1,14 @@
 <div class="max-w-[1400px] mx-auto px-4 md:px-8 py-8">
-  <a href="<?= e(url('knowledge')) ?>" class="text-sm text-slate-500 hover:text-gold mb-4 inline-flex items-center gap-2"><i class="fa-solid fa-arrow-left"></i> Back to Knowledge</a>
+  <a href="<?= e(url('knowledge')) ?>" class="text-sm text-slate-500 hover:text-gold mb-4 inline-flex items-center gap-2"><i class="fa-solid fa-arrow-left"></i> Back to Knowledge Hub</a>
 
-  <div class="flex items-start gap-4 mb-6">
-    <div class="w-14 h-14 rounded-full bg-amber-100 text-gold flex items-center justify-center text-xl flex-shrink-0"><i class="fa-solid fa-pen-to-square"></i></div>
-    <div>
-      <h1 class="text-xl md:text-2xl font-extrabold text-primary-navy">Submit an Article</h1>
-      <p class="text-sm text-slate-500 mt-1">Share your insights, experiences and expertise with the RBS alumni community.</p>
-      <p class="text-sm text-slate-500">Your article can inspire, inform and create value for fellow alumni around the world.</p>
+  <div class="relative rounded-2xl overflow-hidden mb-6 border border-amber-100 bg-amber-50">
+    <div class="absolute inset-0 bg-cover bg-right" style="background-image: linear-gradient(90deg, #fffbeb 0%, #fffbeb 42%, rgba(255,251,235,0.55) 65%, rgba(255,251,235,0) 100%), url('https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&w=1200&q=80');"></div>
+    <div class="relative p-6 md:p-8 max-w-xl">
+      <div class="w-14 h-14 rounded-full bg-amber-100 text-gold flex items-center justify-center text-xl mb-4"><i class="fa-solid fa-pen-to-square"></i></div>
+      <p class="text-xs font-extrabold text-gold uppercase tracking-wide mb-1.5">Share Your Expertise</p>
+      <h1 class="text-2xl md:text-3xl font-extrabold text-primary-navy mb-3">Submit an Article</h1>
+      <p class="text-sm text-slate-600">Share your insights, experiences and expertise with the RBS alumni community.</p>
+      <p class="text-sm text-slate-600">Your article can inspire, inform and create value for fellow alumni around the world.</p>
     </div>
   </div>
 
@@ -104,7 +106,7 @@
           </ul>
         </div>
 
-        <div class="card !bg-sky-50 !border-sky-100 p-5">
+        <div class="card p-5">
           <div class="flex items-center gap-3 mb-3">
             <div class="w-10 h-10 rounded-full bg-sky-100 text-sky-600 flex items-center justify-center flex-shrink-0"><i class="fa-solid fa-user-group"></i></div>
             <h3 class="text-sm font-bold text-primary-navy">Why Share?</h3>
@@ -118,19 +120,19 @@
           </ul>
         </div>
 
-        <div class="card p-5">
+        <div class="card !bg-amber-50 !border-amber-100 p-5">
           <div class="flex items-center gap-3 mb-3">
-            <div class="w-10 h-10 rounded-full bg-amber-100 text-gold flex items-center justify-center flex-shrink-0"><i class="fa-regular fa-file-lines"></i></div>
+            <div class="w-10 h-10 rounded-full bg-amber-100 text-gold flex items-center justify-center flex-shrink-0"><i class="fa-regular fa-envelope"></i></div>
             <h3 class="text-sm font-bold text-primary-navy">Need Help?</h3>
           </div>
-          <p class="text-xs text-slate-500 mb-4">For any support or questions, contact the alumni team at <a href="mailto:<?= e(\App\Models\Setting::get('giving_contact_email', 'alumni@rbs.edu.ng')) ?>" class="text-sky-600 hover:underline"><?= e(\App\Models\Setting::get('giving_contact_email', 'alumni@rbs.edu.ng')) ?></a>.</p>
-          <a href="mailto:<?= e(\App\Models\Setting::get('giving_contact_email', 'alumni@rbs.edu.ng')) ?>" class="btn bg-sky-50 !text-sky-700 hover:bg-sky-100 !px-4 !py-2.5 text-xs w-full flex items-center justify-center gap-2"><i class="fa-regular fa-envelope"></i> Contact Alumni Team</a>
+          <p class="text-xs text-slate-600 mb-4">For any support or questions, contact the alumni team at <a href="mailto:<?= e(\App\Models\Setting::get('giving_contact_email', 'alumni@rbs.edu.ng')) ?>" class="text-gold hover:underline"><?= e(\App\Models\Setting::get('giving_contact_email', 'alumni@rbs.edu.ng')) ?></a>.</p>
+          <a href="mailto:<?= e(\App\Models\Setting::get('giving_contact_email', 'alumni@rbs.edu.ng')) ?>" class="btn-gold !px-4 !py-2.5 text-xs w-full flex items-center justify-center gap-2"><i class="fa-regular fa-envelope"></i> Contact Alumni Team</a>
         </div>
       </div>
     </div>
   </form>
 
-  <h3 class="section-title text-xs mb-3">My Submissions</h3>
+  <h3 id="my-submissions" class="section-title text-xs mb-3 scroll-mt-24">My Submissions</h3>
   <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
     <?php foreach ($myArticles as $article): ?>
       <?php
