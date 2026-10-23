@@ -10,11 +10,46 @@ class ApplicationTemplate extends Model
 
     public const FIELD_TYPES = ['text', 'textarea', 'email', 'phone', 'number', 'url', 'select', 'file'];
 
+    /** profile_field key => human label, for the small "from profile" badge in the template builder. */
+    public const PROFILE_FIELDS = [
+        'name' => 'Full Name',
+        'email' => 'Email',
+        'phone' => 'Phone',
+        'linkedin_url' => 'LinkedIn Profile',
+        'resume' => 'Resume',
+    ];
+
     public static function forUser(int $userId): array
     {
         $stmt = static::db()->prepare('SELECT * FROM application_templates WHERE user_id = ? ORDER BY name ASC');
         $stmt->execute([$userId]);
         return $stmt->fetchAll();
+    }
+
+    /**
+     * Same as forUser(), but if the user has never created a template, seeds one first -
+     * "Quick Apply", with the usual LinkedIn-Easy-Apply-style contact fields (name, email,
+     * phone, LinkedIn, resume) bound to the applicant's own profile - so the Apply Method
+     * dropdown's In-App Form option always has something ready to attach, not a dead end
+     * that requires building a template from scratch before it can be used.
+     */
+    public static function forUserOrCreateDefault(int $userId): array
+    {
+        $templates = self::forUser($userId);
+        if ($templates) {
+            return $templates;
+        }
+
+        $id = self::create(['user_id' => $userId, 'name' => 'Quick Apply']);
+        ApplicationTemplateField::replaceForTemplate($id, [
+            ['label' => 'Full Name', 'field_type' => 'text', 'is_required' => true, 'profile_field' => 'name'],
+            ['label' => 'Email', 'field_type' => 'email', 'is_required' => true, 'profile_field' => 'email'],
+            ['label' => 'Phone', 'field_type' => 'phone', 'is_required' => true, 'profile_field' => 'phone'],
+            ['label' => 'Resume', 'field_type' => 'file', 'is_required' => true, 'profile_field' => 'resume'],
+            ['label' => 'LinkedIn Profile', 'field_type' => 'url', 'is_required' => false, 'profile_field' => 'linkedin_url'],
+        ]);
+
+        return self::forUser($userId);
     }
 
     /** Null unless the template belongs to $userId, so a poster can never load someone else's template by guessing its id. */

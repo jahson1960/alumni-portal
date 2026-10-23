@@ -75,7 +75,7 @@ class JobController extends AdminController
             'allCompanies' => Company::all(),
             'allCategories' => Category::forType('job'),
             'selectedCategoryIds' => [],
-            'myTemplates' => ApplicationTemplate::forUser((int) Auth::id()),
+            'myTemplates' => ApplicationTemplate::forUserOrCreateDefault((int) Auth::id()),
         ]);
     }
 
@@ -99,7 +99,7 @@ class JobController extends AdminController
             'allCompanies' => Company::all(),
             'allCategories' => Category::forType('job'),
             'selectedCategoryIds' => array_column(Category::forJob((int) $id), 'id'),
-            'myTemplates' => ApplicationTemplate::forUser((int) Auth::id()),
+            'myTemplates' => ApplicationTemplate::forUserOrCreateDefault((int) Auth::id()),
         ]);
     }
 

@@ -30,10 +30,11 @@ $inputTypes = ['text' => 'text', 'email' => 'email', 'phone' => 'tel', 'number' 
       <p class="text-sm text-slate-400">This job doesn't have any additional questions — just submit to apply.</p>
     <?php endif; ?>
 
-    <?php foreach ($fields as $field): $prev = $previousByLabel[$field['label']] ?? ''; ?>
+    <?php foreach ($fields as $field): $prev = $prefillByFieldId[$field['id']] ?? ''; ?>
       <div>
         <label class="form-label" for="field_<?= e((string) $field['id']) ?>">
           <?= e($field['label']) ?> <?php if ($field['is_required']): ?><span class="text-red-500">*</span><?php endif; ?>
+          <?php if ($field['profile_field']): ?><span class="text-slate-400 font-normal text-xs">&mdash; from your profile</span><?php endif; ?>
         </label>
 
         <?php if ($field['field_type'] === 'textarea'): ?>
@@ -50,7 +51,7 @@ $inputTypes = ['text' => 'text', 'email' => 'email', 'phone' => 'tel', 'number' 
         <?php elseif ($field['field_type'] === 'file'): ?>
           <input type="file" id="field_<?= e((string) $field['id']) ?>" name="field_<?= e((string) $field['id']) ?>" accept=".pdf,.doc,.docx" class="text-sm block" <?= $field['is_required'] && !$prev ? 'required' : '' ?>>
           <?php if ($prev): ?>
-            <p class="text-xs text-slate-400 mt-1">Previously submitted: <a href="<?= e($prev) ?>" target="_blank" rel="noopener noreferrer" class="text-gold hover:underline">view file</a> &mdash; choose a new file to replace it, or leave blank to keep it.</p>
+            <p class="text-xs text-slate-400 mt-1"><?= $field['profile_field'] === 'resume' ? 'Using your profile resume' : 'Previously submitted' ?>: <a href="<?= e($prev) ?>" target="_blank" rel="noopener noreferrer" class="text-gold hover:underline">view file</a> &mdash; choose a new file to replace it, or leave blank to keep it.</p>
           <?php endif; ?>
 
         <?php else: ?>

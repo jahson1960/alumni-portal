@@ -20,6 +20,12 @@
       <div id="template-fields" class="space-y-3">
         <?php foreach ($fields as $field): ?>
           <div class="template-field-row card !bg-slate-50 p-3">
+            <?php if (!empty($field['profile_field'])): ?>
+              <span class="badge bg-sky-100 text-sky-700 mb-2 inline-flex items-center gap-1"><i class="fa-solid fa-id-badge"></i> Prefills from the candidate's profile</span>
+              <input type="hidden" name="field_profile[]" value="<?= e($field['profile_field']) ?>">
+            <?php else: ?>
+              <input type="hidden" name="field_profile[]" value="">
+            <?php endif; ?>
             <div class="grid grid-cols-1 sm:grid-cols-[1fr_160px_110px_auto] gap-2 items-start">
               <input type="text" name="field_label[]" class="form-input text-sm" placeholder="Question / label" value="<?= e($field['label']) ?>" required>
               <select name="field_type[]" class="form-input text-sm field-type-select">
@@ -38,7 +44,7 @@
         <?php endforeach; ?>
       </div>
       <button type="button" id="add-field-btn" class="btn bg-white border border-slate-200 !text-slate-700 hover:bg-slate-50 !px-3 !py-2 text-xs mt-3">+ Add Question</button>
-      <p class="text-xs text-slate-400 mt-2">Every application already asks for the candidate's name and email from their profile — you only need to add extra questions here (e.g. years of experience, a portfolio link, a resume upload).</p>
+      <p class="text-xs text-slate-400 mt-2">Fields marked "Prefills from the candidate's profile" (only on the auto-created Quick Apply template) pull their answer from the candidate's own profile — you can rename or remove them, but new questions you add here are always blank for the candidate to fill in.</p>
     </div>
 
     <div class="pt-4 border-t border-slate-100">
@@ -49,6 +55,7 @@
 
 <template id="template-field-row-template">
   <div class="template-field-row card !bg-slate-50 p-3">
+    <input type="hidden" name="field_profile[]" value="">
     <div class="grid grid-cols-1 sm:grid-cols-[1fr_160px_110px_auto] gap-2 items-start">
       <input type="text" name="field_label[]" class="form-input text-sm" placeholder="Question / label" required>
       <select name="field_type[]" class="form-input text-sm field-type-select">

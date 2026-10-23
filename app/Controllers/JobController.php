@@ -207,7 +207,7 @@ class JobController extends Controller
             'allCompanies' => Company::all(),
             'postingMode' => Setting::get('job_posting_mode', 'approval'),
             'needsRichEditor' => true,
-            'myTemplates' => ApplicationTemplate::forUser((int) Auth::id()),
+            'myTemplates' => ApplicationTemplate::forUserOrCreateDefault((int) Auth::id()),
         ]);
     }
 
@@ -275,7 +275,7 @@ class JobController extends Controller
             'allCompanies' => Company::all(),
             'postingMode' => Setting::get('job_posting_mode', 'approval'),
             'needsRichEditor' => true,
-            'myTemplates' => ApplicationTemplate::forUser((int) Auth::id()),
+            'myTemplates' => ApplicationTemplate::forUserOrCreateDefault((int) Auth::id()),
         ]);
     }
 
@@ -388,14 +388,36 @@ class JobController extends Controller
             }
         }
 
+        // A field bound to a profile attribute (profile_field) prefills from it,
+        // LinkedIn-Easy-Apply style, so the candidate isn't retyping their own name/email/
+        // phone/LinkedIn/resume - but a value they already submitted before wins over the
+        // profile's current value, since they may have deliberately used a different one.
+        $prefillByFieldId = [];
+        foreach ($fields as $field) {
+            $prefillByFieldId[$field['id']] = $previousByLabel[$field['label']]
+                ?? ($field['profile_field'] ? $this->profileFieldValue(Auth::user(), $field['profile_field']) : '');
+        }
+
         $this->view('jobs.apply', [
             'title' => 'Apply - ' . $job['title'],
             'activeNav' => 'jobs',
             'job' => $job,
             'fields' => $fields,
-            'previousByLabel' => $previousByLabel,
+            'prefillByFieldId' => $prefillByFieldId,
             'isResubmit' => $existing !== null,
         ]);
+    }
+
+    /** The applicant's own profile value for a profile-bound field ('name', 'email', 'phone', 'linkedin_url', or 'resume'). */
+    private function profileFieldValue(array $user, string $profileField): string
+    {
+        if ($profileField === 'resume') {
+            if (!empty($user['resume_file'])) {
+                return upload_url($user['resume_file']);
+            }
+            return (string) ($user['resume_url'] ?? '');
+        }
+        return (string) ($user[$profileField] ?? '');
     }
 
     /** POST handler for a 'form'-method job, called from apply() above. */
@@ -438,6 +460,9 @@ class JobController extends Controller
                 }
                 if (!$value) {
                     $value = $previousByLabel[$field['label']] ?? null;
+                }
+                if (!$value && $field['profile_field'] === 'resume') {
+                    $value = $this->profileFieldValue(Auth::user(), 'resume') ?: null;
                 }
                 if (!$value && $field['is_required']) {
                     $errors[] = $field['label'] . ' is required.';

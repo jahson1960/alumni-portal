@@ -18,7 +18,7 @@ class ApplicationTemplateController extends Controller
     public function index(): void
     {
         $this->guard();
-        $templates = ApplicationTemplate::forUser((int) Auth::id());
+        $templates = ApplicationTemplate::forUserOrCreateDefault((int) Auth::id());
         foreach ($templates as &$template) {
             $template['field_count'] = count(ApplicationTemplateField::forTemplate((int) $template['id']));
         }
@@ -97,6 +97,7 @@ class ApplicationTemplateController extends Controller
         $types = (array) $this->input('field_type', []);
         $options = (array) $this->input('field_options', []);
         $required = (array) $this->input('field_required', []);
+        $profileFields = (array) $this->input('field_profile', []);
 
         if ($name === '') {
             $_SESSION['_errors'] = ['Template name is required.'];
@@ -115,6 +116,10 @@ class ApplicationTemplateController extends Controller
                 'field_type' => $type,
                 'options' => $type === 'select' ? trim((string) ($options[$i] ?? '')) : null,
                 'is_required' => ($required[$i] ?? '0') === '1',
+                // Carried through from a hidden input on existing rows - the builder UI has no
+                // way to newly bind a field to a profile attribute, it only preserves a binding
+                // an auto-created default template already had.
+                'profile_field' => array_key_exists((string) ($profileFields[$i] ?? ''), ApplicationTemplate::PROFILE_FIELDS) ? $profileFields[$i] : null,
             ];
         }
 
