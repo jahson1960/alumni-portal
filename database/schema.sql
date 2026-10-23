@@ -265,6 +265,7 @@ CREATE TABLE jobs (
   company_about MEDIUMTEXT NULL,
   apply_type ENUM('link','email') NOT NULL DEFAULT 'email',
   apply_value VARCHAR(255) NULL,
+  application_instructions TEXT NULL,
   is_featured TINYINT(1) NOT NULL DEFAULT 0,
   status ENUM('open','closed') NOT NULL DEFAULT 'open',
   approval_status ENUM('approved','pending','rejected','draft') NOT NULL DEFAULT 'approved',

@@ -138,6 +138,7 @@ class JobController extends AdminController
         $status = $this->input('status', 'open') === 'closed' ? 'closed' : 'open';
         $applyType = $this->input('apply_type', 'email') === 'link' ? 'link' : 'email';
         $applyValue = trim((string) $this->input('apply_value', ''));
+        $applicationInstructions = trim((string) $this->input('application_instructions', ''));
         $closingDate = trim((string) $this->input('closing_date', ''));
         $logoDisplayMode = $this->input('logo_display_mode', 'logo') === 'badge' ? 'badge' : 'logo';
 
@@ -205,6 +206,7 @@ class JobController extends AdminController
             'company_text_color' => $companyText !== '' ? $companyText : '#091a2e',
             'apply_type' => $applyType,
             'apply_value' => $applyValue,
+            'application_instructions' => $applicationInstructions !== '' ? $applicationInstructions : null,
             'is_featured' => $isFeatured,
             'status' => $status,
             'approval_status' => 'approved',

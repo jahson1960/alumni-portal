@@ -50,10 +50,19 @@ $experienceLabel = !empty($job['experience_level']) ? (\App\Models\Job::EXPERIEN
             <?php if ($isClosed): ?>
               <button type="button" disabled class="btn-gold !px-5 !py-2.5 text-sm opacity-50 cursor-not-allowed flex items-center justify-center gap-2"><i class="fa-solid fa-paper-plane"></i> Applications Closed</button>
             <?php else: ?>
-              <form method="POST" action="<?= e(url('jobs/' . $job['id'] . '/apply')) ?>">
+              <form method="POST" action="<?= e(url('jobs/' . $job['id'] . '/apply')) ?>" class="<?= $job['apply_type'] === 'email' ? 'job-apply-email-form' : '' ?>">
                 <?= csrf_field() ?>
                 <button type="submit" class="btn-gold !px-5 !py-2.5 text-sm w-full flex items-center justify-center gap-2"><i class="fa-solid fa-paper-plane"></i> <?= $hasApplied ? 'Apply Again' : 'Apply Now' ?></button>
               </form>
+              <?php if ($job['apply_type'] === 'email'): ?>
+                <div class="job-apply-reveal <?= $showApplyReveal ? '' : 'hidden' ?> p-4 rounded-lg bg-emerald-50 border border-emerald-100">
+                  <p class="text-xs font-bold text-emerald-800 mb-1">How to apply</p>
+                  <?php if (!empty($job['application_instructions'])): ?>
+                    <p class="text-sm text-slate-700 whitespace-pre-line"><?= e($job['application_instructions']) ?></p>
+                  <?php endif; ?>
+                  <p class="text-sm text-slate-700 <?= !empty($job['application_instructions']) ? 'mt-2' : '' ?>">Email: <a href="mailto:<?= e($job['apply_value']) ?>" class="font-semibold text-emerald-700 hover:underline"><?= e($job['apply_value']) ?></a></p>
+                </div>
+              <?php endif; ?>
             <?php endif; ?>
             <?php if (\App\Core\Auth::check()): ?>
               <form method="POST" action="<?= e(url('jobs/' . $job['id'] . '/save')) ?>">
@@ -342,10 +351,19 @@ $experienceLabel = !empty($job['experience_level']) ? (\App\Models\Job::EXPERIEN
       <?php if ($isClosed): ?>
         <button type="button" disabled class="btn-gold !px-5 !py-2.5 text-sm w-full opacity-50 cursor-not-allowed flex items-center justify-center gap-2"><i class="fa-solid fa-paper-plane"></i> Applications Closed</button>
       <?php else: ?>
-        <form method="POST" action="<?= e(url('jobs/' . $job['id'] . '/apply')) ?>">
+        <form method="POST" action="<?= e(url('jobs/' . $job['id'] . '/apply')) ?>" class="<?= $job['apply_type'] === 'email' ? 'job-apply-email-form' : '' ?>">
           <?= csrf_field() ?>
           <button type="submit" class="btn-gold !px-5 !py-2.5 text-sm w-full flex items-center justify-center gap-2"><i class="fa-solid fa-paper-plane"></i> <?= $hasApplied ? 'Apply Again' : 'Apply Now' ?></button>
         </form>
+        <?php if ($job['apply_type'] === 'email'): ?>
+          <div class="job-apply-reveal <?= $showApplyReveal ? '' : 'hidden' ?> mt-3 p-4 rounded-lg bg-emerald-50 border border-emerald-100">
+            <p class="text-xs font-bold text-emerald-800 mb-1">How to apply</p>
+            <?php if (!empty($job['application_instructions'])): ?>
+              <p class="text-sm text-slate-700 whitespace-pre-line"><?= e($job['application_instructions']) ?></p>
+            <?php endif; ?>
+            <p class="text-sm text-slate-700 <?= !empty($job['application_instructions']) ? 'mt-2' : '' ?>">Email: <a href="mailto:<?= e($job['apply_value']) ?>" class="font-semibold text-emerald-700 hover:underline"><?= e($job['apply_value']) ?></a></p>
+          </div>
+        <?php endif; ?>
       <?php endif; ?>
     </div>
 
@@ -407,6 +425,31 @@ $experienceLabel = !empty($job['experience_level']) ? (\App\Models\Job::EXPERIEN
           done();
         }
       });
+    });
+
+    // Email-method "Apply": reveal the instructions/email in place instead of leaving the
+    // page. The form still POSTs (records the click, and is the no-JS fallback - the server
+    // redirects back with ?applied=1 and renders the panel open), but JS intercepts it to
+    // reveal instantly without a full reload.
+    document.querySelectorAll('.job-apply-email-form').forEach(function (form) {
+      form.addEventListener('submit', function (e) {
+        e.preventDefault();
+        var panel = form.nextElementSibling;
+        fetch(form.action, {
+          method: 'POST',
+          headers: { 'X-Requested-With': 'XMLHttpRequest' },
+          body: new FormData(form),
+        }).catch(function () {}).finally(function () {
+          if (panel && panel.classList.contains('job-apply-reveal')) {
+            panel.classList.remove('hidden');
+            panel.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+          }
+        });
+      });
+    });
+
+    document.querySelectorAll('.job-apply-reveal:not(.hidden)').forEach(function (panel) {
+      panel.scrollIntoView({ behavior: 'smooth', block: 'center' });
     });
   })();
 </script>

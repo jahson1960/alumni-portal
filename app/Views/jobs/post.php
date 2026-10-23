@@ -217,6 +217,11 @@ $postingTips = [
             <input type="text" id="apply_value" name="apply_value" class="form-input" placeholder="careers@company.com or https://careers.company.com" value="<?= e($job['apply_value'] ?? '') ?>">
           </div>
         </div>
+        <div class="mt-4" id="apply_instructions_field">
+          <label class="form-label" for="application_instructions">Application Instructions <span class="text-slate-400 font-normal">(optional)</span></label>
+          <textarea id="application_instructions" name="application_instructions" rows="3" class="form-textarea" placeholder="e.g. To apply for this job, kindly send a mail to abc@xyz.com using the job title as the subject of the email."><?= e($job['application_instructions'] ?? '') ?></textarea>
+          <p class="text-xs text-slate-400 mt-1">Shown to candidates when they click Apply. Most useful with the Email method, where there's no external form to guide them.</p>
+        </div>
       </div>
 
       <!-- Mobile-only step navigation -->

@@ -187,6 +187,7 @@ class JobController extends Controller
             'companyWebsite' => $company['website'] ?? null,
             'isSaved' => Auth::check() ? SavedJob::isSaved((int) Auth::id(), (int) $id) : false,
             'hasApplied' => Auth::check() ? JobApplication::hasApplied((int) Auth::id(), (int) $id) : false,
+            'showApplyReveal' => $this->input('applied') === '1',
             'backUrl' => $backUrl,
             'backLabel' => $backLabel,
         ]);
@@ -305,7 +306,13 @@ class JobController extends Controller
         $this->redirect('jobs?tab=saved');
     }
 
-    /** Tracks the click-through, then redirects to the job's real apply target (mailto: or external link). */
+    /**
+     * Tracks the click-through. A link-type job redirects straight to the poster's external
+     * application URL. An email-type job never launches a mailto: popup - the job page reveals
+     * the email (and the poster's application instructions, if any) in place instead, so this
+     * just records the click and reports back; the JS on the page does the revealing (with a
+     * plain redirect-and-reveal fallback for non-JS requests).
+     */
     public function apply(string $id): void
     {
         $this->requireCsrf();
@@ -324,9 +331,18 @@ class JobController extends Controller
             JobApplication::record((int) Auth::id(), (int) $id);
         }
 
-        $target = $job['apply_type'] === 'email' ? 'mailto:' . $job['apply_value'] : $job['apply_value'];
-        header('Location: ' . $target);
-        exit;
+        if ($job['apply_type'] === 'link') {
+            header('Location: ' . $job['apply_value']);
+            exit;
+        }
+
+        if (($_SERVER['HTTP_X_REQUESTED_WITH'] ?? '') === 'XMLHttpRequest') {
+            header('Content-Type: application/json');
+            echo json_encode(['ok' => true]);
+            return;
+        }
+
+        $this->redirect('jobs/' . $id . '?applied=1');
     }
 
     public function toggleSave(string $id): void
@@ -386,6 +402,7 @@ class JobController extends Controller
         $categoryIds = array_slice(array_map('intval', (array) $this->input('categories', [])), 0, 3);
         $applyType = $this->input('apply_type', 'email') === 'link' ? 'link' : 'email';
         $applyValue = trim((string) $this->input('apply_value', ''));
+        $applicationInstructions = trim((string) $this->input('application_instructions', ''));
         $closingDate = trim((string) $this->input('closing_date', ''));
         $asDraft = $this->input('action') === 'draft';
 
@@ -437,6 +454,7 @@ class JobController extends Controller
             'requirements' => $requirements !== '' ? $requirements : null,
             'apply_type' => $applyType,
             'apply_value' => $applyValue,
+            'application_instructions' => $applicationInstructions !== '' ? $applicationInstructions : null,
             'closing_date' => $closingDate !== '' ? $closingDate : null,
         ];
         if ($companyLogo) {
