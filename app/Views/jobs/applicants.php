@@ -34,18 +34,31 @@ $statusMeta = [
         </div>
 
         <?php if ($applicant['responses']): ?>
-          <div class="space-y-3 pl-14">
-            <?php foreach ($applicant['responses'] as $response): ?>
-              <div>
-                <p class="text-xs font-semibold text-slate-500"><?= e($response['label']) ?></p>
-                <?php if ($response['type'] === 'file'): ?>
-                  <a href="<?= e($response['value']) ?>" target="_blank" rel="noopener noreferrer" class="text-sm text-gold hover:underline inline-flex items-center gap-1.5"><i class="fa-regular fa-file-lines"></i> View file</a>
-                <?php elseif ($response['type'] === 'url'): ?>
-                  <a href="<?= e($response['value']) ?>" target="_blank" rel="noopener noreferrer" class="text-sm text-gold hover:underline break-all"><?= e($response['value']) ?></a>
-                <?php else: ?>
-                  <p class="text-sm text-slate-700 whitespace-pre-line"><?= e($response['value']) ?></p>
-                <?php endif; ?>
-              </div>
+          <?php
+            $responsesBySection = ['profile_info' => [], 'education' => [], 'experience' => []];
+            foreach ($applicant['responses'] as $response) {
+                $responsesBySection[$response['section'] ?? 'profile_info'][] = $response;
+            }
+          ?>
+          <div class="space-y-5 pl-14">
+            <?php foreach (\App\Models\ApplicationTemplate::SECTIONS as $sectionKey => $sectionLabel): ?>
+              <?php if (!empty($responsesBySection[$sectionKey])): ?>
+                <div class="space-y-3">
+                  <p class="text-[0.65rem] font-extrabold text-slate-400 uppercase tracking-wide"><?= e($sectionLabel) ?></p>
+                  <?php foreach ($responsesBySection[$sectionKey] as $response): ?>
+                    <div>
+                      <p class="text-xs font-semibold text-slate-500"><?= e($response['label']) ?></p>
+                      <?php if ($response['type'] === 'file'): ?>
+                        <a href="<?= e($response['value']) ?>" target="_blank" rel="noopener noreferrer" class="text-sm text-gold hover:underline inline-flex items-center gap-1.5"><i class="fa-regular fa-file-lines"></i> View file</a>
+                      <?php elseif ($response['type'] === 'url'): ?>
+                        <a href="<?= e($response['value']) ?>" target="_blank" rel="noopener noreferrer" class="text-sm text-gold hover:underline break-all"><?= e($response['value']) ?></a>
+                      <?php else: ?>
+                        <p class="text-sm text-slate-700 whitespace-pre-line"><?= e($response['value']) ?></p>
+                      <?php endif; ?>
+                    </div>
+                  <?php endforeach; ?>
+                </div>
+              <?php endif; ?>
             <?php endforeach; ?>
           </div>
         <?php else: ?>

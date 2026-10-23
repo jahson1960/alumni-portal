@@ -98,6 +98,7 @@ class ApplicationTemplateController extends Controller
         $options = (array) $this->input('field_options', []);
         $required = (array) $this->input('field_required', []);
         $profileFields = (array) $this->input('field_profile', []);
+        $sections = (array) $this->input('field_section', []);
 
         if ($name === '') {
             $_SESSION['_errors'] = ['Template name is required.'];
@@ -120,6 +121,7 @@ class ApplicationTemplateController extends Controller
                 // way to newly bind a field to a profile attribute, it only preserves a binding
                 // an auto-created default template already had.
                 'profile_field' => array_key_exists((string) ($profileFields[$i] ?? ''), ApplicationTemplate::PROFILE_FIELDS) ? $profileFields[$i] : null,
+                'section' => array_key_exists((string) ($sections[$i] ?? ''), ApplicationTemplate::SECTIONS) ? $sections[$i] : 'profile_info',
             ];
         }
 

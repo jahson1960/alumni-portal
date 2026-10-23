@@ -17,6 +17,15 @@ class ApplicationTemplate extends Model
         'phone' => 'Phone',
         'linkedin_url' => 'LinkedIn Profile',
         'resume' => 'Resume',
+        'education' => 'Education History',
+        'experience' => 'Work Experience',
+    ];
+
+    /** Every template's fields are grouped under one of these three headings on the apply form. */
+    public const SECTIONS = [
+        'profile_info' => 'Profile Info',
+        'education' => 'Education',
+        'experience' => 'Experience',
     ];
 
     public static function forUser(int $userId): array
@@ -42,11 +51,13 @@ class ApplicationTemplate extends Model
 
         $id = self::create(['user_id' => $userId, 'name' => 'Quick Apply']);
         ApplicationTemplateField::replaceForTemplate($id, [
-            ['label' => 'Full Name', 'field_type' => 'text', 'is_required' => true, 'profile_field' => 'name'],
-            ['label' => 'Email', 'field_type' => 'email', 'is_required' => true, 'profile_field' => 'email'],
-            ['label' => 'Phone', 'field_type' => 'phone', 'is_required' => true, 'profile_field' => 'phone'],
-            ['label' => 'Resume', 'field_type' => 'file', 'is_required' => true, 'profile_field' => 'resume'],
-            ['label' => 'LinkedIn Profile', 'field_type' => 'url', 'is_required' => false, 'profile_field' => 'linkedin_url'],
+            ['label' => 'Full Name', 'field_type' => 'text', 'is_required' => true, 'profile_field' => 'name', 'section' => 'profile_info'],
+            ['label' => 'Email', 'field_type' => 'email', 'is_required' => true, 'profile_field' => 'email', 'section' => 'profile_info'],
+            ['label' => 'Phone', 'field_type' => 'phone', 'is_required' => true, 'profile_field' => 'phone', 'section' => 'profile_info'],
+            ['label' => 'Resume', 'field_type' => 'file', 'is_required' => true, 'profile_field' => 'resume', 'section' => 'profile_info'],
+            ['label' => 'LinkedIn Profile', 'field_type' => 'url', 'is_required' => false, 'profile_field' => 'linkedin_url', 'section' => 'profile_info'],
+            ['label' => 'Education History', 'field_type' => 'textarea', 'is_required' => false, 'profile_field' => 'education', 'section' => 'education'],
+            ['label' => 'Work Experience', 'field_type' => 'textarea', 'is_required' => false, 'profile_field' => 'experience', 'section' => 'experience'],
         ]);
 
         return self::forUser($userId);

@@ -18,6 +18,8 @@ use App\Models\PageTabVisibility;
 use App\Models\SavedJob;
 use App\Models\Setting;
 use App\Models\User;
+use App\Models\UserEducation;
+use App\Models\UserExperience;
 
 class JobController extends Controller
 {
@@ -392,23 +394,34 @@ class JobController extends Controller
         // LinkedIn-Easy-Apply style, so the candidate isn't retyping their own name/email/
         // phone/LinkedIn/resume - but a value they already submitted before wins over the
         // profile's current value, since they may have deliberately used a different one.
+        // Education/Experience are read-only snapshots of the profile instead - always the
+        // current data, never a frozen previous answer.
         $prefillByFieldId = [];
         foreach ($fields as $field) {
+            if ($this->isProfileSnapshotField($field['profile_field'])) {
+                $prefillByFieldId[$field['id']] = $this->profileFieldValue(Auth::user(), $field['profile_field']);
+                continue;
+            }
             $prefillByFieldId[$field['id']] = $previousByLabel[$field['label']]
                 ?? ($field['profile_field'] ? $this->profileFieldValue(Auth::user(), $field['profile_field']) : '');
+        }
+
+        $fieldsBySection = ['profile_info' => [], 'education' => [], 'experience' => []];
+        foreach ($fields as $field) {
+            $fieldsBySection[$field['section']][] = $field;
         }
 
         $this->view('jobs.apply', [
             'title' => 'Apply - ' . $job['title'],
             'activeNav' => 'jobs',
             'job' => $job,
-            'fields' => $fields,
+            'fieldsBySection' => $fieldsBySection,
             'prefillByFieldId' => $prefillByFieldId,
             'isResubmit' => $existing !== null,
         ]);
     }
 
-    /** The applicant's own profile value for a profile-bound field ('name', 'email', 'phone', 'linkedin_url', or 'resume'). */
+    /** The applicant's own profile value for a profile-bound field (see ApplicationTemplate::PROFILE_FIELDS). */
     private function profileFieldValue(array $user, string $profileField): string
     {
         if ($profileField === 'resume') {
@@ -417,7 +430,28 @@ class JobController extends Controller
             }
             return (string) ($user['resume_url'] ?? '');
         }
+        if ($profileField === 'education') {
+            $lines = array_map(function (array $edu): string {
+                $degree = trim(($edu['degree'] ?? '') . (($edu['degree'] && $edu['field_of_study']) ? ', ' : '') . ($edu['field_of_study'] ?? ''));
+                $years = trim(($edu['start_year'] ?? '') . (($edu['start_year'] || $edu['end_year']) ? ' - ' : '') . ($edu['end_year'] ?? ''));
+                return trim($edu['school'] . ($degree ? " ({$degree})" : '') . ($years ? " [{$years}]" : ''));
+            }, UserEducation::forUser((int) $user['id']));
+            return implode("\n", $lines);
+        }
+        if ($profileField === 'experience') {
+            $lines = array_map(function (array $exp): string {
+                $dates = trim(($exp['start_date'] ? format_date($exp['start_date'], 'M Y') : '') . ' - ' . ($exp['is_current'] ? 'Present' : ($exp['end_date'] ? format_date($exp['end_date'], 'M Y') : '')));
+                return trim($exp['title'] . ' at ' . $exp['company'] . ($dates !== '-' ? " ({$dates})" : ''));
+            }, UserExperience::forUser((int) $user['id']));
+            return implode("\n", $lines);
+        }
         return (string) ($user[$profileField] ?? '');
+    }
+
+    /** True for the two "snapshot" profile fields that are always server-computed, never taken from client input. */
+    private function isProfileSnapshotField(?string $profileField): bool
+    {
+        return in_array($profileField, ['education', 'experience'], true);
     }
 
     /** POST handler for a 'form'-method job, called from apply() above. */
@@ -448,7 +482,11 @@ class JobController extends Controller
         $responses = [];
         foreach ($fields as $field) {
             $inputName = 'field_' . $field['id'];
-            if ($field['field_type'] === 'file') {
+            if ($this->isProfileSnapshotField($field['profile_field'])) {
+                // Education/Experience are read-only on the form - always recomputed from the
+                // database here too, never trusting whatever the client posted for them.
+                $value = $this->profileFieldValue(Auth::user(), $field['profile_field']);
+            } elseif ($field['field_type'] === 'file') {
                 $value = null;
                 try {
                     $uploaded = Upload::document($this->file($inputName), 'applications');
@@ -474,7 +512,7 @@ class JobController extends Controller
                 }
             }
             if ($value !== null && $value !== '') {
-                $responses[] = ['label' => $field['label'], 'type' => $field['field_type'], 'value' => $value];
+                $responses[] = ['label' => $field['label'], 'type' => $field['field_type'], 'value' => $value, 'section' => $field['section']];
             }
         }
 

@@ -23,41 +23,24 @@ $inputTypes = ['text' => 'text', 'email' => 'email', 'phone' => 'tel', 'number' 
     </div>
   <?php endif; ?>
 
-  <form method="POST" action="<?= e(url('jobs/' . $job['id'] . '/apply')) ?>" enctype="multipart/form-data" class="card p-6 space-y-5">
+  <form method="POST" action="<?= e(url('jobs/' . $job['id'] . '/apply')) ?>" enctype="multipart/form-data" class="card p-6 space-y-6">
     <?= csrf_field() ?>
 
-    <?php if (empty($fields)): ?>
+    <?php if (empty($fieldsBySection['profile_info']) && empty($fieldsBySection['education']) && empty($fieldsBySection['experience'])): ?>
       <p class="text-sm text-slate-400">This job doesn't have any additional questions — just submit to apply.</p>
     <?php endif; ?>
 
-    <?php foreach ($fields as $field): $prev = $prefillByFieldId[$field['id']] ?? ''; ?>
-      <div>
-        <label class="form-label" for="field_<?= e((string) $field['id']) ?>">
-          <?= e($field['label']) ?> <?php if ($field['is_required']): ?><span class="text-red-500">*</span><?php endif; ?>
-          <?php if ($field['profile_field']): ?><span class="text-slate-400 font-normal text-xs">&mdash; from your profile</span><?php endif; ?>
-        </label>
-
-        <?php if ($field['field_type'] === 'textarea'): ?>
-          <textarea id="field_<?= e((string) $field['id']) ?>" name="field_<?= e((string) $field['id']) ?>" rows="4" class="form-textarea" <?= $field['is_required'] ? 'required' : '' ?>><?= e($prev) ?></textarea>
-
-        <?php elseif ($field['field_type'] === 'select'): ?>
-          <select id="field_<?= e((string) $field['id']) ?>" name="field_<?= e((string) $field['id']) ?>" class="form-input" <?= $field['is_required'] ? 'required' : '' ?>>
-            <option value="">Select an option&hellip;</option>
-            <?php foreach (array_filter(array_map('trim', explode(',', (string) $field['options']))) as $choice): ?>
-              <option value="<?= e($choice) ?>" <?= $prev === $choice ? 'selected' : '' ?>><?= e($choice) ?></option>
+    <?php foreach (\App\Models\ApplicationTemplate::SECTIONS as $sectionKey => $sectionLabel): ?>
+      <?php if (!empty($fieldsBySection[$sectionKey])): ?>
+        <div>
+          <h3 class="text-xs font-extrabold text-slate-400 uppercase tracking-wide mb-4 pb-2 border-b border-slate-100"><?= e($sectionLabel) ?></h3>
+          <div class="space-y-5">
+            <?php foreach ($fieldsBySection[$sectionKey] as $field): $prev = $prefillByFieldId[$field['id']] ?? ''; ?>
+              <?php require __DIR__ . '/partials/apply_field.php'; ?>
             <?php endforeach; ?>
-          </select>
-
-        <?php elseif ($field['field_type'] === 'file'): ?>
-          <input type="file" id="field_<?= e((string) $field['id']) ?>" name="field_<?= e((string) $field['id']) ?>" accept=".pdf,.doc,.docx" class="text-sm block" <?= $field['is_required'] && !$prev ? 'required' : '' ?>>
-          <?php if ($prev): ?>
-            <p class="text-xs text-slate-400 mt-1"><?= $field['profile_field'] === 'resume' ? 'Using your profile resume' : 'Previously submitted' ?>: <a href="<?= e($prev) ?>" target="_blank" rel="noopener noreferrer" class="text-gold hover:underline">view file</a> &mdash; choose a new file to replace it, or leave blank to keep it.</p>
-          <?php endif; ?>
-
-        <?php else: ?>
-          <input type="<?= e($inputTypes[$field['field_type']] ?? 'text') ?>" id="field_<?= e((string) $field['id']) ?>" name="field_<?= e((string) $field['id']) ?>" class="form-input" value="<?= e($prev) ?>" <?= $field['is_required'] ? 'required' : '' ?>>
-        <?php endif; ?>
-      </div>
+          </div>
+        </div>
+      <?php endif; ?>
     <?php endforeach; ?>
 
     <div class="pt-4 border-t border-slate-100">

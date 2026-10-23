@@ -261,7 +261,8 @@ CREATE TABLE application_template_fields (
   options VARCHAR(500) NULL COMMENT 'comma-separated choices, only used when field_type = select',
   is_required TINYINT(1) NOT NULL DEFAULT 0,
   sort_order INT NOT NULL DEFAULT 0,
-  profile_field VARCHAR(30) NULL COMMENT 'name|email|phone|linkedin_url|resume - when set, the apply form prefills this field from the applicant''s own profile, LinkedIn-Easy-Apply style',
+  profile_field VARCHAR(30) NULL COMMENT 'name|email|phone|linkedin_url|resume|education|experience - when set, the apply form prefills this field from the applicant''s own profile, LinkedIn-Easy-Apply style',
+  section ENUM('profile_info','education','experience') NOT NULL DEFAULT 'profile_info',
   FOREIGN KEY (template_id) REFERENCES application_templates(id) ON DELETE CASCADE
 ) ENGINE=InnoDB;
 

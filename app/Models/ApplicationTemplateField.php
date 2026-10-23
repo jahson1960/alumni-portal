@@ -28,8 +28,8 @@ class ApplicationTemplateField extends Model
         $db->prepare('DELETE FROM application_template_fields WHERE template_id = ?')->execute([$templateId]);
 
         $stmt = $db->prepare(
-            'INSERT INTO application_template_fields (template_id, label, field_type, options, is_required, sort_order, profile_field)
-             VALUES (?, ?, ?, ?, ?, ?, ?)'
+            'INSERT INTO application_template_fields (template_id, label, field_type, options, is_required, sort_order, profile_field, section)
+             VALUES (?, ?, ?, ?, ?, ?, ?, ?)'
         );
         foreach ($fields as $i => $field) {
             $stmt->execute([
@@ -40,6 +40,7 @@ class ApplicationTemplateField extends Model
                 $field['is_required'] ? 1 : 0,
                 $i,
                 $field['profile_field'] ?? null,
+                $field['section'] ?? 'profile_info',
             ]);
         }
     }
