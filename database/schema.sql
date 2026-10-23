@@ -241,6 +241,30 @@ CREATE TABLE categories (
 ) ENGINE=InnoDB;
 
 -- ---------------------------------------------------------------------
+-- application_templates / application_template_fields  (reusable in-app
+-- job-application form definitions a poster can build once and attach to
+-- any of their job posts)
+-- ---------------------------------------------------------------------
+CREATE TABLE application_templates (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  user_id INT NOT NULL,
+  name VARCHAR(150) NOT NULL,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+) ENGINE=InnoDB;
+
+CREATE TABLE application_template_fields (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  template_id INT NOT NULL,
+  label VARCHAR(200) NOT NULL,
+  field_type ENUM('text','textarea','email','phone','number','url','select','file') NOT NULL DEFAULT 'text',
+  options VARCHAR(500) NULL COMMENT 'comma-separated choices, only used when field_type = select',
+  is_required TINYINT(1) NOT NULL DEFAULT 0,
+  sort_order INT NOT NULL DEFAULT 0,
+  FOREIGN KEY (template_id) REFERENCES application_templates(id) ON DELETE CASCADE
+) ENGINE=InnoDB;
+
+-- ---------------------------------------------------------------------
 -- jobs
 -- ---------------------------------------------------------------------
 CREATE TABLE jobs (
@@ -263,9 +287,10 @@ CREATE TABLE jobs (
   responsibilities MEDIUMTEXT NULL,
   requirements MEDIUMTEXT NULL,
   company_about MEDIUMTEXT NULL,
-  apply_type ENUM('link','email') NOT NULL DEFAULT 'email',
+  apply_type ENUM('link','email','form') NOT NULL DEFAULT 'email',
   apply_value VARCHAR(255) NULL,
   application_instructions TEXT NULL,
+  application_template_id INT NULL COMMENT 'used when apply_type = form',
   is_featured TINYINT(1) NOT NULL DEFAULT 0,
   status ENUM('open','closed') NOT NULL DEFAULT 'open',
   approval_status ENUM('approved','pending','rejected','draft') NOT NULL DEFAULT 'approved',
@@ -274,7 +299,8 @@ CREATE TABLE jobs (
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   CONSTRAINT fk_jobs_company FOREIGN KEY (company_id) REFERENCES companies(id) ON DELETE SET NULL,
-  CONSTRAINT fk_jobs_posted_by FOREIGN KEY (posted_by) REFERENCES users(id) ON DELETE SET NULL
+  CONSTRAINT fk_jobs_posted_by FOREIGN KEY (posted_by) REFERENCES users(id) ON DELETE SET NULL,
+  CONSTRAINT fk_jobs_application_template FOREIGN KEY (application_template_id) REFERENCES application_templates(id) ON DELETE SET NULL
 ) ENGINE=InnoDB;
 
 -- ---------------------------------------------------------------------
@@ -908,12 +934,15 @@ CREATE TABLE saved_news_posts (
 ) ENGINE=InnoDB;
 
 -- ---------------------------------------------------------------------
--- job_applications  (click-through "Apply Now" tracking, powers the Saved Jobs "Applied" tab)
+-- job_applications  (click-through "Apply Now" tracking, powers the Saved Jobs "Applied" tab;
+-- also holds the submitted answers + triage status for in-app form applications)
 -- ---------------------------------------------------------------------
 CREATE TABLE job_applications (
   id INT AUTO_INCREMENT PRIMARY KEY,
   user_id INT NOT NULL,
   job_id INT NOT NULL,
+  status ENUM('new','reviewed','shortlisted','rejected') NOT NULL DEFAULT 'new',
+  responses MEDIUMTEXT NULL COMMENT 'JSON array of {label,type,value}, only set for apply_type = form',
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   UNIQUE KEY uniq_user_job (user_id, job_id),
   CONSTRAINT fk_job_applications_user FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,

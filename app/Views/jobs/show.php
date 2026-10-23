@@ -49,6 +49,8 @@ $experienceLabel = !empty($job['experience_level']) ? (\App\Models\Job::EXPERIEN
           <div class="flex flex-col gap-2 flex-shrink-0 w-full sm:w-auto">
             <?php if ($isClosed): ?>
               <button type="button" disabled class="btn-gold !px-5 !py-2.5 text-sm opacity-50 cursor-not-allowed flex items-center justify-center gap-2"><i class="fa-solid fa-paper-plane"></i> Applications Closed</button>
+            <?php elseif ($job['apply_type'] === 'form'): ?>
+              <a href="<?= e(url('jobs/' . $job['id'] . '/apply')) ?>" class="btn-gold !px-5 !py-2.5 text-sm w-full flex items-center justify-center gap-2"><i class="fa-solid fa-paper-plane"></i> <?= $hasApplied ? 'Edit Application' : 'Apply Now' ?></a>
             <?php else: ?>
               <form method="POST" action="<?= e(url('jobs/' . $job['id'] . '/apply')) ?>" class="<?= $job['apply_type'] === 'email' ? 'job-apply-email-form' : '' ?>">
                 <?= csrf_field() ?>
@@ -350,6 +352,8 @@ $experienceLabel = !empty($job['experience_level']) ? (\App\Models\Job::EXPERIEN
       <p class="text-sm text-slate-500 mb-4">Ready to take the next step? Submit your application for this role below.</p>
       <?php if ($isClosed): ?>
         <button type="button" disabled class="btn-gold !px-5 !py-2.5 text-sm w-full opacity-50 cursor-not-allowed flex items-center justify-center gap-2"><i class="fa-solid fa-paper-plane"></i> Applications Closed</button>
+      <?php elseif ($job['apply_type'] === 'form'): ?>
+        <a href="<?= e(url('jobs/' . $job['id'] . '/apply')) ?>" class="btn-gold !px-5 !py-2.5 text-sm w-full flex items-center justify-center gap-2"><i class="fa-solid fa-paper-plane"></i> <?= $hasApplied ? 'Edit Application' : 'Apply Now' ?></a>
       <?php else: ?>
         <form method="POST" action="<?= e(url('jobs/' . $job['id'] . '/apply')) ?>" class="<?= $job['apply_type'] === 'email' ? 'job-apply-email-form' : '' ?>">
           <?= csrf_field() ?>

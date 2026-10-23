@@ -87,8 +87,19 @@ $router->post('/jobs/alerts/{id}', 'JobAlertController@update');
 $router->post('/jobs/alerts/{id}/toggle', 'JobAlertController@toggle');
 $router->post('/jobs/alerts/{id}/delete', 'JobAlertController@destroy');
 
+// Application templates (must be registered before /jobs/{id})
+$router->get('/application-templates', 'ApplicationTemplateController@index');
+$router->get('/application-templates/create', 'ApplicationTemplateController@create');
+$router->post('/application-templates', 'ApplicationTemplateController@store');
+$router->get('/application-templates/{id}/edit', 'ApplicationTemplateController@edit');
+$router->post('/application-templates/{id}', 'ApplicationTemplateController@update');
+$router->post('/application-templates/{id}/delete', 'ApplicationTemplateController@delete');
+
 $router->post('/jobs/{id}/save', 'JobController@toggleSave');
+$router->get('/jobs/{id}/apply', 'JobController@applyForm');
 $router->post('/jobs/{id}/apply', 'JobController@apply');
+$router->get('/jobs/{id}/applicants', 'JobController@applicants');
+$router->post('/jobs/{id}/applicants/{appId}/status', 'JobController@updateApplicantStatus');
 $router->get('/jobs/{id}', 'JobController@show');
 
 // Companies

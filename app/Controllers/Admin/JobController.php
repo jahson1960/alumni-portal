@@ -2,8 +2,10 @@
 
 namespace App\Controllers\Admin;
 
+use App\Core\Auth;
 use App\Core\Sanitizer;
 use App\Core\Upload;
+use App\Models\ApplicationTemplate;
 use App\Models\Category;
 use App\Models\Company;
 use App\Models\Job;
@@ -73,6 +75,7 @@ class JobController extends AdminController
             'allCompanies' => Company::all(),
             'allCategories' => Category::forType('job'),
             'selectedCategoryIds' => [],
+            'myTemplates' => ApplicationTemplate::forUser((int) Auth::id()),
         ]);
     }
 
@@ -96,6 +99,7 @@ class JobController extends AdminController
             'allCompanies' => Company::all(),
             'allCategories' => Category::forType('job'),
             'selectedCategoryIds' => array_column(Category::forJob((int) $id), 'id'),
+            'myTemplates' => ApplicationTemplate::forUser((int) Auth::id()),
         ]);
     }
 
@@ -136,9 +140,11 @@ class JobController extends AdminController
         $companyText = trim((string) $this->input('company_text_color', '#091a2e'));
         $isFeatured = $this->input('is_featured') ? 1 : 0;
         $status = $this->input('status', 'open') === 'closed' ? 'closed' : 'open';
-        $applyType = $this->input('apply_type', 'email') === 'link' ? 'link' : 'email';
+        $applyType = in_array($this->input('apply_type'), ['link', 'form'], true) ? $this->input('apply_type') : 'email';
         $applyValue = trim((string) $this->input('apply_value', ''));
         $applicationInstructions = trim((string) $this->input('application_instructions', ''));
+        $applicationTemplateId = $this->input('application_template_id') !== null && $this->input('application_template_id') !== ''
+            ? (int) $this->input('application_template_id') : null;
         $closingDate = trim((string) $this->input('closing_date', ''));
         $logoDisplayMode = $this->input('logo_display_mode', 'logo') === 'badge' ? 'badge' : 'logo';
 
@@ -149,7 +155,11 @@ class JobController extends AdminController
         if ($company === '') {
             $errors[] = 'Company is required.';
         }
-        if ($applyValue === '') {
+        if ($applyType === 'form') {
+            if (!$applicationTemplateId || !ApplicationTemplate::findForUser($applicationTemplateId, (int) Auth::id())) {
+                $errors[] = 'Please choose an application template.';
+            }
+        } elseif ($applyValue === '') {
             $errors[] = 'Please provide an application email or link.';
         } elseif ($applyType === 'email' && !filter_var($applyValue, FILTER_VALIDATE_EMAIL)) {
             $errors[] = 'Please provide a valid application email address.';
@@ -207,6 +217,7 @@ class JobController extends AdminController
             'apply_type' => $applyType,
             'apply_value' => $applyValue,
             'application_instructions' => $applicationInstructions !== '' ? $applicationInstructions : null,
+            'application_template_id' => $applyType === 'form' ? $applicationTemplateId : null,
             'is_featured' => $isFeatured,
             'status' => $status,
             'approval_status' => 'approved',

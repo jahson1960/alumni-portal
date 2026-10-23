@@ -6,6 +6,8 @@ use App\Core\Auth;
 use App\Core\Controller;
 use App\Core\Sanitizer;
 use App\Core\Upload;
+use App\Models\ApplicationTemplate;
+use App\Models\ApplicationTemplateField;
 use App\Models\Category;
 use App\Models\Company;
 use App\Models\Job;
@@ -205,6 +207,7 @@ class JobController extends Controller
             'allCompanies' => Company::all(),
             'postingMode' => Setting::get('job_posting_mode', 'approval'),
             'needsRichEditor' => true,
+            'myTemplates' => ApplicationTemplate::forUser((int) Auth::id()),
         ]);
     }
 
@@ -220,6 +223,7 @@ class JobController extends Controller
         $this->guard();
 
         $jobs = Job::postedByUser((int) Auth::id());
+        $applicantCounts = JobApplication::countsForJobs(array_column($jobs, 'id'));
         $stats = ['draft' => 0, 'pending' => 0, 'active' => 0, 'closed' => 0];
         foreach ($jobs as &$job) {
             $job['status_group'] = $this->jobStatusGroup($job);
@@ -231,6 +235,7 @@ class JobController extends Controller
             'title' => 'My Job Posts',
             'activeNav' => 'jobs',
             'jobs' => $jobs,
+            'applicantCounts' => $applicantCounts,
             'stats' => $stats,
             'supportEmail' => Setting::get('support_email', 'support@rbsn.example.com'),
             'premiumHiringEmail' => Setting::get('premium_hiring_email', 'partnerships@rbsn.example.com'),
@@ -270,6 +275,7 @@ class JobController extends Controller
             'allCompanies' => Company::all(),
             'postingMode' => Setting::get('job_posting_mode', 'approval'),
             'needsRichEditor' => true,
+            'myTemplates' => ApplicationTemplate::forUser((int) Auth::id()),
         ]);
     }
 
@@ -311,7 +317,9 @@ class JobController extends Controller
      * application URL. An email-type job never launches a mailto: popup - the job page reveals
      * the email (and the poster's application instructions, if any) in place instead, so this
      * just records the click and reports back; the JS on the page does the revealing (with a
-     * plain redirect-and-reveal fallback for non-JS requests).
+     * plain redirect-and-reveal fallback for non-JS requests). A form-type job's "Apply" button
+     * is a link to the GET applyForm() page instead of this POST action, so by the time this
+     * runs for a form-type job it's always the applicant's actual submitted answers.
      */
     public function apply(string $id): void
     {
@@ -320,6 +328,11 @@ class JobController extends Controller
         if (!$job) {
             http_response_code(404);
             (new ErrorController())->notFound();
+            return;
+        }
+
+        if ($job['apply_type'] === 'form') {
+            $this->submitApplicationForm($job);
             return;
         }
 
@@ -343,6 +356,168 @@ class JobController extends Controller
         }
 
         $this->redirect('jobs/' . $id . '?applied=1');
+    }
+
+    /** GET /jobs/{id}/apply — the in-app application form for a 'form'-method job. */
+    public function applyForm(string $id): void
+    {
+        $job = Job::find((int) $id);
+        if (!$job || $job['apply_type'] !== 'form' || $job['approval_status'] !== 'approved') {
+            http_response_code(404);
+            (new ErrorController())->notFound();
+            return;
+        }
+        if (!Auth::check()) {
+            $this->redirect('login?redirect=' . rawurlencode(url('jobs/' . $id . '/apply')));
+        }
+        if (Job::isClosed($job)) {
+            $this->flash('error', 'This job is no longer accepting applications.');
+            $this->redirect('jobs/' . $id);
+        }
+
+        $fields = $job['application_template_id'] ? ApplicationTemplateField::forTemplate((int) $job['application_template_id']) : [];
+
+        // Prefilling a resubmit matches previous answers back onto today's fields by label,
+        // since responses are stored as a label/type/value snapshot rather than a live
+        // reference to field rows the poster may have since edited.
+        $previousByLabel = [];
+        $existing = JobApplication::findForUserJob((int) Auth::id(), (int) $id) ?: null;
+        if ($existing && $existing['responses']) {
+            foreach (json_decode($existing['responses'], true) ?: [] as $response) {
+                $previousByLabel[$response['label']] = $response['value'];
+            }
+        }
+
+        $this->view('jobs.apply', [
+            'title' => 'Apply - ' . $job['title'],
+            'activeNav' => 'jobs',
+            'job' => $job,
+            'fields' => $fields,
+            'previousByLabel' => $previousByLabel,
+            'isResubmit' => $existing !== null,
+        ]);
+    }
+
+    /** POST handler for a 'form'-method job, called from apply() above. */
+    private function submitApplicationForm(array $job): void
+    {
+        $id = (int) $job['id'];
+        if (!Auth::check()) {
+            $this->redirect('login?redirect=' . rawurlencode(url('jobs/' . $id . '/apply')));
+        }
+        if (Job::isClosed($job)) {
+            $this->flash('error', 'This job is no longer accepting applications.');
+            $this->redirect('jobs/' . $id);
+        }
+
+        $fields = $job['application_template_id'] ? ApplicationTemplateField::forTemplate((int) $job['application_template_id']) : [];
+
+        // Resubmitting keeps a file field's previously uploaded file when no new one is chosen,
+        // rather than treating a blank file input as "clear it" or re-failing required-ness.
+        $previousByLabel = [];
+        $existing = JobApplication::findForUserJob((int) Auth::id(), $id);
+        if ($existing && $existing['responses']) {
+            foreach (json_decode($existing['responses'], true) ?: [] as $response) {
+                $previousByLabel[$response['label']] = $response['value'];
+            }
+        }
+
+        $errors = [];
+        $responses = [];
+        foreach ($fields as $field) {
+            $inputName = 'field_' . $field['id'];
+            if ($field['field_type'] === 'file') {
+                $value = null;
+                try {
+                    $uploaded = Upload::document($this->file($inputName), 'applications');
+                    if ($uploaded) {
+                        $value = upload_url($uploaded);
+                    }
+                } catch (\RuntimeException $e) {
+                    $errors[] = $field['label'] . ': ' . $e->getMessage();
+                }
+                if (!$value) {
+                    $value = $previousByLabel[$field['label']] ?? null;
+                }
+                if (!$value && $field['is_required']) {
+                    $errors[] = $field['label'] . ' is required.';
+                }
+            } else {
+                $value = trim((string) $this->input($inputName, ''));
+                if ($value === '' && $field['is_required']) {
+                    $errors[] = $field['label'] . ' is required.';
+                }
+            }
+            if ($value !== null && $value !== '') {
+                $responses[] = ['label' => $field['label'], 'type' => $field['field_type'], 'value' => $value];
+            }
+        }
+
+        if ($errors) {
+            $_SESSION['_errors'] = $errors;
+            $this->redirect('jobs/' . $id . '/apply');
+        }
+
+        JobApplication::submitForm((int) Auth::id(), $id, $responses);
+
+        if (!empty($job['posted_by'])) {
+            Notification::notify(
+                (int) $job['posted_by'],
+                'job_application',
+                Auth::user()['name'] . ' applied to your job post "' . $job['title'] . '".',
+                'jobs/' . $id . '/applicants'
+            );
+        }
+
+        $this->flash('success', 'Your application was submitted. The poster can review it from their Applicants list.');
+        $this->redirect('jobs/' . $id);
+    }
+
+    /** GET /jobs/{id}/applicants — the poster's (or an admin's) view of everyone who applied. */
+    public function applicants(string $id): void
+    {
+        $job = Job::find((int) $id);
+        $isOwnerOrAdmin = $job && Auth::check() && (Auth::isAdmin() || (int) ($job['posted_by'] ?? 0) === (int) Auth::id());
+        if (!$job || !$isOwnerOrAdmin) {
+            http_response_code(404);
+            (new ErrorController())->notFound();
+            return;
+        }
+
+        $fields = $job['application_template_id'] ? ApplicationTemplateField::forTemplate((int) $job['application_template_id']) : [];
+        $applicants = JobApplication::forJob((int) $id);
+        foreach ($applicants as &$applicant) {
+            $applicant['responses'] = $applicant['responses'] ? json_decode($applicant['responses'], true) : [];
+        }
+        unset($applicant);
+
+        $this->view('jobs.applicants', [
+            'title' => 'Applicants - ' . $job['title'],
+            'activeNav' => 'jobs',
+            'job' => $job,
+            'fields' => $fields,
+            'applicants' => $applicants,
+        ]);
+    }
+
+    public function updateApplicantStatus(string $id, string $appId): void
+    {
+        $this->requireCsrf();
+        $job = Job::find((int) $id);
+        $isOwnerOrAdmin = $job && Auth::check() && (Auth::isAdmin() || (int) ($job['posted_by'] ?? 0) === (int) Auth::id());
+        if (!$job || !$isOwnerOrAdmin) {
+            http_response_code(404);
+            (new ErrorController())->notFound();
+            return;
+        }
+
+        $application = JobApplication::find((int) $appId);
+        $status = in_array($this->input('status'), ['new', 'reviewed', 'shortlisted', 'rejected'], true) ? $this->input('status') : 'new';
+        if ($application && (int) $application['job_id'] === (int) $id) {
+            JobApplication::updateStatus((int) $appId, $status);
+        }
+
+        $this->redirect('jobs/' . $id . '/applicants');
     }
 
     public function toggleSave(string $id): void
@@ -400,9 +575,11 @@ class JobController extends Controller
         $responsibilities = Sanitizer::html(trim((string) $this->input('responsibilities', '')));
         $requirements = Sanitizer::html(trim((string) $this->input('requirements', '')));
         $categoryIds = array_slice(array_map('intval', (array) $this->input('categories', [])), 0, 3);
-        $applyType = $this->input('apply_type', 'email') === 'link' ? 'link' : 'email';
+        $applyType = in_array($this->input('apply_type'), ['link', 'form'], true) ? $this->input('apply_type') : 'email';
         $applyValue = trim((string) $this->input('apply_value', ''));
         $applicationInstructions = trim((string) $this->input('application_instructions', ''));
+        $applicationTemplateId = $this->input('application_template_id') !== null && $this->input('application_template_id') !== ''
+            ? (int) $this->input('application_template_id') : null;
         $closingDate = trim((string) $this->input('closing_date', ''));
         $asDraft = $this->input('action') === 'draft';
 
@@ -414,7 +591,11 @@ class JobController extends Controller
             $errors[] = 'Company is required.';
         }
         if (!$asDraft) {
-            if ($applyValue === '') {
+            if ($applyType === 'form') {
+                if (!$applicationTemplateId || !ApplicationTemplate::findForUser($applicationTemplateId, (int) Auth::id())) {
+                    $errors[] = 'Please choose an application template.';
+                }
+            } elseif ($applyValue === '') {
                 $errors[] = 'Please provide an application email or link.';
             } elseif ($applyType === 'email' && !filter_var($applyValue, FILTER_VALIDATE_EMAIL)) {
                 $errors[] = 'Please provide a valid application email address.';
@@ -455,6 +636,7 @@ class JobController extends Controller
             'apply_type' => $applyType,
             'apply_value' => $applyValue,
             'application_instructions' => $applicationInstructions !== '' ? $applicationInstructions : null,
+            'application_template_id' => $applyType === 'form' ? $applicationTemplateId : null,
             'closing_date' => $closingDate !== '' ? $closingDate : null,
         ];
         if ($companyLogo) {

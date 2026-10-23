@@ -210,11 +210,22 @@ $postingTips = [
             <select id="apply_type" name="apply_type" class="form-input">
               <option value="email" <?= ($job['apply_type'] ?? 'email') === 'email' ? 'selected' : '' ?>>Email (revealed on click)</option>
               <option value="link" <?= ($job['apply_type'] ?? '') === 'link' ? 'selected' : '' ?>>External Link</option>
+              <option value="form" <?= ($job['apply_type'] ?? '') === 'form' ? 'selected' : '' ?>>In-App Form</option>
             </select>
           </div>
-          <div>
+          <div id="apply_value_field">
             <label class="form-label" for="apply_value">Email or URL <span class="text-red-500">*</span></label>
             <input type="text" id="apply_value" name="apply_value" class="form-input" placeholder="careers@company.com or https://careers.company.com" value="<?= e($job['apply_value'] ?? '') ?>">
+          </div>
+          <div id="apply_template_field" class="hidden">
+            <label class="form-label" for="application_template_id">Application Template <span class="text-red-500">*</span></label>
+            <select id="application_template_id" name="application_template_id" class="form-input">
+              <option value="">Select a template&hellip;</option>
+              <?php foreach ($myTemplates as $template): ?>
+                <option value="<?= e((string) $template['id']) ?>" <?= (string) ($job['application_template_id'] ?? '') === (string) $template['id'] ? 'selected' : '' ?>><?= e($template['name']) ?></option>
+              <?php endforeach; ?>
+            </select>
+            <a href="<?= e(url('application-templates')) ?>" target="_blank" rel="noopener noreferrer" class="text-xs text-gold hover:underline mt-1 inline-block">Manage templates &rarr;</a>
           </div>
         </div>
         <div class="mt-4" id="apply_instructions_field">
@@ -417,5 +428,23 @@ $postingTips = [
       quill.on('text-change', updateCount);
       updateCount();
     });
+  })();
+</script>
+
+<script>
+  (function () {
+    var applyType = document.getElementById('apply_type');
+    var valueField = document.getElementById('apply_value_field');
+    var templateField = document.getElementById('apply_template_field');
+    if (!applyType) return;
+
+    function sync() {
+      var isForm = applyType.value === 'form';
+      valueField.classList.toggle('hidden', isForm);
+      templateField.classList.toggle('hidden', !isForm);
+    }
+
+    applyType.addEventListener('change', sync);
+    sync();
   })();
 </script>

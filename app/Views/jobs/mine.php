@@ -142,6 +142,9 @@ $statusTabs = [
               <p class="text-[0.68rem] text-slate-400"><?= $footerText ?></p>
               <div class="flex items-center gap-2 flex-shrink-0">
                 <a href="<?= e(url('jobs/' . $job['id'])) ?>" class="btn bg-white border border-slate-200 !text-slate-700 hover:bg-slate-50 !px-3 !py-1.5 text-xs">View</a>
+                <?php if ($group === 'active' || $group === 'closed'): ?>
+                  <a href="<?= e(url('jobs/' . $job['id'] . '/applicants')) ?>" class="btn bg-white border border-slate-200 !text-slate-700 hover:bg-slate-50 !px-3 !py-1.5 text-xs">Applicants<?= !empty($applicantCounts[$job['id']]) ? ' (' . $applicantCounts[$job['id']] . ')' : '' ?></a>
+                <?php endif; ?>
                 <div class="relative">
                   <button type="button" class="kebab-btn text-slate-400 hover:text-primary-navy px-1"><i class="bi bi-three-dots-vertical"></i></button>
                   <div class="kebab-menu hidden absolute right-0 top-full mt-1 z-20 bg-white border border-slate-200 rounded-lg shadow-lg w-32 py-1">
