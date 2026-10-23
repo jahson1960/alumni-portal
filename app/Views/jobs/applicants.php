@@ -35,7 +35,7 @@ $statusMeta = [
 
         <?php if ($applicant['responses']): ?>
           <?php
-            $responsesBySection = ['profile_info' => [], 'education' => [], 'experience' => []];
+            $responsesBySection = array_fill_keys(array_keys(\App\Models\ApplicationTemplate::SECTIONS), []);
             foreach ($applicant['responses'] as $response) {
                 $responsesBySection[$response['section'] ?? 'profile_info'][] = $response;
             }

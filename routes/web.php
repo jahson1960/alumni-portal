@@ -98,6 +98,7 @@ $router->post('/application-templates/{id}/delete', 'ApplicationTemplateControll
 $router->post('/jobs/{id}/save', 'JobController@toggleSave');
 $router->get('/jobs/{id}/apply', 'JobController@applyForm');
 $router->post('/jobs/{id}/apply', 'JobController@apply');
+$router->post('/jobs/{id}/quick-apply', 'JobController@quickApply');
 $router->get('/jobs/{id}/applicants', 'JobController@applicants');
 $router->post('/jobs/{id}/applicants/{appId}/status', 'JobController@updateApplicantStatus');
 $router->get('/jobs/{id}', 'JobController@show');

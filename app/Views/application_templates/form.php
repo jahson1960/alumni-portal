@@ -1,6 +1,6 @@
 <?php
 $isEdit = $template !== null;
-$fieldsBySection = ['profile_info' => [], 'education' => [], 'experience' => []];
+$fieldsBySection = array_fill_keys(array_keys(\App\Models\ApplicationTemplate::SECTIONS), []);
 foreach ($fields as $field) {
     $fieldsBySection[$field['section']][] = $field;
 }
@@ -8,6 +8,7 @@ $sectionHints = [
     'profile_info' => 'Basic contact questions, plus any other general question you want to ask.',
     'education' => 'Questions about the candidate\'s education. On the Quick Apply template, this section also shows their education history pulled straight from their profile.',
     'experience' => 'Questions about the candidate\'s work history. On the Quick Apply template, this section also shows their work experience pulled straight from their profile.',
+    'additional_info' => 'Optional extras like salary expectation or notice period. Candidates can skip anything here.',
 ];
 ?>
 <div class="max-w-[900px] mx-auto px-4 md:px-8 py-8">

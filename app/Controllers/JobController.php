@@ -179,6 +179,11 @@ class JobController extends Controller
         $company = !empty($job['company_id']) ? Company::find((int) $job['company_id']) : null;
         [$backUrl, $backLabel] = $this->smartBack(url('jobs'), 'Back to Jobs');
 
+        $canQuickApply = false;
+        if ($job['apply_type'] === 'form' && $job['application_template_id']) {
+            $canQuickApply = $this->canQuickApply(ApplicationTemplateField::forTemplate((int) $job['application_template_id']));
+        }
+
         $this->view('jobs.show', [
             'title' => $job['title'] . ' - ' . $job['company'],
             'activeNav' => 'jobs',
@@ -192,6 +197,7 @@ class JobController extends Controller
             'isSaved' => Auth::check() ? SavedJob::isSaved((int) Auth::id(), (int) $id) : false,
             'hasApplied' => Auth::check() ? JobApplication::hasApplied((int) Auth::id(), (int) $id) : false,
             'showApplyReveal' => $this->input('applied') === '1',
+            'canQuickApply' => $canQuickApply,
             'backUrl' => $backUrl,
             'backLabel' => $backLabel,
         ]);
@@ -360,6 +366,19 @@ class JobController extends Controller
         $this->redirect('jobs/' . $id . '?applied=1');
     }
 
+    /** POST /jobs/{id}/quick-apply — one click, no form: applies using the candidate's profile info and resume. */
+    public function quickApply(string $id): void
+    {
+        $this->requireCsrf();
+        $job = Job::find((int) $id);
+        if (!$job || $job['apply_type'] !== 'form') {
+            http_response_code(404);
+            (new ErrorController())->notFound();
+            return;
+        }
+        $this->submitApplicationForm($job, true);
+    }
+
     /** GET /jobs/{id}/apply — the in-app application form for a 'form'-method job. */
     public function applyForm(string $id): void
     {
@@ -406,7 +425,7 @@ class JobController extends Controller
                 ?? ($field['profile_field'] ? $this->profileFieldValue(Auth::user(), $field['profile_field']) : '');
         }
 
-        $fieldsBySection = ['profile_info' => [], 'education' => [], 'experience' => []];
+        $fieldsBySection = array_fill_keys(array_keys(ApplicationTemplate::SECTIONS), []);
         foreach ($fields as $field) {
             $fieldsBySection[$field['section']][] = $field;
         }
@@ -455,7 +474,12 @@ class JobController extends Controller
     }
 
     /** POST handler for a 'form'-method job, called from apply() above. */
-    private function submitApplicationForm(array $job): void
+    /**
+     * $quickApply true = the one-click "Apply with My Profile" path: no form was shown, so
+     * every field not bound to the profile is skipped entirely rather than read from $_POST
+     * (canQuickApply() already guarantees none of those are required).
+     */
+    private function submitApplicationForm(array $job, bool $quickApply = false): void
     {
         $id = (int) $job['id'];
         if (!Auth::check()) {
@@ -467,6 +491,11 @@ class JobController extends Controller
         }
 
         $fields = $job['application_template_id'] ? ApplicationTemplateField::forTemplate((int) $job['application_template_id']) : [];
+        if ($quickApply && !$this->canQuickApply($fields)) {
+            // Shouldn't happen via the UI (the button is hidden in this case), but guard
+            // against a direct POST - a required custom question can't be answered blind.
+            $this->redirect('jobs/' . $id . '/apply');
+        }
 
         // Resubmitting keeps a file field's previously uploaded file when no new one is chosen,
         // rather than treating a blank file input as "clear it" or re-failing required-ness.
@@ -486,6 +515,14 @@ class JobController extends Controller
                 // Education/Experience are read-only on the form - always recomputed from the
                 // database here too, never trusting whatever the client posted for them.
                 $value = $this->profileFieldValue(Auth::user(), $field['profile_field']);
+            } elseif ($quickApply && $field['profile_field']) {
+                // Scalar profile field (name/email/phone/linkedin/resume) with no form behind
+                // it to read from - use the profile value directly.
+                $value = $this->profileFieldValue(Auth::user(), $field['profile_field']);
+            } elseif ($quickApply) {
+                // Not profile-bound, so canQuickApply() guarantees it's optional - keep a
+                // previous answer if resubmitting, otherwise leave it unanswered.
+                $value = $previousByLabel[$field['label']] ?? null;
             } elseif ($field['field_type'] === 'file') {
                 $value = null;
                 try {
@@ -532,8 +569,21 @@ class JobController extends Controller
             );
         }
 
-        $this->flash('success', 'Your application was submitted. The poster can review it from their Applicants list.');
+        $this->flash('success', $quickApply
+            ? 'Applied instantly using your profile info and resume. The poster can review it from their Applicants list.'
+            : 'Your application was submitted. The poster can review it from their Applicants list.');
         $this->redirect('jobs/' . $id);
+    }
+
+    /** A template can be quick-applied to only if every non-profile-bound (i.e. custom) question is optional - nothing requires typed input the profile can't supply. */
+    private function canQuickApply(array $fields): bool
+    {
+        foreach ($fields as $field) {
+            if (!$field['profile_field'] && $field['is_required']) {
+                return false;
+            }
+        }
+        return true;
     }
 
     /** GET /jobs/{id}/applicants — the poster's (or an admin's) view of everyone who applied. */

@@ -21,11 +21,12 @@ class ApplicationTemplate extends Model
         'experience' => 'Work Experience',
     ];
 
-    /** Every template's fields are grouped under one of these three headings on the apply form. */
+    /** Every template's fields are grouped under one of these headings on the apply form. */
     public const SECTIONS = [
         'profile_info' => 'Profile Info',
         'education' => 'Education',
         'experience' => 'Experience',
+        'additional_info' => 'Additional Info',
     ];
 
     public static function forUser(int $userId): array
@@ -58,6 +59,8 @@ class ApplicationTemplate extends Model
             ['label' => 'LinkedIn Profile', 'field_type' => 'url', 'is_required' => false, 'profile_field' => 'linkedin_url', 'section' => 'profile_info'],
             ['label' => 'Education History', 'field_type' => 'textarea', 'is_required' => false, 'profile_field' => 'education', 'section' => 'education'],
             ['label' => 'Work Experience', 'field_type' => 'textarea', 'is_required' => false, 'profile_field' => 'experience', 'section' => 'experience'],
+            ['label' => 'Salary Expectation', 'field_type' => 'text', 'is_required' => false, 'profile_field' => null, 'section' => 'additional_info'],
+            ['label' => 'How soon can you resume?', 'field_type' => 'select', 'options' => 'Immediately, 2 weeks notice, 1 month notice, More than 1 month', 'is_required' => false, 'profile_field' => null, 'section' => 'additional_info'],
         ]);
 
         return self::forUser($userId);

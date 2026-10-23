@@ -50,7 +50,15 @@ $experienceLabel = !empty($job['experience_level']) ? (\App\Models\Job::EXPERIEN
             <?php if ($isClosed): ?>
               <button type="button" disabled class="btn-gold !px-5 !py-2.5 text-sm opacity-50 cursor-not-allowed flex items-center justify-center gap-2"><i class="fa-solid fa-paper-plane"></i> Applications Closed</button>
             <?php elseif ($job['apply_type'] === 'form'): ?>
-              <a href="<?= e(url('jobs/' . $job['id'] . '/apply')) ?>" class="btn-gold !px-5 !py-2.5 text-sm w-full flex items-center justify-center gap-2"><i class="fa-solid fa-paper-plane"></i> <?= $hasApplied ? 'Edit Application' : 'Apply Now' ?></a>
+              <?php if ($canQuickApply): ?>
+                <form method="POST" action="<?= e(url('jobs/' . $job['id'] . '/quick-apply')) ?>" data-confirm="Apply to &ldquo;<?= e($job['title']) ?>&rdquo; using the info and resume on your profile? You can review it afterward from My Job Posts &rarr; Applicants if you change your mind." data-confirm-tone="neutral" data-confirm-icon="fa-regular fa-id-badge" data-confirm-ok-label="Quick Apply">
+                  <?= csrf_field() ?>
+                  <button type="submit" class="btn-gold !px-5 !py-2.5 text-sm w-full flex items-center justify-center gap-2"><i class="fa-regular fa-id-badge"></i> <?= $hasApplied ? 'Quick Re-Apply' : 'Quick Apply with My Profile' ?></button>
+                </form>
+                <a href="<?= e(url('jobs/' . $job['id'] . '/apply')) ?>" class="text-xs text-slate-500 hover:text-gold text-center">or review &amp; fill out the full form</a>
+              <?php else: ?>
+                <a href="<?= e(url('jobs/' . $job['id'] . '/apply')) ?>" class="btn-gold !px-5 !py-2.5 text-sm w-full flex items-center justify-center gap-2"><i class="fa-solid fa-paper-plane"></i> <?= $hasApplied ? 'Edit Application' : 'Apply Now' ?></a>
+              <?php endif; ?>
             <?php else: ?>
               <form method="POST" action="<?= e(url('jobs/' . $job['id'] . '/apply')) ?>" class="<?= $job['apply_type'] === 'email' ? 'job-apply-email-form' : '' ?>">
                 <?= csrf_field() ?>
@@ -353,7 +361,15 @@ $experienceLabel = !empty($job['experience_level']) ? (\App\Models\Job::EXPERIEN
       <?php if ($isClosed): ?>
         <button type="button" disabled class="btn-gold !px-5 !py-2.5 text-sm w-full opacity-50 cursor-not-allowed flex items-center justify-center gap-2"><i class="fa-solid fa-paper-plane"></i> Applications Closed</button>
       <?php elseif ($job['apply_type'] === 'form'): ?>
-        <a href="<?= e(url('jobs/' . $job['id'] . '/apply')) ?>" class="btn-gold !px-5 !py-2.5 text-sm w-full flex items-center justify-center gap-2"><i class="fa-solid fa-paper-plane"></i> <?= $hasApplied ? 'Edit Application' : 'Apply Now' ?></a>
+        <?php if ($canQuickApply): ?>
+          <form method="POST" action="<?= e(url('jobs/' . $job['id'] . '/quick-apply')) ?>" data-confirm="Apply to &ldquo;<?= e($job['title']) ?>&rdquo; using the info and resume on your profile? You can review it afterward from My Job Posts &rarr; Applicants if you change your mind." data-confirm-tone="neutral" data-confirm-icon="fa-regular fa-id-badge" data-confirm-ok-label="Quick Apply" class="mb-2">
+            <?= csrf_field() ?>
+            <button type="submit" class="btn-gold !px-5 !py-2.5 text-sm w-full flex items-center justify-center gap-2"><i class="fa-regular fa-id-badge"></i> <?= $hasApplied ? 'Quick Re-Apply' : 'Quick Apply with My Profile' ?></button>
+          </form>
+          <a href="<?= e(url('jobs/' . $job['id'] . '/apply')) ?>" class="text-xs text-slate-500 hover:text-gold text-center block">or review &amp; fill out the full form</a>
+        <?php else: ?>
+          <a href="<?= e(url('jobs/' . $job['id'] . '/apply')) ?>" class="btn-gold !px-5 !py-2.5 text-sm w-full flex items-center justify-center gap-2"><i class="fa-solid fa-paper-plane"></i> <?= $hasApplied ? 'Edit Application' : 'Apply Now' ?></a>
+        <?php endif; ?>
       <?php else: ?>
         <form method="POST" action="<?= e(url('jobs/' . $job['id'] . '/apply')) ?>" class="<?= $job['apply_type'] === 'email' ? 'job-apply-email-form' : '' ?>">
           <?= csrf_field() ?>
