@@ -26,7 +26,7 @@ CREATE TABLE IF NOT EXISTS application_template_fields (
 
 ALTER TABLE jobs
   MODIFY COLUMN apply_type ENUM('link','email','form') NOT NULL DEFAULT 'email',
-  ADD COLUMN application_template_id INT NULL AFTER application_instructions;
+  ADD COLUMN application_template_id INT NULL;
 
 ALTER TABLE jobs
   ADD CONSTRAINT fk_jobs_application_template FOREIGN KEY (application_template_id) REFERENCES application_templates(id) ON DELETE SET NULL;
