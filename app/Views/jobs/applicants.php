@@ -3,7 +3,7 @@ $statusMeta = [
     'new' => ['label' => 'Applied', 'class' => 'bg-sky-100 text-sky-700'],
     'reviewed' => ['label' => 'Reviewed', 'class' => 'bg-amber-100 text-amber-700'],
     'shortlisted' => ['label' => 'Shortlisted', 'class' => 'bg-emerald-100 text-emerald-700'],
-    'interview_scheduled' => ['label' => 'Interview Scheduled', 'class' => 'bg-indigo-100 text-indigo-700'],
+    'interview_scheduled' => ['label' => 'Interview Scheduled', 'class' => 'bg-violet-100 text-violet-700'],
     'rejected' => ['label' => 'Rejected', 'class' => 'bg-red-100 text-red-700'],
 ];
 $experienceLabels = \App\Models\Job::EXPERIENCE_LEVELS;
@@ -17,13 +17,13 @@ $matchCategoryLabels = [
 ];
 $isClosed = \App\Models\Job::isClosed($job);
 ?>
-<div class="max-w-[960px] mx-auto px-4 md:px-8 py-8">
-  <a href="<?= e(url('jobs/mine')) ?>" class="text-sm text-slate-500 hover:text-gold mb-4 inline-flex items-center gap-2"><i class="fa-solid fa-arrow-left"></i> Back to My Job Posts</a>
+<div class="max-w-[1280px] mx-auto px-4 md:px-8 py-8">
+  <a href="<?= e(url('jobs/mine')) ?>" class="text-sm text-slate-500 hover:text-gold mb-4 inline-flex items-center gap-2"><i class="fa-solid fa-arrow-left"></i> Back to Jobs</a>
 
   <div class="flex flex-wrap items-start justify-between gap-4 mb-6">
     <div>
-      <h1 class="text-xl font-extrabold text-primary-navy">Applicants</h1>
-      <p class="text-sm text-slate-500 mt-1">Review and manage candidates for this role.</p>
+      <h1 class="text-xl font-extrabold text-primary-navy flex items-center gap-2.5"><i class="fa-solid fa-users text-primary-navy"></i> Applicants</h1>
+      <p class="text-sm text-slate-500 mt-1"><?= e($job['title']) ?> &bull; <?= count($applicants) ?> Applicant<?= count($applicants) === 1 ? '' : 's' ?></p>
     </div>
   </div>
 
@@ -31,18 +31,22 @@ $isClosed = \App\Models\Job::isClosed($job);
   <div class="card p-5 mb-6">
     <div class="flex flex-wrap items-start justify-between gap-4">
       <div class="flex gap-3 min-w-0">
-        <?= job_logo_html($job, 'w-12 h-12 flex-shrink-0') ?>
+        <?= job_logo_html($job, 'w-12 h-12 flex-shrink-0 !rounded-xl') ?>
         <div class="min-w-0">
           <h2 class="text-base font-bold text-primary-navy truncate"><?= e($job['title']) ?><?= $isClosed ? ' <span class="badge-blue !bg-slate-200 !text-slate-600 ml-1">Closed</span>' : '' ?></h2>
-          <p class="text-xs text-slate-500 mt-0.5"><?= e($job['company']) ?><?= $job['location'] ? ' &bull; ' . e($job['location']) : '' ?><?= $job['job_type'] ? ' &bull; ' . e($job['job_type']) : '' ?></p>
+          <p class="text-xs text-slate-500 mt-0.5 flex flex-wrap items-center gap-x-3 gap-y-1">
+            <span><i class="fa-solid fa-building text-slate-400"></i> <?= e($job['company']) ?></span>
+            <?php if ($job['location']): ?><span><i class="fa-solid fa-location-dot text-slate-400"></i> <?= e($job['location']) ?></span><?php endif; ?>
+            <?php if ($job['job_type']): ?><span><i class="fa-solid fa-briefcase text-slate-400"></i> <?= e($job['job_type']) ?></span><?php endif; ?>
+          </p>
           <?php if ($job['description']): ?>
-            <p class="text-xs text-slate-500 mt-2 line-clamp-2"><?= e(mb_strimwidth(strip_tags($job['description']), 0, 220, '...')) ?></p>
+            <p class="text-xs text-slate-500 mt-2 line-clamp-2 max-w-xl"><?= e(mb_strimwidth(strip_tags($job['description']), 0, 220, '...')) ?></p>
           <?php endif; ?>
         </div>
       </div>
       <div class="flex items-center gap-2 flex-shrink-0">
-        <a href="<?= e(url('jobs/' . $job['id'])) ?>" class="btn bg-white border border-slate-200 !text-slate-700 hover:bg-slate-50 !px-3.5 !py-2 text-xs">View Job Details</a>
-        <a href="<?= e(url('jobs/mine/' . $job['id'] . '/edit')) ?>" class="btn-gold !px-3.5 !py-2 text-xs">Manage Job</a>
+        <a href="<?= e(url('jobs/' . $job['id'])) ?>" class="btn bg-white border border-slate-200 !text-slate-700 hover:bg-slate-50 !px-3.5 !py-2 text-xs"><i class="fa-regular fa-comment-dots"></i> View Job Details</a>
+        <a href="<?= e(url('jobs/mine/' . $job['id'] . '/edit')) ?>" class="btn-gold !bg-primary-navy hover:!bg-primary-navy/90 !px-3.5 !py-2 text-xs"><i class="fa-solid fa-gear"></i> Manage Job</a>
       </div>
     </div>
   </div>
@@ -51,7 +55,7 @@ $isClosed = \App\Models\Job::isClosed($job);
   <div class="flex flex-wrap items-center gap-3 mb-5">
     <div class="relative flex-1 min-w-[200px]">
       <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-sm"></i>
-      <input type="text" id="app-search" placeholder="Search by name, skill, or school..." class="form-input !pl-10">
+      <input type="text" id="app-search" placeholder="Search by name, email or skills..." class="form-input !pl-10">
     </div>
     <select id="app-status" class="form-input !py-2.5 text-sm max-w-[170px]">
       <option value="all">All Statuses</option>
@@ -59,137 +63,144 @@ $isClosed = \App\Models\Job::isClosed($job);
         <option value="<?= e($key) ?>"><?= e($m['label']) ?></option>
       <?php endforeach; ?>
     </select>
-    <select id="app-experience" class="form-input !py-2.5 text-sm max-w-[180px]">
+    <select id="app-experience" class="form-input !py-2.5 text-sm max-w-[190px]">
       <option value="all">All Experience Levels</option>
       <?php foreach ($experienceLabels as $key => $label): ?>
         <option value="<?= e($key) ?>"><?= e($label) ?></option>
       <?php endforeach; ?>
     </select>
-    <select id="app-education" class="form-input !py-2.5 text-sm max-w-[170px]">
+    <select id="app-education" class="form-input !py-2.5 text-sm max-w-[180px]">
       <option value="all">All Education Levels</option>
       <?php foreach ($educationLabels as $key => $label): ?>
         <option value="<?= e($key) ?>"><?= e($label) ?></option>
       <?php endforeach; ?>
     </select>
-    <select id="app-sort" class="form-input !py-2.5 text-sm max-w-[160px]">
-      <option value="recent">Newest first</option>
-      <option value="oldest">Oldest first</option>
-      <option value="match">Best match</option>
-      <option value="name">Name (A&ndash;Z)</option>
+    <select id="app-sort" class="form-input !py-2.5 text-sm max-w-[190px]">
+      <option value="recent">Sort by: Most Recent</option>
+      <option value="oldest">Sort by: Oldest</option>
+      <option value="match">Sort by: Best Match</option>
+      <option value="name">Sort by: Name (A&ndash;Z)</option>
     </select>
   </div>
 
   <div class="space-y-4" id="applicant-list">
     <?php foreach ($applicants as $applicant):
         $meta = $statusMeta[$applicant['status']] ?? $statusMeta['new'];
-        $searchBlob = mb_strtolower($applicant['applicant_name'] . ' ' . implode(' ', $applicant['skills_list']) . ' ' . ($applicant['education_summary']['school'] ?? ''));
-        $isNew = $applicant['status'] === 'new';
+        $searchBlob = mb_strtolower($applicant['applicant_name'] . ' ' . $applicant['applicant_email'] . ' ' . implode(' ', $applicant['skills_list']));
+        $isNew = (time() - strtotime($applicant['created_at'])) < 86400;
+        $ed = $applicant['education_summary'];
+        $exp = $applicant['experience_summary'];
+        if ($exp) {
+            $expStart = $exp['start_date'] ? date('Y', strtotime($exp['start_date'])) : '';
+            $expEnd = $exp['is_current'] ? 'Present' : ($exp['end_date'] ? date('Y', strtotime($exp['end_date'])) : '');
+        }
     ?>
       <div class="applicant-card card p-5" data-status="<?= e($applicant['status']) ?>" data-experience="<?= e($applicant['experience_level']) ?>" data-education="<?= e($applicant['education_level']) ?>" data-search="<?= e($searchBlob) ?>" data-created="<?= e($applicant['created_at']) ?>" data-match="<?= (int) $applicant['match_percent'] ?>" data-name="<?= e(mb_strtolower($applicant['applicant_name'])) ?>">
-        <div class="flex flex-wrap items-start justify-between gap-4">
-          <div class="flex gap-3 min-w-0 flex-1">
+        <div class="grid grid-cols-1 lg:grid-cols-[1.3fr_1.3fr_200px_180px] gap-5 items-start">
+
+          <!-- Identity + contact -->
+          <div class="flex gap-3 min-w-0">
             <a href="<?= e(url('alumni/' . $applicant['user_id'])) ?>" class="flex-shrink-0">
-              <?= avatar_html(['name' => $applicant['applicant_name'], 'avatar' => $applicant['applicant_avatar']], 'w-12 h-12') ?>
+              <?= avatar_html(['name' => $applicant['applicant_name'], 'avatar' => $applicant['applicant_avatar']], 'w-14 h-14') ?>
             </a>
-            <div class="min-w-0 flex-1">
+            <div class="min-w-0">
               <div class="flex items-center gap-2 flex-wrap">
                 <a href="<?= e(url('alumni/' . $applicant['user_id'])) ?>" class="text-sm font-bold text-primary-navy hover:text-gold truncate"><?= e($applicant['applicant_name']) ?></a>
-                <?php if ($isNew): ?><span class="badge !bg-gold/15 !text-gold uppercase text-[0.6rem]">New</span><?php endif; ?>
-                <span class="text-[0.68rem] text-slate-400"><?= e(time_ago($applicant['created_at'])) ?></span>
+                <?php if ($isNew): ?><span class="badge !bg-sky-100 !text-sky-600 uppercase text-[0.6rem]">New</span><?php endif; ?>
               </div>
-              <p class="text-xs text-slate-500 mt-0.5"><?= e($applicant['applicant_headline'] ?: '') ?></p>
+              <p class="text-[0.68rem] text-slate-400 mb-2"><?= e(time_ago($applicant['created_at'])) ?></p>
 
-              <div class="flex flex-wrap gap-3 text-[0.72rem] text-slate-500 mt-2.5">
+              <div class="flex flex-col gap-1.5 text-xs text-slate-500">
                 <?php if ($applicant['applicant_city'] || $applicant['applicant_country']): ?>
-                  <span><i class="fa-solid fa-location-dot"></i> <?= e(trim(($applicant['applicant_city'] ?: '') . (($applicant['applicant_city'] && $applicant['applicant_country']) ? ', ' : '') . ($applicant['applicant_country'] ?: ''))) ?></span>
+                  <span><i class="fa-solid fa-location-dot w-3.5 text-slate-400"></i> <?= e(trim(($applicant['applicant_city'] ?: '') . (($applicant['applicant_city'] && $applicant['applicant_country']) ? ', ' : '') . ($applicant['applicant_country'] ?: ''))) ?></span>
                 <?php endif; ?>
                 <?php if ($applicant['applicant_show_email']): ?>
-                  <span><i class="fa-regular fa-envelope"></i> <?= e($applicant['applicant_email']) ?></span>
+                  <span class="truncate"><i class="fa-regular fa-envelope w-3.5 text-slate-400"></i> <?= e($applicant['applicant_email']) ?></span>
                 <?php endif; ?>
                 <?php if ($applicant['applicant_show_phone'] && $applicant['applicant_phone']): ?>
-                  <span><i class="fa-solid fa-phone"></i> <?= e($applicant['applicant_phone']) ?></span>
+                  <span><i class="fa-solid fa-phone w-3.5 text-slate-400"></i> <?= e($applicant['applicant_phone']) ?></span>
                 <?php endif; ?>
                 <?php if ($applicant['applicant_linkedin']): ?>
-                  <a href="<?= e($applicant['applicant_linkedin']) ?>" target="_blank" rel="noopener noreferrer" class="hover:text-gold"><i class="fa-brands fa-linkedin"></i> LinkedIn</a>
+                  <a href="<?= e($applicant['applicant_linkedin']) ?>" target="_blank" rel="noopener noreferrer" class="text-sky-600 hover:underline"><i class="fa-brands fa-linkedin w-3.5"></i> LinkedIn Profile</a>
                 <?php endif; ?>
               </div>
-
-              <div class="grid sm:grid-cols-2 gap-3 mt-3">
-                <?php if ($applicant['education_summary']): $ed = $applicant['education_summary']; ?>
-                  <div>
-                    <p class="text-[0.65rem] font-extrabold text-slate-400 uppercase tracking-wide mb-0.5">Education</p>
-                    <p class="text-xs text-slate-700"><?= e($ed['degree'] ?: 'Studied') ?><?= $ed['school'] ? ' &bull; ' . e($ed['school']) : '' ?></p>
-                    <?php if ($ed['start_year'] || $ed['end_year']): ?>
-                      <p class="text-[0.68rem] text-slate-400"><?= e((string) ($ed['start_year'] ?: '')) ?><?= $ed['start_year'] && $ed['end_year'] ? '&ndash;' : '' ?><?= e((string) ($ed['end_year'] ?: '')) ?></p>
-                    <?php endif; ?>
-                  </div>
-                <?php endif; ?>
-                <?php if ($applicant['experience_summary']): $exp = $applicant['experience_summary']; ?>
-                  <div>
-                    <p class="text-[0.65rem] font-extrabold text-slate-400 uppercase tracking-wide mb-0.5">Experience</p>
-                    <p class="text-xs text-slate-700"><?= e($applicant['total_years']) ?> year<?= $applicant['total_years'] == 1 ? '' : 's' ?> total</p>
-                    <p class="text-[0.68rem] text-slate-400"><?= e($exp['title']) ?><?= $exp['company'] ? ' &bull; ' . e($exp['company']) : '' ?></p>
-                  </div>
-                <?php endif; ?>
-              </div>
-
-              <?php if ($applicant['skills_list']): ?>
-                <div class="flex flex-wrap gap-1.5 mt-3">
-                  <?php foreach ($applicant['skills_list'] as $skill): ?>
-                    <span class="badge bg-slate-100 text-slate-600 !text-[0.65rem]"><?= e($skill) ?></span>
-                  <?php endforeach; ?>
-                </div>
-              <?php endif; ?>
             </div>
           </div>
 
-          <!-- Match score -->
-          <div class="flex flex-col items-center flex-shrink-0 w-[140px]">
-            <div class="relative w-16 h-16">
-              <svg viewBox="0 0 36 36" class="w-16 h-16 -rotate-90">
-                <circle cx="18" cy="18" r="15.5" fill="none" stroke="#e2e8f0" stroke-width="3"></circle>
-                <circle cx="18" cy="18" r="15.5" fill="none" stroke="<?= $applicant['match_percent'] >= 80 ? '#10b981' : ($applicant['match_percent'] >= 50 ? '#f59e0b' : '#ef4444') ?>" stroke-width="3" stroke-dasharray="97.4" stroke-dashoffset="<?= round(97.4 * (1 - $applicant['match_percent'] / 100), 2) ?>" stroke-linecap="round"></circle>
-              </svg>
-              <div class="absolute inset-0 flex items-center justify-center">
-                <span class="text-sm font-extrabold text-primary-navy"><?= (int) $applicant['match_percent'] ?>%</span>
+          <!-- Education / Experience / Skills -->
+          <div class="min-w-0 space-y-3.5">
+            <?php if ($ed): ?>
+              <div>
+                <p class="text-xs font-bold text-slate-700 flex items-center gap-1.5 mb-1"><i class="fa-solid fa-graduation-cap text-slate-400"></i> Education</p>
+                <p class="text-sm font-semibold text-primary-navy"><?= e($ed['degree'] ?: 'Studied') ?><?= $ed['field_of_study'] ? ', ' . e($ed['field_of_study']) : '' ?></p>
+                <p class="text-xs text-slate-500"><?= e($ed['school']) ?><?= ($ed['start_year'] || $ed['end_year']) ? ', ' . e((string) ($ed['start_year'] ?: '')) . ' &ndash; ' . e((string) ($ed['end_year'] ?: '')) : '' ?></p>
               </div>
+            <?php endif; ?>
+            <?php if ($exp): ?>
+              <div>
+                <p class="text-xs font-bold text-slate-700 flex items-center gap-1.5 mb-1"><i class="fa-solid fa-briefcase text-slate-400"></i> Experience</p>
+                <p class="text-sm font-semibold text-primary-navy"><?= e($applicant['total_years']) ?> year<?= $applicant['total_years'] == 1 ? '' : 's' ?></p>
+                <p class="text-xs text-slate-500"><?= e($exp['title']) ?><?= $exp['company'] ? ' &bull; ' . e($exp['company']) : '' ?><?= ($expStart || $expEnd) ? ' (' . e($expStart) . ' &ndash; ' . e($expEnd) . ')' : '' ?></p>
+              </div>
+            <?php endif; ?>
+            <?php if ($applicant['skills_list']): ?>
+              <div>
+                <p class="text-xs font-bold text-slate-700 flex items-center gap-1.5 mb-1.5"><i class="fa-solid fa-tags text-slate-400"></i> Skills</p>
+                <div class="flex flex-wrap gap-1.5">
+                  <?php foreach ($applicant['skills_list'] as $skill): ?>
+                    <span class="bg-sky-50 text-sky-700 rounded-md px-2 py-1 text-[0.68rem] font-medium"><?= e($skill) ?></span>
+                  <?php endforeach; ?>
+                </div>
+              </div>
+            <?php endif; ?>
+            <?php if ($applicant['responses'] || $applicant['applicant_resume_file'] || $applicant['applicant_resume_url']): ?>
+              <div class="flex flex-wrap gap-x-4 gap-y-1 pt-1">
+                <?php if ($applicant['responses']): ?>
+                  <button type="button" class="view-responses-btn text-xs text-gold hover:underline font-semibold">View Submitted Answers</button>
+                <?php endif; ?>
+                <?php if ($applicant['applicant_resume_file'] || $applicant['applicant_resume_url']): ?>
+                  <a href="<?= e($applicant['applicant_resume_file'] ? upload_url($applicant['applicant_resume_file']) : $applicant['applicant_resume_url']) ?>" target="_blank" rel="noopener noreferrer" class="text-xs text-gold hover:underline font-semibold">View Resume</a>
+                <?php endif; ?>
+              </div>
+            <?php endif; ?>
+          </div>
+
+          <!-- Match score -->
+          <div class="min-w-0">
+            <div class="flex items-center gap-2.5">
+              <div class="relative w-14 h-14 flex-shrink-0">
+                <svg viewBox="0 0 36 36" class="w-14 h-14 -rotate-90">
+                  <circle cx="18" cy="18" r="15.5" fill="none" stroke="#e2e8f0" stroke-width="3"></circle>
+                  <circle cx="18" cy="18" r="15.5" fill="none" stroke="<?= $applicant['match_percent'] >= 80 ? '#10b981' : ($applicant['match_percent'] >= 50 ? '#f59e0b' : '#ef4444') ?>" stroke-width="3" stroke-dasharray="97.4" stroke-dashoffset="<?= round(97.4 * (1 - $applicant['match_percent'] / 100), 2) ?>" stroke-linecap="round"></circle>
+                </svg>
+                <div class="absolute inset-0 flex items-center justify-center">
+                  <span class="text-xs font-extrabold text-primary-navy"><?= (int) $applicant['match_percent'] ?>%</span>
+                </div>
+              </div>
+              <p class="text-xs font-bold text-sky-700">Profile Match</p>
             </div>
-            <p class="text-[0.6rem] font-semibold text-slate-400 uppercase tracking-wide mt-1 mb-2">Profile Match</p>
-            <div class="w-full space-y-1">
+            <div class="space-y-1.5 mt-3">
               <?php foreach ($matchCategoryLabels as $catKey => $catLabel): $met = $applicant['match_categories'][$catKey] ?? false; ?>
-                <div class="flex items-center gap-1.5 text-[0.65rem] <?= $met ? 'text-slate-500' : 'text-amber-600' ?>">
+                <div class="flex items-center gap-1.5 text-[0.7rem] <?= $met ? 'text-slate-600' : 'text-amber-600' ?>">
                   <i class="<?= $met ? 'fa-solid fa-circle-check text-emerald-500' : 'fa-solid fa-triangle-exclamation text-amber-500' ?> flex-shrink-0"></i>
                   <span class="truncate"><?= e($catLabel) ?></span>
                 </div>
               <?php endforeach; ?>
             </div>
           </div>
-        </div>
 
-        <div class="flex flex-wrap items-center justify-between gap-3 mt-4 pt-3.5 border-t border-slate-100">
-          <form method="POST" action="<?= e(url('jobs/' . $job['id'] . '/applicants/' . $applicant['id'] . '/status')) ?>" class="flex items-center gap-2">
-            <?= csrf_field() ?>
-            <select name="status" onchange="this.form.submit()" class="form-input !py-1.5 text-xs max-w-[170px] font-semibold <?= e($meta['class']) ?>">
-              <?php foreach ($statusMeta as $key => $m): ?>
-                <option value="<?= e($key) ?>" <?= $applicant['status'] === $key ? 'selected' : '' ?>><?= e($m['label']) ?></option>
-              <?php endforeach; ?>
-            </select>
-          </form>
-
-          <div class="flex items-center gap-2 flex-shrink-0">
-            <a href="<?= e(url('alumni/' . $applicant['user_id'])) ?>" class="btn bg-white border border-slate-200 !text-slate-700 hover:bg-slate-50 !px-3 !py-1.5 text-xs">View Profile</a>
-            <a href="<?= e(url('messages/' . $applicant['user_id'])) ?>" class="btn bg-white border border-slate-200 !text-slate-700 hover:bg-slate-50 !px-3 !py-1.5 text-xs">Send Message</a>
-            <div class="relative">
-              <button type="button" class="kebab-btn text-slate-400 hover:text-primary-navy px-1"><i class="bi bi-three-dots-vertical"></i></button>
-              <div class="kebab-menu hidden absolute right-0 bottom-full mb-1 z-20 bg-white border border-slate-200 rounded-lg shadow-lg w-44 py-1">
-                <?php if ($applicant['responses']): ?>
-                  <button type="button" class="view-responses-btn block w-full text-left px-3 py-2 text-xs text-slate-700 hover:bg-slate-50" data-applicant="<?= e((string) $applicant['id']) ?>">View Submitted Answers</button>
-                <?php endif; ?>
-                <?php if ($applicant['applicant_resume_file'] || $applicant['applicant_resume_url']): ?>
-                  <a href="<?= e($applicant['applicant_resume_file'] ? upload_url($applicant['applicant_resume_file']) : $applicant['applicant_resume_url']) ?>" target="_blank" rel="noopener noreferrer" class="block px-3 py-2 text-xs text-slate-700 hover:bg-slate-50">View Resume</a>
-                <?php endif; ?>
-              </div>
-            </div>
+          <!-- Status + actions -->
+          <div class="min-w-0 space-y-2">
+            <form method="POST" action="<?= e(url('jobs/' . $job['id'] . '/applicants/' . $applicant['id'] . '/status')) ?>">
+              <?= csrf_field() ?>
+              <select name="status" onchange="this.form.submit()" class="w-full !rounded-full !border-0 !py-1.5 !pl-3 !pr-7 text-xs font-bold <?= e($meta['class']) ?>">
+                <?php foreach ($statusMeta as $key => $m): ?>
+                  <option value="<?= e($key) ?>" <?= $applicant['status'] === $key ? 'selected' : '' ?>><?= e($m['label']) ?></option>
+                <?php endforeach; ?>
+              </select>
+            </form>
+            <a href="<?= e(url('alumni/' . $applicant['user_id'])) ?>" class="btn !bg-primary-navy !text-white hover:!bg-primary-navy/90 !py-2 text-xs w-full flex items-center justify-center gap-1.5"><i class="fa-regular fa-eye"></i> View Profile</a>
+            <a href="<?= e(url('messages/' . $applicant['user_id'])) ?>" class="btn bg-white border border-slate-200 !text-slate-700 hover:bg-slate-50 !py-2 text-xs w-full flex items-center justify-center gap-1.5"><i class="fa-regular fa-envelope"></i> Send Message</a>
           </div>
         </div>
 
@@ -230,7 +241,7 @@ $isClosed = \App\Models\Job::isClosed($job);
   </div>
 
   <p id="app-empty" class="hidden text-sm text-slate-400 py-6 text-center">No applicants match those filters.</p>
-  <p id="app-count" class="text-xs text-slate-400 text-center mt-5"></p>
+  <p id="app-count" class="text-xs text-slate-400 text-center mt-5 flex items-center justify-center gap-1.5"></p>
 </div>
 
 <script>
@@ -268,24 +279,12 @@ $isClosed = \App\Models\Job::isClosed($job);
       });
 
       emptyState.classList.toggle('hidden', sorted.length > 0);
-      countText.textContent = sorted.length + ' applicant' + (sorted.length === 1 ? '' : 's') + ' found';
+      countText.innerHTML = '<i class="fa-solid fa-users"></i> ' + sorted.length + ' applicant' + (sorted.length === 1 ? '' : 's') + ' found';
     }
 
     [searchInput, statusSelect, experienceSelect, educationSelect, sortSelect].forEach(function (el) {
       el.addEventListener('input', render);
       el.addEventListener('change', render);
-    });
-
-    document.querySelectorAll('.kebab-btn').forEach(function (btn) {
-      btn.addEventListener('click', function (e) {
-        e.stopPropagation();
-        var menu = btn.nextElementSibling;
-        document.querySelectorAll('.kebab-menu').forEach(function (m) { if (m !== menu) m.classList.add('hidden'); });
-        menu.classList.toggle('hidden');
-      });
-    });
-    document.addEventListener('click', function () {
-      document.querySelectorAll('.kebab-menu').forEach(function (m) { m.classList.add('hidden'); });
     });
 
     document.querySelectorAll('.view-responses-btn').forEach(function (btn) {
