@@ -25,10 +25,9 @@ class Message extends Model
             if (!$partner) {
                 continue;
             }
-            // Messaging is connection-gated; a thread with someone you're no longer (or never
-            // were, per stale seed data) connected to shouldn't surface in the active list.
-            $status = Connection::statusBetween($userId, (int) $partner['id']);
-            if ($status === null || $status['status'] !== 'accepted') {
+            // Messaging is gated (see canMessage()); a thread with someone who's since been
+            // disconnected and has no other standing relationship shouldn't surface here.
+            if (!self::canMessage($userId, (int) $partner['id'])) {
                 continue;
             }
             $lastMessage = static::db()->prepare(
@@ -87,5 +86,49 @@ class Message extends Model
         $stmt = static::db()->prepare('SELECT COUNT(*) FROM messages WHERE recipient_id = ? AND sender_id = ? AND read_at IS NULL');
         $stmt->execute([$userId, $partnerId]);
         return (int) $stmt->fetchColumn();
+    }
+
+    /**
+     * True if $a and $b are allowed to message each other: an accepted connection, or a
+     * recruiter/applicant relationship - either posted a job the other applied to, or one of
+     * them is an admin reaching someone who has genuinely applied to a job somewhere (admins
+     * manage every job's applicants, including jobs with no individual poster on record).
+     * Hiring conversations shouldn't require first sending and accepting a connection request.
+     */
+    public static function canMessage(int $a, int $b): bool
+    {
+        $status = Connection::statusBetween($a, $b);
+        if ($status !== null && $status['status'] === 'accepted') {
+            return true;
+        }
+
+        $stmt = static::db()->prepare(
+            'SELECT 1 FROM job_applications ja JOIN jobs j ON j.id = ja.job_id
+             WHERE (ja.user_id = ? AND j.posted_by = ?) OR (ja.user_id = ? AND j.posted_by = ?)
+             LIMIT 1'
+        );
+        $stmt->execute([$a, $b, $b, $a]);
+        if ($stmt->fetchColumn()) {
+            return true;
+        }
+
+        $roles = static::db()->prepare('SELECT id, role FROM users WHERE id IN (?, ?)');
+        $roles->execute([$a, $b]);
+        $roleById = array_column($roles->fetchAll(), 'role', 'id');
+        $adminId = null;
+        $otherId = null;
+        if (($roleById[$a] ?? null) === 'admin') {
+            $adminId = $a;
+            $otherId = $b;
+        } elseif (($roleById[$b] ?? null) === 'admin') {
+            $adminId = $b;
+            $otherId = $a;
+        }
+        if ($adminId === null) {
+            return false;
+        }
+        $stmt = static::db()->prepare('SELECT 1 FROM job_applications WHERE user_id = ? LIMIT 1');
+        $stmt->execute([$otherId]);
+        return (bool) $stmt->fetchColumn();
     }
 }

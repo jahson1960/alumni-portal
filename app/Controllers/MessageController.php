@@ -34,8 +34,8 @@ class MessageController extends Controller
         $partnerId = (int) $userId;
         $partner = User::find($partnerId);
 
-        if (!$partner || $partnerId === $viewerId || !$this->areConnected($viewerId, $partnerId)) {
-            $this->flash('error', 'You can only message alumni you are connected with.');
+        if (!$partner || $partnerId === $viewerId || !Message::canMessage($viewerId, $partnerId)) {
+            $this->flash('error', "You can only message alumni you're connected with, or recruiters/applicants from a job posting.");
             $this->redirect('messages');
         }
 
@@ -70,8 +70,8 @@ class MessageController extends Controller
         $viewerId = (int) Auth::id();
         $partnerId = (int) $userId;
 
-        if (!$this->areConnected($viewerId, $partnerId)) {
-            $this->flash('error', 'You can only message alumni you are connected with.');
+        if (!Message::canMessage($viewerId, $partnerId)) {
+            $this->flash('error', "You can only message alumni you're connected with, or recruiters/applicants from a job posting.");
             $this->redirect('messages');
         }
 
@@ -96,7 +96,7 @@ class MessageController extends Controller
         $viewerId = (int) Auth::id();
         $partnerId = (int) $userId;
 
-        if (!$this->areConnected($viewerId, $partnerId)) {
+        if (!Message::canMessage($viewerId, $partnerId)) {
             http_response_code(403);
             echo json_encode(['error' => 'Not connected.']);
             return;
@@ -112,11 +112,5 @@ class MessageController extends Controller
             'body' => $m['body'],
             'created_at' => $m['created_at'],
         ], $newMessages)]);
-    }
-
-    private function areConnected(int $a, int $b): bool
-    {
-        $status = Connection::statusBetween($a, $b);
-        return $status !== null && $status['status'] === 'accepted';
     }
 }

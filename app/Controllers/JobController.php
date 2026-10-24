@@ -13,6 +13,7 @@ use App\Models\Company;
 use App\Models\Job;
 use App\Models\JobAlert;
 use App\Models\JobApplication;
+use App\Models\Message;
 use App\Models\Notification;
 use App\Models\PageTabVisibility;
 use App\Models\SavedJob;
@@ -25,6 +26,18 @@ class JobController extends Controller
 {
     /** Careers is one tabbed page — Job Board, Advanced Search, Companies Hiring, Saved Jobs, Job Alerts. */
     private const TABS = ['board', 'search', 'companies', 'saved', 'alerts'];
+
+    /** True when the request came from the page's own JS (fetch), which wants a JSON reply instead of a redirect. */
+    private function wantsJson(): bool
+    {
+        return ($_SERVER['HTTP_X_REQUESTED_WITH'] ?? '') === 'XMLHttpRequest';
+    }
+
+    private function json(array $data): void
+    {
+        header('Content-Type: application/json');
+        echo json_encode($data);
+    }
 
     public function index(): void
     {
@@ -809,6 +822,11 @@ class JobController extends Controller
         $job = Job::find((int) $id);
         $isOwnerOrAdmin = $job && Auth::check() && (Auth::isAdmin() || (int) ($job['posted_by'] ?? 0) === (int) Auth::id());
         if (!$job || !$isOwnerOrAdmin) {
+            if ($this->wantsJson()) {
+                http_response_code(404);
+                $this->json(['ok' => false, 'error' => 'Not found.']);
+                return;
+            }
             http_response_code(404);
             (new ErrorController())->notFound();
             return;
@@ -816,8 +834,74 @@ class JobController extends Controller
 
         $application = JobApplication::find((int) $appId);
         $status = in_array($this->input('status'), ['new', 'reviewed', 'shortlisted', 'interview_scheduled', 'rejected'], true) ? $this->input('status') : 'new';
+        $updated = false;
         if ($application && (int) $application['job_id'] === (int) $id) {
-            JobApplication::updateStatus((int) $appId, $status);
+            $updated = JobApplication::updateStatus((int) $appId, $status);
+        }
+
+        if ($this->wantsJson()) {
+            $this->json(['ok' => $updated, 'status' => $status]);
+            return;
+        }
+
+        $this->redirect('jobs/' . $id . '/applicants');
+    }
+
+    /** POST /jobs/{id}/applicants/broadcast — message every applicant, or every applicant in one status, at once. */
+    public function broadcastApplicants(string $id): void
+    {
+        $this->requireCsrf();
+        $job = Job::find((int) $id);
+        $isOwnerOrAdmin = $job && Auth::check() && (Auth::isAdmin() || (int) ($job['posted_by'] ?? 0) === (int) Auth::id());
+        if (!$job || !$isOwnerOrAdmin) {
+            http_response_code(404);
+            (new ErrorController())->notFound();
+            return;
+        }
+
+        $body = trim((string) $this->input('body', ''));
+        $statusFilter = $this->input('status', 'all');
+        $statusLabels = [
+            'all' => 'All Applicants',
+            'new' => 'Applied',
+            'reviewed' => 'Reviewed',
+            'shortlisted' => 'Shortlisted',
+            'interview_scheduled' => 'Interview Scheduled',
+            'rejected' => 'Rejected',
+        ];
+        if (!array_key_exists($statusFilter, $statusLabels)) {
+            $statusFilter = 'all';
+        }
+
+        if ($body === '') {
+            $this->flash('error', 'Write a message before broadcasting.');
+            $this->redirect('jobs/' . $id . '/applicants');
+        }
+
+        $applicants = JobApplication::forJob((int) $id);
+        if ($statusFilter !== 'all') {
+            $applicants = array_filter($applicants, fn (array $a): bool => $a['status'] === $statusFilter);
+        }
+
+        $senderId = (int) Auth::id();
+        $senderName = Auth::user()['name'];
+        $sentCount = 0;
+        foreach ($applicants as $applicant) {
+            $recipientId = (int) $applicant['user_id'];
+            Message::send($senderId, $recipientId, $body);
+            Notification::notify(
+                $recipientId,
+                'new_message',
+                $senderName . ' sent you a message about your application for "' . $job['title'] . '".',
+                'messages/' . $senderId
+            );
+            $sentCount++;
+        }
+
+        if ($sentCount === 0) {
+            $this->flash('error', 'No applicants matched "' . $statusLabels[$statusFilter] . '" - nothing was sent.');
+        } else {
+            $this->flash('success', 'Message sent to ' . $sentCount . ' ' . ($sentCount === 1 ? 'applicant' : 'applicants') . ' (' . $statusLabels[$statusFilter] . ').');
         }
 
         $this->redirect('jobs/' . $id . '/applicants');

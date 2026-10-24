@@ -16,6 +16,10 @@ $matchCategoryLabels = [
     'contact_location' => 'Contact & Location',
 ];
 $isClosed = \App\Models\Job::isClosed($job);
+$statusCounts = array_fill_keys(array_keys($statusMeta), 0);
+foreach ($applicants as $a) {
+    $statusCounts[$a['status']] = ($statusCounts[$a['status']] ?? 0) + 1;
+}
 ?>
 <div class="max-w-[1280px] mx-auto px-4 md:px-8 py-8">
   <a href="<?= e(url('jobs/mine')) ?>" class="text-sm text-slate-500 hover:text-gold mb-4 inline-flex items-center gap-2"><i class="fa-solid fa-arrow-left"></i> Back to Jobs</a>
@@ -25,6 +29,9 @@ $isClosed = \App\Models\Job::isClosed($job);
       <h1 class="text-xl font-extrabold text-primary-navy flex items-center gap-2.5"><i class="fa-solid fa-users text-primary-navy"></i> Applicants</h1>
       <p class="text-sm text-slate-500 mt-1"><?= e($job['title']) ?> &bull; <?= count($applicants) ?> Applicant<?= count($applicants) === 1 ? '' : 's' ?></p>
     </div>
+    <?php if ($applicants): ?>
+      <button type="button" id="broadcast-open-btn" class="btn-gold !px-4 !py-2.5 text-sm flex items-center gap-2"><i class="fa-solid fa-bullhorn"></i> Broadcast Message</button>
+    <?php endif; ?>
   </div>
 
   <!-- Job summary -->
@@ -191,14 +198,17 @@ $isClosed = \App\Models\Job::isClosed($job);
 
           <!-- Status + actions -->
           <div class="min-w-0 space-y-2">
-            <form method="POST" action="<?= e(url('jobs/' . $job['id'] . '/applicants/' . $applicant['id'] . '/status')) ?>">
-              <?= csrf_field() ?>
-              <select name="status" onchange="this.form.submit()" class="w-full !rounded-full !border-0 !py-1.5 !pl-3 !pr-7 text-xs font-bold <?= e($meta['class']) ?>">
-                <?php foreach ($statusMeta as $key => $m): ?>
-                  <option value="<?= e($key) ?>" <?= $applicant['status'] === $key ? 'selected' : '' ?>><?= e($m['label']) ?></option>
-                <?php endforeach; ?>
-              </select>
-            </form>
+            <div>
+              <form method="POST" action="<?= e(url('jobs/' . $job['id'] . '/applicants/' . $applicant['id'] . '/status')) ?>" class="status-form">
+                <?= csrf_field() ?>
+                <select name="status" class="status-select w-full !rounded-full !border-0 !py-1.5 !pl-3 !pr-7 text-xs font-bold <?= e($meta['class']) ?>">
+                  <?php foreach ($statusMeta as $key => $m): ?>
+                    <option value="<?= e($key) ?>" <?= $applicant['status'] === $key ? 'selected' : '' ?>><?= e($m['label']) ?></option>
+                  <?php endforeach; ?>
+                </select>
+              </form>
+              <p class="status-indicator text-[0.65rem] mt-1 h-3.5 flex items-center gap-1 opacity-0 transition-opacity duration-300"></p>
+            </div>
             <a href="<?= e(url('alumni/' . $applicant['user_id'])) ?>" class="btn !bg-primary-navy !text-white hover:!bg-primary-navy/90 !py-2 text-xs w-full flex items-center justify-center gap-1.5"><i class="fa-regular fa-eye"></i> View Profile</a>
             <a href="<?= e(url('messages/' . $applicant['user_id'])) ?>" class="btn bg-white border border-slate-200 !text-slate-700 hover:bg-slate-50 !py-2 text-xs w-full flex items-center justify-center gap-1.5"><i class="fa-regular fa-envelope"></i> Send Message</a>
           </div>
@@ -242,6 +252,37 @@ $isClosed = \App\Models\Job::isClosed($job);
 
   <p id="app-empty" class="hidden text-sm text-slate-400 py-6 text-center">No applicants match those filters.</p>
   <p id="app-count" class="text-xs text-slate-400 text-center mt-5 flex items-center justify-center gap-1.5"></p>
+</div>
+
+<!-- Broadcast modal -->
+<div id="broadcast-modal" class="hidden fixed inset-0 z-50 items-center justify-center bg-black/50 p-4">
+  <div class="bg-white rounded-xl shadow-2xl w-full max-w-md overflow-hidden">
+    <div class="flex items-center justify-between px-5 py-4 border-b border-slate-100">
+      <h3 class="text-sm font-bold text-primary-navy flex items-center gap-2"><i class="fa-solid fa-bullhorn text-gold"></i> Broadcast Message</h3>
+      <button type="button" id="broadcast-close-btn" class="text-slate-400 hover:text-slate-600"><i class="fa-solid fa-xmark text-lg"></i></button>
+    </div>
+    <form method="POST" action="<?= e(url('jobs/' . $job['id'] . '/applicants/broadcast')) ?>" class="p-5 space-y-4" id="broadcast-form">
+      <?= csrf_field() ?>
+      <div>
+        <label class="text-xs font-semibold text-slate-600 mb-1.5 block">Send to</label>
+        <select name="status" class="form-input text-sm">
+          <option value="all">All Applicants (<?= count($applicants) ?>)</option>
+          <?php foreach ($statusMeta as $key => $m): ?>
+            <option value="<?= e($key) ?>"><?= e($m['label']) ?> (<?= $statusCounts[$key] ?? 0 ?>)</option>
+          <?php endforeach; ?>
+        </select>
+      </div>
+      <div>
+        <label class="text-xs font-semibold text-slate-600 mb-1.5 block">Message</label>
+        <textarea name="body" rows="5" required maxlength="2000" class="form-input text-sm resize-none" placeholder="Write a message to send to the selected applicants..."></textarea>
+        <p class="text-[0.65rem] text-slate-400 mt-1.5"><i class="fa-regular fa-circle-info"></i> Every recipient gets this as a direct message and a notification.</p>
+      </div>
+      <div class="flex items-center justify-end gap-2 pt-1">
+        <button type="button" id="broadcast-cancel-btn" class="btn bg-white border border-slate-200 !text-slate-700 hover:bg-slate-50 !px-4 !py-2 text-xs">Cancel</button>
+        <button type="submit" id="broadcast-submit-btn" class="btn-gold !px-4 !py-2 text-xs flex items-center gap-1.5"><i class="fa-solid fa-paper-plane"></i> Send Broadcast</button>
+      </div>
+    </form>
+  </div>
 </div>
 
 <script>
@@ -298,5 +339,89 @@ $isClosed = \App\Models\Job::isClosed($job);
     document.getElementById('applicant-list').style.flexDirection = 'column';
 
     render();
+
+    // Status dropdown: save in the background (no page reload), with a small inline indicator.
+    var statusClassMap = {
+      new: ['bg-sky-100', 'text-sky-700'],
+      reviewed: ['bg-amber-100', 'text-amber-700'],
+      shortlisted: ['bg-emerald-100', 'text-emerald-700'],
+      interview_scheduled: ['bg-violet-100', 'text-violet-700'],
+      rejected: ['bg-red-100', 'text-red-700']
+    };
+    var allStatusClasses = Object.keys(statusClassMap).reduce(function (acc, k) { return acc.concat(statusClassMap[k]); }, []);
+
+    function setIndicator(el, state, text) {
+      var colors = { saving: 'text-slate-400', saved: 'text-emerald-600', error: 'text-red-600' };
+      var icon = state === 'saving' ? 'fa-circle-notch fa-spin' : (state === 'saved' ? 'fa-circle-check' : 'fa-triangle-exclamation');
+      el.className = 'status-indicator text-[0.65rem] mt-1 h-3.5 flex items-center gap-1 transition-opacity duration-300 opacity-100 ' + colors[state];
+      el.innerHTML = '<i class="fa-solid ' + icon + '"></i> ' + text;
+    }
+
+    document.querySelectorAll('.status-form').forEach(function (form) {
+      var select = form.querySelector('.status-select');
+      var indicator = form.parentElement.querySelector('.status-indicator');
+      var card = form.closest('.applicant-card');
+      var csrfInput = form.querySelector('input[name="_csrf"]');
+      var lastSavedValue = select.value;
+      var fadeTimer = null;
+
+      select.addEventListener('change', function () {
+        var newStatus = select.value;
+        select.classList.remove.apply(select.classList, allStatusClasses);
+        select.classList.add.apply(select.classList, statusClassMap[newStatus] || []);
+        card.dataset.status = newStatus;
+
+        clearTimeout(fadeTimer);
+        setIndicator(indicator, 'saving', 'Saving...');
+
+        var body = new URLSearchParams();
+        body.set('_csrf', csrfInput.value);
+        body.set('status', newStatus);
+
+        fetch(form.action, {
+          method: 'POST',
+          headers: { 'X-Requested-With': 'XMLHttpRequest', 'Content-Type': 'application/x-www-form-urlencoded' },
+          body: body.toString()
+        })
+          .then(function (res) { return res.ok ? res.json() : Promise.reject(); })
+          .then(function (data) {
+            if (!data.ok) return Promise.reject();
+            lastSavedValue = newStatus;
+            setIndicator(indicator, 'saved', 'Saved');
+            fadeTimer = setTimeout(function () { indicator.classList.remove('opacity-100'); indicator.classList.add('opacity-0'); }, 1500);
+          })
+          .catch(function () {
+            select.value = lastSavedValue;
+            select.classList.remove.apply(select.classList, allStatusClasses);
+            select.classList.add.apply(select.classList, statusClassMap[lastSavedValue] || []);
+            card.dataset.status = lastSavedValue;
+            setIndicator(indicator, 'error', 'Failed to save - try again');
+          });
+      });
+    });
+
+    // Broadcast modal
+    var broadcastModal = document.getElementById('broadcast-modal');
+    var broadcastOpenBtn = document.getElementById('broadcast-open-btn');
+    var broadcastCloseBtn = document.getElementById('broadcast-close-btn');
+    var broadcastCancelBtn = document.getElementById('broadcast-cancel-btn');
+    var broadcastForm = document.getElementById('broadcast-form');
+    var broadcastSubmitBtn = document.getElementById('broadcast-submit-btn');
+
+    function openBroadcast() { broadcastModal.classList.remove('hidden'); broadcastModal.classList.add('flex'); }
+    function closeBroadcast() { broadcastModal.classList.add('hidden'); broadcastModal.classList.remove('flex'); }
+
+    if (broadcastOpenBtn) broadcastOpenBtn.addEventListener('click', openBroadcast);
+    if (broadcastCloseBtn) broadcastCloseBtn.addEventListener('click', closeBroadcast);
+    if (broadcastCancelBtn) broadcastCancelBtn.addEventListener('click', closeBroadcast);
+    if (broadcastModal) {
+      broadcastModal.addEventListener('click', function (e) { if (e.target === broadcastModal) closeBroadcast(); });
+    }
+    if (broadcastForm) {
+      broadcastForm.addEventListener('submit', function () {
+        broadcastSubmitBtn.disabled = true;
+        broadcastSubmitBtn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i> Sending...';
+      });
+    }
   })();
 </script>

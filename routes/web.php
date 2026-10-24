@@ -101,6 +101,7 @@ $router->post('/jobs/{id}/apply', 'JobController@apply');
 $router->post('/jobs/{id}/quick-apply', 'JobController@quickApply');
 $router->get('/jobs/{id}/applicants', 'JobController@applicants');
 $router->post('/jobs/{id}/applicants/{appId}/status', 'JobController@updateApplicantStatus');
+$router->post('/jobs/{id}/applicants/broadcast', 'JobController@broadcastApplicants');
 $router->get('/jobs/{id}', 'JobController@show');
 
 // Companies
