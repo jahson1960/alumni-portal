@@ -943,7 +943,7 @@ CREATE TABLE job_applications (
   id INT AUTO_INCREMENT PRIMARY KEY,
   user_id INT NOT NULL,
   job_id INT NOT NULL,
-  status ENUM('new','reviewed','shortlisted','rejected') NOT NULL DEFAULT 'new',
+  status ENUM('new','reviewed','shortlisted','interview_scheduled','rejected') NOT NULL DEFAULT 'new',
   responses MEDIUMTEXT NULL COMMENT 'JSON array of {label,type,value}, only set for apply_type = form',
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   UNIQUE KEY uniq_user_job (user_id, job_id),

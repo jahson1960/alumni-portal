@@ -55,11 +55,23 @@ class JobApplication extends Model
         $stmt->execute([$userId, $jobId, json_encode($responses)]);
     }
 
-    /** Applicants for a job, newest first, with the applicant's own profile fields joined in for the poster's Applicants view. */
+    /**
+     * Applicants for a job, newest first, with the applicant's own current profile fields
+     * joined in for the poster's Applicants view - their live profile, not the application's
+     * own point-in-time responses snapshot, so this reflects their most up to date info and
+     * works the same way regardless of which apply_type the job uses.
+     */
     public static function forJob(int $jobId): array
     {
         $stmt = static::db()->prepare(
-            'SELECT ja.*, u.name AS applicant_name, u.email AS applicant_email, u.avatar AS applicant_avatar, u.headline AS applicant_headline
+            'SELECT ja.*,
+                    u.name AS applicant_name, u.email AS applicant_email, u.avatar AS applicant_avatar,
+                    u.headline AS applicant_headline, u.phone AS applicant_phone, u.linkedin_url AS applicant_linkedin,
+                    u.city AS applicant_city, u.state AS applicant_state, u.country AS applicant_country,
+                    u.show_phone AS applicant_show_phone, u.show_email AS applicant_show_email,
+                    u.skills AS applicant_skills, u.expertise_areas AS applicant_expertise_areas,
+                    u.business_interests AS applicant_business_interests, u.personal_interests AS applicant_personal_interests,
+                    u.resume_file AS applicant_resume_file, u.resume_url AS applicant_resume_url
              FROM job_applications ja
              JOIN users u ON u.id = ja.user_id
              WHERE ja.job_id = ?

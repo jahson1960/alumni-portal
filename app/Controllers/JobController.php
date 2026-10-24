@@ -601,6 +601,7 @@ class JobController extends Controller
         $applicants = JobApplication::forJob((int) $id);
         foreach ($applicants as &$applicant) {
             $applicant['responses'] = $applicant['responses'] ? json_decode($applicant['responses'], true) : [];
+            $applicant += $this->applicantSummary($applicant, $job);
         }
         unset($applicant);
 
@@ -611,6 +612,137 @@ class JobController extends Controller
             'fields' => $fields,
             'applicants' => $applicants,
         ]);
+    }
+
+    /**
+     * Everything the Applicants card needs beyond the raw JobApplication::forJob() row: the
+     * applicant's most recent education/experience entry, a skills list, bucketed education/
+     * experience levels (for the page's filter dropdowns), and a Profile Match score.
+     *
+     * The match score is a transparent, rule-based heuristic (not AI/ML matching) - five equally
+     * weighted categories out of 20 points each, so it's explainable and doesn't need anything
+     * beyond data already on the candidate's profile and the job post:
+     *   - Education: has a degree on file.
+     *   - Experience: total years of work history scaled against the job's experience_level.
+     *   - Skills & Expertise: how many of the candidate's skills/expertise keywords show up in
+     *     the job's own title/description/requirements text, plus a small base for having any.
+     *   - Interests: business/personal interests filled in (a profile-completeness signal).
+     *   - Contact & Location: email/phone shared, location on file, and whether it's a city or
+     *     country match for the job's own location.
+     * A category is "met" (green check) at 16/20 (80%) or more; otherwise it shows as a gap.
+     */
+    private function applicantSummary(array $applicant, array $job): array
+    {
+        $userId = (int) $applicant['user_id'];
+        $educationRows = UserEducation::forUser($userId);
+        $experienceRows = UserExperience::forUser($userId);
+
+        $education = $educationRows[0] ?? null;
+        $experience = $experienceRows[0] ?? null;
+        $totalYears = $this->totalExperienceYears($experienceRows);
+
+        $skills = array_slice(array_values(array_unique(array_filter(array_merge(
+            array_map('trim', explode(',', (string) $applicant['applicant_skills'])),
+            array_map('trim', explode(',', (string) $applicant['applicant_expertise_areas']))
+        )))), 0, 6);
+
+        $scores = [
+            'education' => $education ? 20 : 0,
+            'experience' => $this->experienceScore($totalYears, $job['experience_level']),
+            'skills' => $this->skillsScore($skills, $job),
+            'interests' => (!empty($applicant['applicant_business_interests']) ? 10 : 0) + (!empty($applicant['applicant_personal_interests']) ? 10 : 0),
+            'contact_location' => $this->contactLocationScore($applicant, $job),
+        ];
+
+        return [
+            'education_summary' => $education,
+            'experience_summary' => $experience,
+            'total_years' => $totalYears,
+            'skills_list' => $skills,
+            'education_level' => $this->educationLevel($education['degree'] ?? ''),
+            'experience_level' => $this->experienceLevel($totalYears),
+            'match_percent' => (int) round(array_sum($scores) / 100 * 100),
+            'match_categories' => array_map(fn (int $score): bool => $score >= 16, $scores),
+        ];
+    }
+
+    private function totalExperienceYears(array $experienceRows): float
+    {
+        if (!$experienceRows) {
+            return 0;
+        }
+        $starts = array_filter(array_map(fn ($e) => $e['start_date'] ? strtotime($e['start_date']) : null, $experienceRows));
+        if (!$starts) {
+            return 0;
+        }
+        $earliestStart = min($starts);
+        $hasCurrent = count(array_filter($experienceRows, fn ($e) => (bool) $e['is_current'])) > 0;
+        $ends = array_filter(array_map(fn ($e) => $e['end_date'] ? strtotime($e['end_date']) : null, $experienceRows));
+        $latestEnd = $hasCurrent ? time() : ($ends ? max($ends) : time());
+        return round(max(0, $latestEnd - $earliestStart) / (365.25 * 86400), 1);
+    }
+
+    private function experienceLevel(float $years): string
+    {
+        return match (true) {
+            $years >= 10 => 'executive',
+            $years >= 6 => 'senior',
+            $years >= 3 => 'mid',
+            default => 'entry',
+        };
+    }
+
+    private function experienceScore(float $years, ?string $jobLevel): int
+    {
+        $bracketMin = ['entry' => 0, 'mid' => 3, 'senior' => 6, 'executive' => 10][$jobLevel ?? ''] ?? 0;
+        if ($bracketMin === 0) {
+            return $years > 0 ? 20 : 8;
+        }
+        return (int) min(20, round($years / $bracketMin * 20));
+    }
+
+    private function educationLevel(string $degree): string
+    {
+        $degree = strtolower($degree);
+        return match (true) {
+            str_contains($degree, 'phd') || str_contains($degree, 'doctorate') => 'phd',
+            str_contains($degree, 'mba') || str_contains($degree, 'master') || str_contains($degree, 'm.sc') || str_contains($degree, 'msc') => 'masters',
+            str_contains($degree, 'b.sc') || str_contains($degree, 'bsc') || str_contains($degree, 'bachelor') => 'bachelors',
+            $degree !== '' => 'other',
+            default => 'none',
+        };
+    }
+
+    private function skillsScore(array $skills, array $job): int
+    {
+        if (!$skills) {
+            return 0;
+        }
+        $haystack = mb_strtolower(strip_tags($job['title'] . ' ' . $job['description'] . ' ' . ($job['requirements'] ?? '')));
+        $matches = 0;
+        foreach ($skills as $skill) {
+            if ($skill !== '' && str_contains($haystack, mb_strtolower($skill))) {
+                $matches++;
+            }
+        }
+        return min(20, 8 + $matches * 4);
+    }
+
+    private function contactLocationScore(array $applicant, array $job): int
+    {
+        $score = 0;
+        $score += $applicant['applicant_show_email'] ? 5 : 0;
+        $score += ($applicant['applicant_show_phone'] && $applicant['applicant_phone']) ? 5 : 0;
+        $hasLocation = $applicant['applicant_city'] || $applicant['applicant_country'];
+        $score += $hasLocation ? 5 : 0;
+        if ($hasLocation && !empty($job['location'])) {
+            $jobLocation = mb_strtolower($job['location']);
+            if (($applicant['applicant_city'] && str_contains($jobLocation, mb_strtolower($applicant['applicant_city'])))
+                || ($applicant['applicant_country'] && str_contains($jobLocation, mb_strtolower($applicant['applicant_country'])))) {
+                $score += 5;
+            }
+        }
+        return $score;
     }
 
     public function updateApplicantStatus(string $id, string $appId): void
@@ -625,7 +757,7 @@ class JobController extends Controller
         }
 
         $application = JobApplication::find((int) $appId);
-        $status = in_array($this->input('status'), ['new', 'reviewed', 'shortlisted', 'rejected'], true) ? $this->input('status') : 'new';
+        $status = in_array($this->input('status'), ['new', 'reviewed', 'shortlisted', 'interview_scheduled', 'rejected'], true) ? $this->input('status') : 'new';
         if ($application && (int) $application['job_id'] === (int) $id) {
             JobApplication::updateStatus((int) $appId, $status);
         }
