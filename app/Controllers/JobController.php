@@ -981,6 +981,9 @@ class JobController extends Controller
         $description = Sanitizer::html(trim((string) $this->input('description', '')));
         $responsibilities = Sanitizer::html(trim((string) $this->input('responsibilities', '')));
         $requirements = Sanitizer::html(trim((string) $this->input('requirements', '')));
+        $companyAbout = Sanitizer::html(trim((string) $this->input('company_about', '')));
+        $companyBg = valid_hex_color($this->input('company_bg_color'), '#f8fafc');
+        $companyText = valid_hex_color($this->input('company_text_color'), '#091a2e');
         $categoryIds = array_slice(array_map('intval', (array) $this->input('categories', [])), 0, 3);
         $applyType = in_array($this->input('apply_type'), ['link', 'form'], true) ? $this->input('apply_type') : 'email';
         $applyValue = trim((string) $this->input('apply_value', ''));
@@ -1040,6 +1043,9 @@ class JobController extends Controller
             'description' => $description,
             'responsibilities' => $responsibilities !== '' ? $responsibilities : null,
             'requirements' => $requirements !== '' ? $requirements : null,
+            'company_about' => $companyAbout !== '' ? $companyAbout : null,
+            'company_bg_color' => $companyBg,
+            'company_text_color' => $companyText,
             'apply_type' => $applyType,
             'apply_value' => $applyValue,
             'application_instructions' => $applicationInstructions !== '' ? $applicationInstructions : null,

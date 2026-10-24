@@ -76,12 +76,13 @@ $postingTips = [
                 <option value="<?= $c['id'] ?>"
                         data-name="<?= e($c['name']) ?>"
                         data-logo="<?= e($c['logo'] ?? '') ?>"
+                        data-about="<?= e(json_encode($c['about'] ?? '')) ?>"
                         <?= !empty($job['company_id']) && (int) $job['company_id'] === (int) $c['id'] ? 'selected' : '' ?>>
                   <?= e($c['name']) ?>
                 </option>
               <?php endforeach; ?>
             </select>
-            <p class="text-xs text-slate-400 mt-1">Selecting one fills in the company name and shows its logo below.</p>
+            <p class="text-xs text-slate-400 mt-1">Selecting one fills in the company's name, logo, and about section below &mdash; or leave it on manual entry to type them yourself.</p>
           </div>
 
           <input type="hidden" id="company_id" name="company_id" value="<?= e($job['company_id'] ?? '') ?>">
@@ -92,6 +93,28 @@ $postingTips = [
             <img id="company_logo_preview" src="<?= e($job['company_logo'] ?? '') ?>" alt="" class="w-16 h-16 object-contain rounded border border-slate-200 mb-2 bg-white p-1 <?= empty($job['company_logo']) ? 'hidden' : '' ?>">
             <input type="file" id="company_logo" name="company_logo" accept=".jpg,.jpeg,.png,.webp" class="text-sm block">
             <p class="text-xs text-slate-400 mt-1">Shows the selected company's logo if it has one. You can upload a different image just for this job post &mdash; it won't change the company's own logo.</p>
+          </div>
+
+          <div>
+            <label class="form-label" for="company_bg_color">No logo? Choose a badge color <span class="text-slate-400 font-normal">(optional)</span></label>
+            <div class="flex items-center gap-4">
+              <div class="flex items-center gap-2">
+                <input type="color" id="company_bg_color" name="company_bg_color" class="form-input h-10 w-16 !p-1" value="<?= e($job['company_bg_color'] ?? '#f8fafc') ?>">
+                <span class="text-xs text-slate-500">Background</span>
+              </div>
+              <div class="flex items-center gap-2">
+                <input type="color" id="company_text_color" name="company_text_color" class="form-input h-10 w-16 !p-1" value="<?= e($job['company_text_color'] ?? '#091a2e') ?>">
+                <span class="text-xs text-slate-500">Initials</span>
+              </div>
+            </div>
+            <p class="text-xs text-slate-400 mt-1">Used for the colored initials shown instead of a logo.</p>
+          </div>
+
+          <div>
+            <label class="form-label">About the Company <span class="text-slate-400 font-normal">(optional)</span></label>
+            <div data-rich-editor="company_about"></div>
+            <textarea id="company_about" name="company_about" class="hidden"><?= e($job['company_about'] ?? '') ?></textarea>
+            <p class="text-xs text-slate-400 mt-1">A short description shown to applicants on the job listing. Not required if the company isn't in our directory yet.</p>
           </div>
 
           <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -394,6 +417,14 @@ $postingTips = [
           logoPreview.classList.remove('hidden');
         } else {
           logoPreview.classList.add('hidden');
+        }
+
+        var about = '';
+        try { about = JSON.parse(option.dataset.about); } catch (e) { about = ''; }
+        var aboutTextarea = document.getElementById('company_about');
+        aboutTextarea.value = about;
+        if (window.refreshRichEditor) {
+          window.refreshRichEditor('company_about', about);
         }
       });
     }
