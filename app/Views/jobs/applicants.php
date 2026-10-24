@@ -256,32 +256,66 @@ foreach ($applicants as $a) {
 
 <!-- Broadcast modal -->
 <div id="broadcast-modal" class="hidden fixed inset-0 z-50 items-center justify-center bg-black/50 p-4">
-  <div class="bg-white rounded-xl shadow-2xl w-full max-w-md overflow-hidden">
-    <div class="flex items-center justify-between px-5 py-4 border-b border-slate-100">
+  <div class="bg-white rounded-xl shadow-2xl w-full max-w-lg max-h-[85vh] flex flex-col overflow-hidden">
+    <div class="flex items-center justify-between px-5 py-4 border-b border-slate-100 flex-shrink-0">
       <h3 class="text-sm font-bold text-primary-navy flex items-center gap-2"><i class="fa-solid fa-bullhorn text-gold"></i> Broadcast Message</h3>
       <button type="button" id="broadcast-close-btn" class="text-slate-400 hover:text-slate-600"><i class="fa-solid fa-xmark text-lg"></i></button>
     </div>
-    <form method="POST" action="<?= e(url('jobs/' . $job['id'] . '/applicants/broadcast')) ?>" class="p-5 space-y-4" id="broadcast-form">
-      <?= csrf_field() ?>
-      <div>
-        <label class="text-xs font-semibold text-slate-600 mb-1.5 block">Send to</label>
-        <select name="status" class="form-input text-sm">
-          <option value="all">All Applicants (<?= count($applicants) ?>)</option>
-          <?php foreach ($statusMeta as $key => $m): ?>
-            <option value="<?= e($key) ?>"><?= e($m['label']) ?> (<?= $statusCounts[$key] ?? 0 ?>)</option>
-          <?php endforeach; ?>
-        </select>
-      </div>
-      <div>
-        <label class="text-xs font-semibold text-slate-600 mb-1.5 block">Message</label>
-        <textarea name="body" rows="5" required maxlength="2000" class="form-input text-sm resize-none" placeholder="Write a message to send to the selected applicants..."></textarea>
-        <p class="text-[0.65rem] text-slate-400 mt-1.5"><i class="fa-regular fa-circle-info"></i> Every recipient gets this as a direct message and a notification.</p>
-      </div>
-      <div class="flex items-center justify-end gap-2 pt-1">
-        <button type="button" id="broadcast-cancel-btn" class="btn bg-white border border-slate-200 !text-slate-700 hover:bg-slate-50 !px-4 !py-2 text-xs">Cancel</button>
-        <button type="submit" id="broadcast-submit-btn" class="btn-gold !px-4 !py-2 text-xs flex items-center gap-1.5"><i class="fa-solid fa-paper-plane"></i> Send Broadcast</button>
-      </div>
-    </form>
+
+    <div class="flex items-center gap-5 px-5 pt-3 border-b border-slate-100 flex-shrink-0">
+      <button type="button" class="broadcast-tab-link text-xs font-semibold pb-2.5 border-b-2 -mb-px text-gold border-gold" data-tab="compose">Compose</button>
+      <button type="button" class="broadcast-tab-link text-xs font-semibold pb-2.5 border-b-2 -mb-px text-slate-500 border-transparent hover:text-primary-navy" data-tab="history">History<?= $broadcasts ? ' (' . count($broadcasts) . ')' : '' ?></button>
+    </div>
+
+    <div id="broadcast-tab-compose" class="broadcast-tab-panel overflow-y-auto">
+      <form method="POST" action="<?= e(url('jobs/' . $job['id'] . '/applicants/broadcast')) ?>" class="p-5 space-y-4" id="broadcast-form">
+        <?= csrf_field() ?>
+        <div>
+          <label class="text-xs font-semibold text-slate-600 mb-1.5 block">Send to</label>
+          <select name="status" class="form-input text-sm">
+            <option value="all">All Applicants (<?= count($applicants) ?>)</option>
+            <?php foreach ($statusMeta as $key => $m): ?>
+              <option value="<?= e($key) ?>"><?= e($m['label']) ?> (<?= $statusCounts[$key] ?? 0 ?>)</option>
+            <?php endforeach; ?>
+          </select>
+        </div>
+        <div>
+          <label class="text-xs font-semibold text-slate-600 mb-1.5 block">Message</label>
+          <textarea name="body" rows="5" required maxlength="2000" class="form-input text-sm resize-none" placeholder="Write a message to send to the selected applicants..."></textarea>
+          <p class="text-[0.65rem] text-slate-400 mt-1.5"><i class="fa-regular fa-circle-info"></i> Every recipient gets this as a direct message and a notification.</p>
+        </div>
+        <div class="flex items-center justify-end gap-2 pt-1">
+          <button type="button" id="broadcast-cancel-btn" class="btn bg-white border border-slate-200 !text-slate-700 hover:bg-slate-50 !px-4 !py-2 text-xs">Cancel</button>
+          <button type="submit" id="broadcast-submit-btn" class="btn-gold !px-4 !py-2 text-xs flex items-center gap-1.5"><i class="fa-solid fa-paper-plane"></i> Send Broadcast</button>
+        </div>
+      </form>
+    </div>
+
+    <div id="broadcast-tab-history" class="broadcast-tab-panel hidden overflow-y-auto p-5 space-y-3">
+      <?php if (!$broadcasts): ?>
+        <p class="text-sm text-slate-400 text-center py-10">No broadcasts sent yet for this job.</p>
+      <?php else: ?>
+        <?php foreach ($broadcasts as $b): $recalled = (bool) $b['recalled_at']; ?>
+          <div class="border border-slate-100 rounded-lg p-3.5 <?= $recalled ? 'bg-slate-50' : '' ?>">
+            <div class="flex items-start justify-between gap-2 mb-1.5">
+              <div class="flex items-center gap-1.5 flex-wrap">
+                <span class="badge bg-slate-100 text-slate-600 !text-[0.65rem]"><?= e(\App\Models\JobBroadcast::STATUS_LABELS[$b['status_filter']] ?? 'All Applicants') ?></span>
+                <span class="text-[0.65rem] text-slate-400"><?= e(time_ago($b['created_at'])) ?></span>
+                <?php if ($recalled): ?><span class="badge bg-red-100 text-red-600 !text-[0.6rem] uppercase">Recalled</span><?php endif; ?>
+              </div>
+              <?php if (!$recalled): ?>
+                <form method="POST" action="<?= e(url('jobs/' . $job['id'] . '/applicants/broadcasts/' . $b['id'] . '/recall')) ?>" class="flex-shrink-0" data-confirm="Recall this broadcast? It will be removed from every recipient's messages." data-confirm-icon="fa-solid fa-rotate-left" data-confirm-ok-label="Recall">
+                  <?= csrf_field() ?>
+                  <button type="submit" class="text-[0.65rem] text-red-500 hover:text-red-700 font-semibold flex items-center gap-1"><i class="fa-solid fa-rotate-left"></i> Recall</button>
+                </form>
+              <?php endif; ?>
+            </div>
+            <p class="text-xs <?= $recalled ? 'text-slate-400' : 'text-slate-700' ?> whitespace-pre-line"><?= e($b['body']) ?></p>
+            <p class="text-[0.65rem] text-slate-400 mt-1.5"><i class="fa-solid fa-paper-plane"></i> Sent to <?= (int) $b['recipient_count'] ?> applicant<?= (int) $b['recipient_count'] === 1 ? '' : 's' ?></p>
+          </div>
+        <?php endforeach; ?>
+      <?php endif; ?>
+    </div>
   </div>
 </div>
 
@@ -407,9 +441,27 @@ foreach ($applicants as $a) {
     var broadcastCancelBtn = document.getElementById('broadcast-cancel-btn');
     var broadcastForm = document.getElementById('broadcast-form');
     var broadcastSubmitBtn = document.getElementById('broadcast-submit-btn');
+    var broadcastTabLinks = document.querySelectorAll('.broadcast-tab-link');
 
-    function openBroadcast() { broadcastModal.classList.remove('hidden'); broadcastModal.classList.add('flex'); }
+    function openBroadcast() {
+      broadcastModal.classList.remove('hidden');
+      broadcastModal.classList.add('flex');
+      setBroadcastTab('compose');
+    }
     function closeBroadcast() { broadcastModal.classList.add('hidden'); broadcastModal.classList.remove('flex'); }
+
+    function setBroadcastTab(tab) {
+      broadcastTabLinks.forEach(function (btn) {
+        var active = btn.dataset.tab === tab;
+        btn.classList.toggle('text-gold', active);
+        btn.classList.toggle('border-gold', active);
+        btn.classList.toggle('text-slate-500', !active);
+        btn.classList.toggle('border-transparent', !active);
+      });
+      document.querySelectorAll('.broadcast-tab-panel').forEach(function (panel) {
+        panel.classList.toggle('hidden', panel.id !== 'broadcast-tab-' + tab);
+      });
+    }
 
     if (broadcastOpenBtn) broadcastOpenBtn.addEventListener('click', openBroadcast);
     if (broadcastCloseBtn) broadcastCloseBtn.addEventListener('click', closeBroadcast);
@@ -417,6 +469,9 @@ foreach ($applicants as $a) {
     if (broadcastModal) {
       broadcastModal.addEventListener('click', function (e) { if (e.target === broadcastModal) closeBroadcast(); });
     }
+    broadcastTabLinks.forEach(function (btn) {
+      btn.addEventListener('click', function () { setBroadcastTab(btn.dataset.tab); });
+    });
     if (broadcastForm) {
       broadcastForm.addEventListener('submit', function () {
         broadcastSubmitBtn.disabled = true;

@@ -131,7 +131,7 @@ $groupByDay = function (array $messages): array {
         <form method="POST" action="<?= e(url('messages/' . $partner['id'])) ?>" id="message-form" class="flex items-end gap-2 p-3 border-t border-slate-100 flex-shrink-0">
           <?= csrf_field() ?>
           <span class="text-slate-400 px-1 pb-2" title="Attachments aren't available yet"><i class="bi bi-paperclip"></i></span>
-          <textarea name="body" id="message-input" rows="1" class="form-input flex-1 resize-none max-h-32 overflow-y-auto leading-snug py-2.5" placeholder="Write a message..." required></textarea>
+          <textarea name="body" id="message-input" rows="1" class="form-input flex-1 resize-none max-h-32 overflow-y-auto no-scrollbar leading-snug py-2.5" placeholder="Write a message..." required></textarea>
           <button type="submit" class="btn-gold !px-4 !py-2 text-xs whitespace-nowrap">Send</button>
         </form>
       <?php else: ?>

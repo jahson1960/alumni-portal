@@ -8,10 +8,10 @@ class Notification extends Model
 {
     protected static string $table = 'notifications';
 
-    /** Inserts the in-app notification, then enqueues a matching branded email — the one choke point for all 14 notification types. */
-    public static function notify(int $userId, string $type, string $message, ?string $link = null): void
+    /** Inserts the in-app notification, then enqueues a matching branded email — the one choke point for all 14 notification types. Returns the new notification's id. */
+    public static function notify(int $userId, string $type, string $message, ?string $link = null): int
     {
-        static::insertRow('notifications', [
+        $id = static::insertRow('notifications', [
             'user_id' => $userId,
             'type' => $type,
             'message' => $message,
@@ -27,6 +27,8 @@ class Notification extends Model
                 $link
             ));
         }
+
+        return $id;
     }
 
     public static function forUser(int $userId, int $limit = 50): array

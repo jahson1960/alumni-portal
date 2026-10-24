@@ -13,6 +13,7 @@ use App\Models\Company;
 use App\Models\Job;
 use App\Models\JobAlert;
 use App\Models\JobApplication;
+use App\Models\JobBroadcast;
 use App\Models\Message;
 use App\Models\Notification;
 use App\Models\PageTabVisibility;
@@ -624,6 +625,7 @@ class JobController extends Controller
             'job' => $job,
             'fields' => $fields,
             'applicants' => $applicants,
+            'broadcasts' => JobBroadcast::forJob((int) $id),
         ]);
     }
 
@@ -861,14 +863,7 @@ class JobController extends Controller
 
         $body = trim((string) $this->input('body', ''));
         $statusFilter = $this->input('status', 'all');
-        $statusLabels = [
-            'all' => 'All Applicants',
-            'new' => 'Applied',
-            'reviewed' => 'Reviewed',
-            'shortlisted' => 'Shortlisted',
-            'interview_scheduled' => 'Interview Scheduled',
-            'rejected' => 'Rejected',
-        ];
+        $statusLabels = JobBroadcast::STATUS_LABELS;
         if (!array_key_exists($statusFilter, $statusLabels)) {
             $statusFilter = 'all';
         }
@@ -885,23 +880,48 @@ class JobController extends Controller
 
         $senderId = (int) Auth::id();
         $senderName = Auth::user()['name'];
+        $broadcastId = JobBroadcast::create((int) $id, $senderId, $statusFilter, $body);
         $sentCount = 0;
         foreach ($applicants as $applicant) {
             $recipientId = (int) $applicant['user_id'];
-            Message::send($senderId, $recipientId, $body);
-            Notification::notify(
+            $messageId = Message::send($senderId, $recipientId, $body);
+            $notificationId = Notification::notify(
                 $recipientId,
                 'new_message',
                 $senderName . ' sent you a message about your application for "' . $job['title'] . '".',
                 'messages/' . $senderId
             );
+            JobBroadcast::addRecipient($broadcastId, $recipientId, $messageId, $notificationId);
             $sentCount++;
         }
 
         if ($sentCount === 0) {
+            JobBroadcast::delete($broadcastId);
             $this->flash('error', 'No applicants matched "' . $statusLabels[$statusFilter] . '" - nothing was sent.');
         } else {
+            JobBroadcast::setRecipientCount($broadcastId, $sentCount);
             $this->flash('success', 'Message sent to ' . $sentCount . ' ' . ($sentCount === 1 ? 'applicant' : 'applicants') . ' (' . $statusLabels[$statusFilter] . ').');
+        }
+
+        $this->redirect('jobs/' . $id . '/applicants');
+    }
+
+    /** POST /jobs/{id}/applicants/broadcasts/{broadcastId}/recall — unsend a past broadcast (deletes the message/notification it created for every recipient). */
+    public function recallBroadcast(string $id, string $broadcastId): void
+    {
+        $this->requireCsrf();
+        $job = Job::find((int) $id);
+        $isOwnerOrAdmin = $job && Auth::check() && (Auth::isAdmin() || (int) ($job['posted_by'] ?? 0) === (int) Auth::id());
+        if (!$job || !$isOwnerOrAdmin) {
+            http_response_code(404);
+            (new ErrorController())->notFound();
+            return;
+        }
+
+        $broadcast = JobBroadcast::find((int) $broadcastId);
+        if ($broadcast && (int) $broadcast['job_id'] === (int) $id && !$broadcast['recalled_at']) {
+            JobBroadcast::recall((int) $broadcastId);
+            $this->flash('success', 'Broadcast recalled — it has been removed from every recipient\'s messages.');
         }
 
         $this->redirect('jobs/' . $id . '/applicants');
