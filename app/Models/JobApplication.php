@@ -46,13 +46,13 @@ class JobApplication extends Model
      * snapshot taken at submission time, independent of the template's fields afterward, so
      * a poster editing their template later never garbles an already-submitted application.
      */
-    public static function submitForm(int $userId, int $jobId, array $responses): void
+    public static function submitForm(int $userId, int $jobId, array $responses, bool $viaQuickApply = false): void
     {
         $stmt = static::db()->prepare(
-            'INSERT INTO job_applications (user_id, job_id, responses, status) VALUES (?, ?, ?, "new")
-             ON DUPLICATE KEY UPDATE responses = VALUES(responses), status = "new"'
+            'INSERT INTO job_applications (user_id, job_id, responses, via_quick_apply, status) VALUES (?, ?, ?, ?, "new")
+             ON DUPLICATE KEY UPDATE responses = VALUES(responses), via_quick_apply = VALUES(via_quick_apply), status = "new"'
         );
-        $stmt->execute([$userId, $jobId, json_encode($responses)]);
+        $stmt->execute([$userId, $jobId, json_encode($responses), $viaQuickApply ? 1 : 0]);
     }
 
     /**

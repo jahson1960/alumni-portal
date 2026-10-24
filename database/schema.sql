@@ -945,6 +945,7 @@ CREATE TABLE job_applications (
   job_id INT NOT NULL,
   status ENUM('new','reviewed','shortlisted','interview_scheduled','rejected') NOT NULL DEFAULT 'new',
   responses MEDIUMTEXT NULL COMMENT 'JSON array of {label,type,value}, only set for apply_type = form',
+  via_quick_apply TINYINT(1) NOT NULL DEFAULT 0 COMMENT '1 if submitted via Quick Apply with My Profile, not the full form',
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   UNIQUE KEY uniq_user_job (user_id, job_id),
   CONSTRAINT fk_job_applications_user FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,

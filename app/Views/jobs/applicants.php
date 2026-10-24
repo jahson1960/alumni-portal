@@ -161,8 +161,10 @@ foreach ($applicants as $a) {
               </div>
             <?php endif; ?>
             <?php if ($applicant['responses'] || $applicant['applicant_resume_file'] || $applicant['applicant_resume_url']): ?>
-              <div class="flex flex-wrap gap-x-4 gap-y-1 pt-1">
-                <?php if ($applicant['responses']): ?>
+              <div class="flex flex-wrap items-center gap-x-4 gap-y-1 pt-1">
+                <?php if ($applicant['responses'] && $applicant['via_quick_apply']): ?>
+                  <span class="text-xs text-slate-400 font-semibold flex items-center gap-1.5"><i class="fa-regular fa-id-badge"></i> Applied via Profile (Quick Apply)</span>
+                <?php elseif ($applicant['responses']): ?>
                   <button type="button" class="view-responses-btn text-xs text-gold hover:underline font-semibold">View Submitted Answers</button>
                 <?php endif; ?>
                 <?php if ($applicant['applicant_resume_file'] || $applicant['applicant_resume_url']): ?>
@@ -214,7 +216,7 @@ foreach ($applicants as $a) {
           </div>
         </div>
 
-        <?php if ($applicant['responses']): ?>
+        <?php if ($applicant['responses'] && !$applicant['via_quick_apply']): ?>
           <div class="applicant-responses hidden mt-4 pt-4 border-t border-slate-100 space-y-5">
             <?php
               $responsesBySection = array_fill_keys(array_keys(\App\Models\ApplicationTemplate::SECTIONS), []);
@@ -272,10 +274,10 @@ foreach ($applicants as $a) {
         <?= csrf_field() ?>
         <div>
           <label class="text-xs font-semibold text-slate-600 mb-1.5 block">Send to</label>
-          <select name="status" class="form-input text-sm">
-            <option value="all">All Applicants (<?= count($applicants) ?>)</option>
+          <select name="status" id="broadcast-status-select" class="form-input text-sm">
+            <option value="all" data-base-label="All Applicants">All Applicants (<?= count($applicants) ?>)</option>
             <?php foreach ($statusMeta as $key => $m): ?>
-              <option value="<?= e($key) ?>"><?= e($m['label']) ?> (<?= $statusCounts[$key] ?? 0 ?>)</option>
+              <option value="<?= e($key) ?>" data-base-label="<?= e($m['label']) ?>"><?= e($m['label']) ?> (<?= $statusCounts[$key] ?? 0 ?>)</option>
             <?php endforeach; ?>
           </select>
         </div>
@@ -443,10 +445,27 @@ foreach ($applicants as $a) {
     var broadcastSubmitBtn = document.getElementById('broadcast-submit-btn');
     var broadcastTabLinks = document.querySelectorAll('.broadcast-tab-link');
 
+    // Recomputes the "Send to" option counts from each card's live data-status (kept current
+    // by the status-select AJAX save above), since the server-rendered counts go stale the
+    // moment a status changes without a page reload.
+    function refreshBroadcastCounts() {
+      var statusSelect = document.getElementById('broadcast-status-select');
+      if (!statusSelect) return;
+      var counts = {};
+      cards.forEach(function (card) {
+        counts[card.dataset.status] = (counts[card.dataset.status] || 0) + 1;
+      });
+      Array.from(statusSelect.options).forEach(function (opt) {
+        var n = opt.value === 'all' ? cards.length : (counts[opt.value] || 0);
+        opt.textContent = opt.dataset.baseLabel + ' (' + n + ')';
+      });
+    }
+
     function openBroadcast() {
       broadcastModal.classList.remove('hidden');
       broadcastModal.classList.add('flex');
       setBroadcastTab('compose');
+      refreshBroadcastCounts();
     }
     function closeBroadcast() { broadcastModal.classList.add('hidden'); broadcastModal.classList.remove('flex'); }
 

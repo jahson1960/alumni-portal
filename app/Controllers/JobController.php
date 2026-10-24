@@ -572,7 +572,7 @@ class JobController extends Controller
             $this->redirect('jobs/' . $id . '/apply');
         }
 
-        JobApplication::submitForm((int) Auth::id(), $id, $responses);
+        JobApplication::submitForm((int) Auth::id(), $id, $responses, $quickApply);
 
         if (!empty($job['posted_by'])) {
             Notification::notify(
