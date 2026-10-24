@@ -128,10 +128,10 @@ $groupByDay = function (array $messages): array {
           <?php endif; ?>
         </div>
 
-        <form method="POST" action="<?= e(url('messages/' . $partner['id'])) ?>" id="message-form" class="flex items-center gap-2 p-3 border-t border-slate-100 flex-shrink-0">
+        <form method="POST" action="<?= e(url('messages/' . $partner['id'])) ?>" id="message-form" class="flex items-end gap-2 p-3 border-t border-slate-100 flex-shrink-0">
           <?= csrf_field() ?>
-          <span class="text-slate-400 px-1" title="Attachments aren't available yet"><i class="bi bi-paperclip"></i></span>
-          <input type="text" name="body" class="form-input flex-1" placeholder="Write a message..." required autocomplete="off">
+          <span class="text-slate-400 px-1 pb-2" title="Attachments aren't available yet"><i class="bi bi-paperclip"></i></span>
+          <textarea name="body" id="message-input" rows="1" class="form-input flex-1 resize-none max-h-32 overflow-y-auto leading-snug py-2.5" placeholder="Write a message..." required></textarea>
           <button type="submit" class="btn-gold !px-4 !py-2 text-xs whitespace-nowrap">Send</button>
         </form>
       <?php else: ?>
@@ -318,6 +318,27 @@ $groupByDay = function (array $messages): array {
     var partnerId = thread.dataset.partnerId;
     var viewerId = thread.dataset.viewerId;
     var pollUrl = <?= json_encode(url('messages/' . $partner['id'] . '/poll')) ?>;
+
+    var messageForm = document.getElementById('message-form');
+    var messageInput = document.getElementById('message-input');
+    if (messageInput) {
+      var growMessageInput = function () {
+        messageInput.style.height = 'auto';
+        messageInput.style.height = Math.min(messageInput.scrollHeight, 128) + 'px';
+      };
+      messageInput.addEventListener('input', growMessageInput);
+      growMessageInput();
+
+      // Enter sends the message; Shift+Enter inserts a newline, like most chat apps.
+      messageInput.addEventListener('keydown', function (e) {
+        if (e.key === 'Enter' && !e.shiftKey) {
+          e.preventDefault();
+          if (messageInput.value.trim() !== '') {
+            messageForm.requestSubmit ? messageForm.requestSubmit() : messageForm.submit();
+          }
+        }
+      });
+    }
 
     function lastMessageId() {
       var nodes = thread.querySelectorAll('[data-message-id]');
