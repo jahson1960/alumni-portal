@@ -718,14 +718,72 @@ class JobController extends Controller
         if (!$skills) {
             return 0;
         }
-        $haystack = mb_strtolower(strip_tags($job['title'] . ' ' . $job['description'] . ' ' . ($job['requirements'] ?? '')));
+        $haystackWords = $this->significantWords($job['title'] . ' ' . $job['description'] . ' ' . ($job['requirements'] ?? ''));
         $matches = 0;
         foreach ($skills as $skill) {
-            if ($skill !== '' && str_contains($haystack, mb_strtolower($skill))) {
+            if ($skill !== '' && $this->skillMatchesWords($skill, $haystackWords)) {
                 $matches++;
             }
         }
         return min(20, 8 + $matches * 4);
+    }
+
+    /** Lowercased, punctuation-stripped words of 3+ characters, common filler words dropped. */
+    private function significantWords(string $text): array
+    {
+        static $stopwords = ['the', 'and', 'for', 'with', 'are', 'that', 'this', 'from', 'your', 'you',
+            'able', 'etc', 'will', 'into', 'across', 'has', 'have', 'can', 'all', 'any', 'our', 'their'];
+        $text = mb_strtolower(strip_tags($text));
+        $text = preg_replace('/[^a-z0-9\s]/u', ' ', $text);
+        $words = array_filter(preg_split('/\s+/', $text), fn (string $w): bool => mb_strlen($w) >= 3);
+        return array_values(array_diff(array_unique($words), $stopwords));
+    }
+
+    /**
+     * A skill phrase "matches" the job text if at least half of its own significant words
+     * fuzzily match a word somewhere in the job's title/description/requirements - catches
+     * stems and near-spellings (e.g. "Strategy" matching "strategic"/"strategist", "Payment"
+     * matching "payments") rather than requiring the whole phrase to appear verbatim.
+     */
+    private function skillMatchesWords(string $skill, array $haystackWords): bool
+    {
+        $skillWords = $this->significantWords($skill);
+        if (!$skillWords) {
+            return false;
+        }
+        $matched = 0;
+        foreach ($skillWords as $skillWord) {
+            foreach ($haystackWords as $haystackWord) {
+                if ($this->wordsAreSimilar($skillWord, $haystackWord)) {
+                    $matched++;
+                    break;
+                }
+            }
+        }
+        return $matched >= max(1, (int) ceil(count($skillWords) / 2));
+    }
+
+    /** Exact match, a shared 5+ character stem (strategy/strategic/strategist), or 80%+ similar_text() similarity (minor spelling variation). */
+    private function wordsAreSimilar(string $a, string $b): bool
+    {
+        if ($a === $b) {
+            return true;
+        }
+        // Both the stem-prefix check and similar_text() below key off shared characters, not
+        // true edit distance - on words of very different lengths that falsely matches a short
+        // word that just happens to be the start of an unrelated longer one (e.g. "excel" is
+        // the first 5 letters of "excellent"; "agile" is a literal substring of "fragile").
+        // Requiring the words be close in length first keeps matches to genuine near-spellings
+        // (payment/payments, strategy/strategic) instead of coincidental overlaps.
+        if (mb_strlen($a) === 0 || mb_strlen($b) === 0 || min(mb_strlen($a), mb_strlen($b)) / max(mb_strlen($a), mb_strlen($b)) < 0.75) {
+            return false;
+        }
+        $stemLen = 5;
+        if (mb_strlen($a) >= $stemLen && mb_strlen($b) >= $stemLen && mb_substr($a, 0, $stemLen) === mb_substr($b, 0, $stemLen)) {
+            return true;
+        }
+        similar_text($a, $b, $percent);
+        return $percent >= 80.0;
     }
 
     private function contactLocationScore(array $applicant, array $job): int
