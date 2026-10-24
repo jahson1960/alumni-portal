@@ -104,7 +104,7 @@ $postingTips = [
             <div id="company_logo_dropzone" class="border-2 border-dashed border-slate-200 rounded-xl px-5 py-6 text-center cursor-pointer transition-colors hover:border-gold hover:bg-gold/5">
               <i class="fa-solid fa-cloud-arrow-up text-2xl text-slate-300 mb-1.5"></i>
               <p class="text-sm font-semibold text-slate-600">Drag &amp; drop an image, or <span class="text-gold">browse</span></p>
-              <p class="text-xs text-slate-400 mt-1">JPG, PNG, or WEBP &bull; Max 3MB</p>
+              <p class="text-xs text-slate-400 mt-1">JPG, PNG, or WEBP &bull; Max 3MB &bull; Must be exactly <?= (int) $companyLogoWidth ?>&times;<?= (int) $companyLogoHeight ?>px</p>
             </div>
 
             <div id="company_logo_preview_card" class="hidden items-center gap-3 border border-slate-200 rounded-xl px-4 py-3">
@@ -428,6 +428,8 @@ $postingTips = [
     var logoUrlField = document.getElementById('company_logo_url');
     var LOGO_ALLOWED_EXT = ['jpg', 'jpeg', 'png', 'webp'];
     var LOGO_MAX_SIZE = 3 * 1024 * 1024;
+    var LOGO_REQUIRED_WIDTH = <?= (int) $companyLogoWidth ?>;
+    var LOGO_REQUIRED_HEIGHT = <?= (int) $companyLogoHeight ?>;
 
     function showLogoError(msg) {
       logoErrorEl.querySelector('span').textContent = msg;
@@ -464,10 +466,23 @@ $postingTips = [
         logoInput.value = '';
         return;
       }
-      logoUrlField.value = '';
       var reader = new FileReader();
       reader.onload = function (e) {
-        showLogoPreview(e.target.result, file.name, Math.max(1, Math.round(file.size / 1024)) + ' KB');
+        var img = new Image();
+        img.onload = function () {
+          if (img.naturalWidth !== LOGO_REQUIRED_WIDTH || img.naturalHeight !== LOGO_REQUIRED_HEIGHT) {
+            showLogoError('Image must be exactly ' + LOGO_REQUIRED_WIDTH + '×' + LOGO_REQUIRED_HEIGHT + 'px (yours is ' + img.naturalWidth + '×' + img.naturalHeight + 'px).');
+            logoInput.value = '';
+            return;
+          }
+          logoUrlField.value = '';
+          showLogoPreview(e.target.result, file.name, Math.max(1, Math.round(file.size / 1024)) + ' KB');
+        };
+        img.onerror = function () {
+          showLogoError('The uploaded file does not look like a valid image.');
+          logoInput.value = '';
+        };
+        img.src = e.target.result;
       };
       reader.readAsDataURL(file);
     }

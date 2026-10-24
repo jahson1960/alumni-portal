@@ -180,6 +180,13 @@ class SettingsController extends AdminController
         $data['knowledge_banner_height'] = (string) max(120, min(500, $knowledgeBannerHeight ?: 220));
         $data['knowledge_banner_visible'] = $this->input('knowledge_banner_visible') ? '1' : '0';
 
+        // Required pixel dimensions for a company logo uploaded on a job post - enforced on
+        // both the client (instant rejection) and server (Upload::image()) side.
+        $companyLogoWidth = (int) $this->input('company_logo_width', 200);
+        $data['company_logo_width'] = (string) max(50, min(1000, $companyLogoWidth ?: 200));
+        $companyLogoHeight = (int) $this->input('company_logo_height', 200);
+        $data['company_logo_height'] = (string) max(50, min(1000, $companyLogoHeight ?: 200));
+
         if ($errors) {
             $_SESSION['_errors'] = $errors;
             $this->redirect('admin/settings');

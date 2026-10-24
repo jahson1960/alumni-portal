@@ -230,6 +230,8 @@ class JobController extends Controller
             'postingMode' => Setting::get('job_posting_mode', 'approval'),
             'needsRichEditor' => true,
             'myTemplates' => ApplicationTemplate::forUserOrCreateDefault((int) Auth::id()),
+            'companyLogoWidth' => (int) Setting::get('company_logo_width', '200'),
+            'companyLogoHeight' => (int) Setting::get('company_logo_height', '200'),
         ]);
     }
 
@@ -298,6 +300,8 @@ class JobController extends Controller
             'postingMode' => Setting::get('job_posting_mode', 'approval'),
             'needsRichEditor' => true,
             'myTemplates' => ApplicationTemplate::forUserOrCreateDefault((int) Auth::id()),
+            'companyLogoWidth' => (int) Setting::get('company_logo_width', '200'),
+            'companyLogoHeight' => (int) Setting::get('company_logo_height', '200'),
         ]);
     }
 
@@ -1016,7 +1020,8 @@ class JobController extends Controller
 
         $companyLogo = $companyLogoUrl !== '' ? $companyLogoUrl : null;
         try {
-            $uploadedLogo = Upload::image($this->file('company_logo'), 'jobs');
+            $logoDimensions = ['width' => (int) Setting::get('company_logo_width', '200'), 'height' => (int) Setting::get('company_logo_height', '200')];
+            $uploadedLogo = Upload::image($this->file('company_logo'), 'jobs', $logoDimensions);
             if ($uploadedLogo) {
                 $companyLogo = upload_url($uploadedLogo);
             }

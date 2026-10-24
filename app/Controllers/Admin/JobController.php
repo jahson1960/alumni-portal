@@ -10,6 +10,7 @@ use App\Models\Category;
 use App\Models\Company;
 use App\Models\Job;
 use App\Models\Notification;
+use App\Models\Setting;
 
 class JobController extends AdminController
 {
@@ -76,6 +77,8 @@ class JobController extends AdminController
             'allCategories' => Category::forType('job'),
             'selectedCategoryIds' => [],
             'myTemplates' => ApplicationTemplate::forUserOrCreateDefault((int) Auth::id()),
+            'companyLogoWidth' => (int) Setting::get('company_logo_width', '200'),
+            'companyLogoHeight' => (int) Setting::get('company_logo_height', '200'),
         ]);
     }
 
@@ -100,6 +103,8 @@ class JobController extends AdminController
             'allCategories' => Category::forType('job'),
             'selectedCategoryIds' => array_column(Category::forJob((int) $id), 'id'),
             'myTemplates' => ApplicationTemplate::forUserOrCreateDefault((int) Auth::id()),
+            'companyLogoWidth' => (int) Setting::get('company_logo_width', '200'),
+            'companyLogoHeight' => (int) Setting::get('company_logo_height', '200'),
         ]);
     }
 
@@ -174,7 +179,8 @@ class JobController extends AdminController
 
         $companyLogo = $companyLogoUrl !== '' ? $companyLogoUrl : null;
         try {
-            $uploadedLogo = Upload::image($this->file('company_logo'), 'jobs');
+            $logoDimensions = ['width' => (int) Setting::get('company_logo_width', '200'), 'height' => (int) Setting::get('company_logo_height', '200')];
+            $uploadedLogo = Upload::image($this->file('company_logo'), 'jobs', $logoDimensions);
             if ($uploadedLogo) {
                 $companyLogo = upload_url($uploadedLogo);
             }

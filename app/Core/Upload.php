@@ -17,8 +17,11 @@ class Upload
     /**
      * Validate and move an uploaded image. Returns the stored relative path (e.g. "news/xyz.jpg") or null if no file was submitted.
      * Throws RuntimeException with a user-facing message on validation failure.
+     * $exactDimensions, if given as ['width' => w, 'height' => h], rejects any image whose
+     * pixel dimensions don't match exactly (used for company logos, which the UI tells the
+     * poster to crop to a fixed size before uploading).
      */
-    public static function image(?array $file, string $subdir): ?string
+    public static function image(?array $file, string $subdir, ?array $exactDimensions = null): ?string
     {
         if (!$file || $file['error'] === UPLOAD_ERR_NO_FILE) {
             return null;
@@ -38,6 +41,19 @@ class Upload
         $mime = mime_content_type($file['tmp_name']);
         if ($mime !== self::ALLOWED[$ext]) {
             throw new \RuntimeException('The uploaded file does not look like a valid image.');
+        }
+
+        if ($exactDimensions) {
+            $size = @getimagesize($file['tmp_name']);
+            if (!$size) {
+                throw new \RuntimeException('The uploaded file does not look like a valid image.');
+            }
+            [$width, $height] = $size;
+            if ($width !== $exactDimensions['width'] || $height !== $exactDimensions['height']) {
+                throw new \RuntimeException(
+                    "Image must be exactly {$exactDimensions['width']}×{$exactDimensions['height']}px (yours is {$width}×{$height}px)."
+                );
+            }
         }
 
         $config = require __DIR__ . '/../../config/config.php';

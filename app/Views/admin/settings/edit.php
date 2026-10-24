@@ -269,6 +269,21 @@
       </label>
     </div>
     <div class="mt-4 pt-4 border-t border-slate-100">
+      <label class="form-label">Company Logo Size</label>
+      <p class="text-xs text-slate-400 mb-2">The exact pixel dimensions required for a company logo uploaded on a job post. Shown to posters on the upload area, and enforced instantly &mdash; an image of any other size is rejected.</p>
+      <div class="flex items-end gap-3 max-w-xs">
+        <div>
+          <label class="form-label" for="company_logo_width">Width (px)</label>
+          <input type="number" id="company_logo_width" name="company_logo_width" min="50" max="1000" step="1" class="form-input" value="<?= e($settings['company_logo_width'] ?? '200') ?>">
+        </div>
+        <span class="text-slate-400 pb-2.5">&times;</span>
+        <div>
+          <label class="form-label" for="company_logo_height">Height (px)</label>
+          <input type="number" id="company_logo_height" name="company_logo_height" min="50" max="1000" step="1" class="form-input" value="<?= e($settings['company_logo_height'] ?? '200') ?>">
+        </div>
+      </div>
+    </div>
+    <div class="mt-4 pt-4 border-t border-slate-100">
       <label class="form-label">Job Board Banner Image</label>
       <p class="text-xs text-slate-400 mb-2">Background photo behind the "Job Board" hero on the Careers page. Upload a file or paste an image URL — uploading a file takes priority.</p>
       <?php if (!empty($settings['jobs_banner_image'])): ?>

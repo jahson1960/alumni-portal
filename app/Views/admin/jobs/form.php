@@ -157,9 +157,33 @@
 
     <div class="mb-4">
       <label class="form-label">Company Logo</label>
-      <img id="company_logo_preview" src="<?= e($job['company_logo'] ?? '') ?>" alt="" class="w-16 h-16 object-contain rounded border border-slate-200 mb-2 bg-white p-1 <?= empty($job['company_logo']) ? 'hidden' : '' ?>">
-      <input type="file" id="company_logo" name="company_logo" accept=".jpg,.jpeg,.png,.webp" class="text-sm block">
-      <p class="text-xs text-slate-400 mt-1">Uploading a file here only changes the logo shown on this job post, not the company's own logo. If none is set, the colored initials badge below is used.</p>
+      <p class="text-xs text-slate-400 mb-2">Uploading a file here only changes the logo shown on this job post, not the company's own logo. If none is set, the colored initials badge below is used.</p>
+
+      <?php if (!empty($job['company_logo'])): ?>
+        <div class="flex items-center gap-2.5 mb-2.5">
+          <img src="<?= e($job['company_logo']) ?>" alt="" class="w-11 h-11 object-contain rounded-lg border border-slate-200 bg-white p-1 flex-shrink-0">
+          <span class="text-xs text-slate-400">Current logo &mdash; drop or choose a new image below to replace it.</span>
+        </div>
+      <?php endif; ?>
+
+      <input type="file" id="company_logo" name="company_logo" accept=".jpg,.jpeg,.png,.webp" class="hidden">
+
+      <div id="company_logo_dropzone" class="border-2 border-dashed border-slate-200 rounded-xl px-5 py-6 text-center cursor-pointer transition-colors hover:border-gold hover:bg-gold/5">
+        <i class="fa-solid fa-cloud-arrow-up text-2xl text-slate-300 mb-1.5"></i>
+        <p class="text-sm font-semibold text-slate-600">Drag &amp; drop an image, or <span class="text-gold">browse</span></p>
+        <p class="text-xs text-slate-400 mt-1">JPG, PNG, or WEBP &bull; Max 3MB &bull; Must be exactly <?= (int) $companyLogoWidth ?>&times;<?= (int) $companyLogoHeight ?>px</p>
+      </div>
+
+      <div id="company_logo_preview_card" class="hidden items-center gap-3 border border-slate-200 rounded-xl px-4 py-3">
+        <img id="company_logo_staged_preview" src="" alt="" class="w-11 h-11 object-contain rounded-lg border border-slate-200 bg-white p-1 flex-shrink-0">
+        <div class="min-w-0 flex-1">
+          <p id="company_logo_filename" class="text-sm font-medium text-slate-700 truncate"></p>
+          <p id="company_logo_filesize" class="text-xs text-slate-400"></p>
+        </div>
+        <button type="button" id="company_logo_remove" class="text-slate-400 hover:text-red-500 flex-shrink-0" title="Remove"><i class="fa-solid fa-xmark text-lg"></i></button>
+      </div>
+
+      <p id="company_logo_error" class="hidden items-center gap-1.5 text-xs text-red-500 mt-1.5"><i class="fa-solid fa-circle-exclamation"></i> <span></span></p>
     </div>
 
     <div class="grid grid-cols-2 gap-4 mb-4">
@@ -222,13 +246,120 @@
 </form>
 
 <script>
+  // Company logo: drag-and-drop dropzone with an instant client-side type/size/dimension
+  // check, so a rejected file never reaches form submission.
+  var logoInput = document.getElementById('company_logo');
+  var logoDropzone = document.getElementById('company_logo_dropzone');
+  var logoPreviewCard = document.getElementById('company_logo_preview_card');
+  var logoStagedPreview = document.getElementById('company_logo_staged_preview');
+  var logoFilenameEl = document.getElementById('company_logo_filename');
+  var logoFilesizeEl = document.getElementById('company_logo_filesize');
+  var logoRemoveBtn = document.getElementById('company_logo_remove');
+  var logoErrorEl = document.getElementById('company_logo_error');
+  var logoUrlField = document.getElementById('company_logo_url');
+  var LOGO_ALLOWED_EXT = ['jpg', 'jpeg', 'png', 'webp'];
+  var LOGO_MAX_SIZE = 3 * 1024 * 1024;
+  var LOGO_REQUIRED_WIDTH = <?= (int) $companyLogoWidth ?>;
+  var LOGO_REQUIRED_HEIGHT = <?= (int) $companyLogoHeight ?>;
+
+  function showLogoError(msg) {
+    logoErrorEl.querySelector('span').textContent = msg;
+    logoErrorEl.classList.remove('hidden');
+    logoErrorEl.classList.add('flex');
+  }
+  function clearLogoError() {
+    logoErrorEl.classList.add('hidden');
+    logoErrorEl.classList.remove('flex');
+  }
+  function showLogoPreview(src, label, sizeText) {
+    logoDropzone.classList.add('hidden');
+    logoPreviewCard.classList.remove('hidden');
+    logoPreviewCard.classList.add('flex');
+    logoStagedPreview.src = src;
+    logoFilenameEl.textContent = label;
+    logoFilesizeEl.textContent = sizeText || '';
+  }
+  function hideLogoPreview() {
+    logoPreviewCard.classList.add('hidden');
+    logoPreviewCard.classList.remove('flex');
+    logoDropzone.classList.remove('hidden');
+  }
+  function handleLogoFile(file) {
+    clearLogoError();
+    var ext = (file.name.split('.').pop() || '').toLowerCase();
+    if (LOGO_ALLOWED_EXT.indexOf(ext) === -1) {
+      showLogoError('Only JPG, PNG, or WEBP images are allowed.');
+      logoInput.value = '';
+      return;
+    }
+    if (file.size > LOGO_MAX_SIZE) {
+      showLogoError('Image must be smaller than 3MB.');
+      logoInput.value = '';
+      return;
+    }
+    var reader = new FileReader();
+    reader.onload = function (e) {
+      var img = new Image();
+      img.onload = function () {
+        if (img.naturalWidth !== LOGO_REQUIRED_WIDTH || img.naturalHeight !== LOGO_REQUIRED_HEIGHT) {
+          showLogoError('Image must be exactly ' + LOGO_REQUIRED_WIDTH + '×' + LOGO_REQUIRED_HEIGHT + 'px (yours is ' + img.naturalWidth + '×' + img.naturalHeight + 'px).');
+          logoInput.value = '';
+          return;
+        }
+        logoUrlField.value = '';
+        showLogoPreview(e.target.result, file.name, Math.max(1, Math.round(file.size / 1024)) + ' KB');
+      };
+      img.onerror = function () {
+        showLogoError('The uploaded file does not look like a valid image.');
+        logoInput.value = '';
+      };
+      img.src = e.target.result;
+    };
+    reader.readAsDataURL(file);
+  }
+
+  if (logoDropzone && logoInput) {
+    logoDropzone.addEventListener('click', function () { logoInput.click(); });
+
+    logoInput.addEventListener('change', function () {
+      if (this.files && this.files[0]) handleLogoFile(this.files[0]);
+    });
+
+    ['dragenter', 'dragover'].forEach(function (evt) {
+      logoDropzone.addEventListener(evt, function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+        logoDropzone.classList.add('border-gold', 'bg-gold/5');
+      });
+    });
+    ['dragleave', 'drop'].forEach(function (evt) {
+      logoDropzone.addEventListener(evt, function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+        logoDropzone.classList.remove('border-gold', 'bg-gold/5');
+      });
+    });
+    logoDropzone.addEventListener('drop', function (e) {
+      var files = e.dataTransfer.files;
+      if (files && files[0]) {
+        logoInput.files = files;
+        handleLogoFile(files[0]);
+      }
+    });
+
+    logoRemoveBtn.addEventListener('click', function (e) {
+      e.stopPropagation();
+      logoInput.value = '';
+      logoUrlField.value = '';
+      clearLogoError();
+      hideLogoPreview();
+    });
+  }
+
   document.getElementById('company_select').addEventListener('change', function () {
     var option = this.options[this.selectedIndex];
     var companyIdField = document.getElementById('company_id');
-    var logoUrlField = document.getElementById('company_logo_url');
-    var logoPreview = document.getElementById('company_logo_preview');
     var nameField = document.getElementById('company');
-    var fileField = document.getElementById('company_logo');
 
     if (!option.value) {
       companyIdField.value = '';
@@ -239,13 +370,13 @@
     nameField.value = option.textContent.trim();
 
     var logo = option.dataset.logo || '';
+    logoInput.value = '';
+    clearLogoError();
     logoUrlField.value = logo;
-    fileField.value = '';
     if (logo) {
-      logoPreview.src = logo;
-      logoPreview.classList.remove('hidden');
+      showLogoPreview(logo, option.textContent.trim(), "This company's saved logo");
     } else {
-      logoPreview.classList.add('hidden');
+      hideLogoPreview();
     }
 
     var about = '';
@@ -254,19 +385,6 @@
     aboutTextarea.value = about;
     if (window.refreshRichEditor) {
       window.refreshRichEditor('company_about', about);
-    }
-  });
-
-  document.getElementById('company_logo').addEventListener('change', function () {
-    if (this.files && this.files[0]) {
-      document.getElementById('company_logo_url').value = '';
-      var reader = new FileReader();
-      var preview = document.getElementById('company_logo_preview');
-      reader.onload = function (e) {
-        preview.src = e.target.result;
-        preview.classList.remove('hidden');
-      };
-      reader.readAsDataURL(this.files[0]);
     }
   });
 
