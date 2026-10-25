@@ -8,6 +8,7 @@ $tabLabels = [
     'education' => ['label' => 'Education', 'icon' => 'fa-solid fa-graduation-cap'],
     'experience' => ['label' => 'Experience', 'icon' => 'fa-solid fa-briefcase'],
     'skills' => ['label' => 'Skills & Expertise', 'icon' => 'fa-regular fa-star'],
+    'job_categories' => ['label' => 'Job Categories', 'icon' => 'fa-solid fa-compass'],
     'interests' => ['label' => 'Interests', 'icon' => 'fa-regular fa-heart'],
     'contact' => ['label' => 'Contact & Location', 'icon' => 'fa-solid fa-location-dot'],
     'links' => ['label' => 'Links & Socials', 'icon' => 'fa-solid fa-link'],
@@ -175,6 +176,12 @@ $industryOptions = \App\Models\User::distinctFilterValues('industry');
             <label class="form-label" for="expertise_areas">Areas of Expertise</label>
             <input type="text" id="expertise_areas" name="expertise_areas" class="form-input" placeholder="e.g. Entrepreneurship, Corporate Strategy" value="<?= e($user['expertise_areas']) ?>">
           </div>
+        </div>
+
+        <div class="profile-tab-panel hidden card p-6" data-tab="job_categories">
+          <h3 class="text-base font-bold text-primary-navy mb-1">Job Categories</h3>
+          <p class="text-xs text-slate-500 mb-5">The categories you're interested in — used to match you with relevant opportunities under "Jobs for Me" on the Job Board.</p>
+          <?php require dirname(__DIR__) . '/partials/job_category_picker.php'; ?>
         </div>
 
         <div class="profile-tab-panel hidden card p-6" data-tab="interests">

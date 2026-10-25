@@ -324,6 +324,7 @@ $router->post('/admin/alumni/{id}/spotlight', 'Admin\\AlumniController@spotlight
 $router->post('/admin/alumni/{id}/unspotlight', 'Admin\\AlumniController@unspotlight');
 $router->post('/admin/alumni/{id}/role', 'Admin\\AlumniController@setRole');
 $router->post('/admin/alumni/{id}/reset-password', 'Admin\\AlumniController@resetPassword');
+$router->post('/admin/alumni/{id}/job-categories', 'Admin\\AlumniController@updateJobCategories');
 
 $router->get('/admin/alumni-roster', 'Admin\\AlumniRosterController@index');
 $router->get('/admin/alumni-roster/create', 'Admin\\AlumniRosterController@create');

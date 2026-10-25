@@ -5,6 +5,7 @@ namespace App\Controllers;
 use App\Core\Auth;
 use App\Core\Controller;
 use App\Core\Upload;
+use App\Models\Category;
 use App\Models\MentorshipArea;
 use App\Models\User;
 use App\Models\UserEducation;
@@ -36,6 +37,8 @@ class ProfileController extends Controller
             'needsRichEditor' => true,
             'needsMap' => true,
             'allMentorshipAreas' => MentorshipArea::all('name ASC'),
+            'allCategories' => Category::forType('job'),
+            'selectedIds' => Category::idsForUser($userId),
         ]);
     }
 
@@ -61,6 +64,7 @@ class ProfileController extends Controller
         $expertiseAreas = trim((string) $this->input('expertise_areas', ''));
         $businessInterests = trim((string) $this->input('business_interests', ''));
         $personalInterests = trim((string) $this->input('personal_interests', ''));
+        $jobCategoryIds = array_map('intval', (array) $this->input('job_categories', []));
         $linkedin = trim((string) $this->input('linkedin_url', ''));
         $personalWebsite = trim((string) $this->input('personal_website', ''));
         $twitter = trim((string) $this->input('twitter_url', ''));
@@ -83,6 +87,9 @@ class ProfileController extends Controller
         $errors = [];
         if ($name === '') {
             $errors[] = 'Full name is required.';
+        }
+        if (!$jobCategoryIds) {
+            $errors[] = 'Please select at least one job category.';
         }
 
         $bio = \App\Core\Sanitizer::html($bio);
@@ -147,6 +154,7 @@ class ProfileController extends Controller
             'mentorship_areas' => $mentorshipAreas !== '' ? $mentorshipAreas : null,
             'avatar' => $avatarPath,
         ]);
+        Category::syncUserJobCategories((int) $user['id'], $jobCategoryIds);
 
         $this->flash('success', 'Your profile has been updated.');
         $this->redirect('profile/edit');

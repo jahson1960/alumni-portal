@@ -5,6 +5,7 @@ namespace App\Controllers;
 use App\Core\Auth;
 use App\Core\Controller;
 use App\Models\AlumniRoster;
+use App\Models\Category;
 use App\Models\User;
 
 class AuthController extends Controller
@@ -16,6 +17,7 @@ class AuthController extends Controller
         }
         $this->view('auth.register', [
             'title' => 'Create Your Alumni Account',
+            'allCategories' => Category::forType('job'),
         ], 'auth');
     }
 
@@ -27,6 +29,7 @@ class AuthController extends Controller
         $password = (string) $this->input('password', '');
         $passwordConfirm = (string) $this->input('password_confirmation', '');
         $matricNumber = trim((string) $this->input('matric_number', ''));
+        $jobCategoryIds = array_map('intval', (array) $this->input('job_categories', []));
 
         $errors = [];
         if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
@@ -50,6 +53,9 @@ class AuthController extends Controller
             } elseif ($rosterEntry['claimed_by_user_id']) {
                 $errors[] = 'An account has already been created for this matric number.';
             }
+        }
+        if (!$jobCategoryIds) {
+            $errors[] = 'Please select at least one job category.';
         }
 
         if ($errors) {
@@ -76,6 +82,7 @@ class AuthController extends Controller
         ]);
 
         AlumniRoster::markClaimed((int) $rosterEntry['id'], $id);
+        Category::syncUserJobCategories($id, $jobCategoryIds);
 
         $user = User::find($id);
         Auth::login($user);

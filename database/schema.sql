@@ -325,6 +325,18 @@ CREATE TABLE news_category (
 ) ENGINE=InnoDB;
 
 -- ---------------------------------------------------------------------
+-- user_job_category  (an alumnus's own job-category interests, selected at
+-- registration and editable from their profile - used to power "Jobs for Me")
+-- ---------------------------------------------------------------------
+CREATE TABLE user_job_category (
+  user_id INT NOT NULL,
+  category_id INT NOT NULL,
+  PRIMARY KEY (user_id, category_id),
+  FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+  FOREIGN KEY (category_id) REFERENCES categories(id) ON DELETE CASCADE
+) ENGINE=InnoDB;
+
+-- ---------------------------------------------------------------------
 -- mentorship_areas  (admin-managed pick-list; selected names are joined into
 -- the free-text users.mentorship_areas column, same as before — this table
 -- only constrains what a mentor can choose from, no separate junction table)

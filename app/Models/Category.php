@@ -62,6 +62,26 @@ class Category extends Model
         return $stmt->fetchAll();
     }
 
+    /** A user's own job-category interests (selected at registration, editable from their profile). */
+    public static function forUser(int $userId): array
+    {
+        $stmt = static::db()->prepare(
+            'SELECT c.* FROM categories c
+             JOIN user_job_category ujc ON ujc.category_id = c.id
+             WHERE ujc.user_id = ? ORDER BY c.name ASC'
+        );
+        $stmt->execute([$userId]);
+        return $stmt->fetchAll();
+    }
+
+    /** Just the ids of a user's job-category interests, for pre-checking chips and for matching queries. */
+    public static function idsForUser(int $userId): array
+    {
+        $stmt = static::db()->prepare('SELECT category_id FROM user_job_category WHERE user_id = ?');
+        $stmt->execute([$userId]);
+        return array_map('intval', $stmt->fetchAll(\PDO::FETCH_COLUMN));
+    }
+
     /** @param int[] $categoryIds */
     public static function syncJobCategories(int $jobId, array $categoryIds): void
     {
@@ -70,6 +90,17 @@ class Category extends Model
         $stmt = $db->prepare('INSERT INTO job_category (job_id, category_id) VALUES (?, ?)');
         foreach (self::cleanIds($categoryIds) as $categoryId) {
             $stmt->execute([$jobId, $categoryId]);
+        }
+    }
+
+    /** @param int[] $categoryIds */
+    public static function syncUserJobCategories(int $userId, array $categoryIds): void
+    {
+        $db = static::db();
+        $db->prepare('DELETE FROM user_job_category WHERE user_id = ?')->execute([$userId]);
+        $stmt = $db->prepare('INSERT INTO user_job_category (user_id, category_id) VALUES (?, ?)');
+        foreach (self::cleanIds($categoryIds) as $categoryId) {
+            $stmt->execute([$userId, $categoryId]);
         }
     }
 

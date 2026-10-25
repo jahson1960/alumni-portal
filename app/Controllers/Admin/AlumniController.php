@@ -2,6 +2,7 @@
 
 namespace App\Controllers\Admin;
 
+use App\Models\Category;
 use App\Models\EmailQueue;
 use App\Models\User;
 
@@ -32,7 +33,29 @@ class AlumniController extends AdminController
             'activeNav' => 'alumni',
             'alum' => $alum,
             'resetResult' => $resetResult,
+            'allCategories' => Category::forType('job'),
+            'selectedIds' => Category::idsForUser((int) $id),
         ]);
+    }
+
+    public function updateJobCategories(string $id): void
+    {
+        $this->requireCsrf();
+        $alum = User::find((int) $id);
+        if (!$alum || !in_array($alum['role'], ['alumni', 'editor'], true)) {
+            $this->flash('error', 'Alumni not found.');
+            $this->redirect('admin/alumni');
+        }
+
+        $jobCategoryIds = array_map('intval', (array) $this->input('job_categories', []));
+        if (!$jobCategoryIds) {
+            $this->flash('error', 'Please select at least one job category.');
+            $this->redirect("admin/alumni/{$id}");
+        }
+
+        Category::syncUserJobCategories((int) $id, $jobCategoryIds);
+        $this->flash('success', 'Job categories updated.');
+        $this->redirect("admin/alumni/{$id}");
     }
 
     public function suspend(string $id): void

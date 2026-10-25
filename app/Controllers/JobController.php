@@ -26,7 +26,7 @@ use App\Models\UserExperience;
 class JobController extends Controller
 {
     /** Careers is one tabbed page — Job Board, Advanced Search, Companies Hiring, Saved Jobs, Job Alerts. */
-    private const TABS = ['board', 'search', 'companies', 'saved', 'alerts'];
+    private const TABS = ['board', 'forme', 'search', 'companies', 'saved', 'alerts'];
 
     /** True when the request came from the page's own JS (fetch), which wants a JSON reply instead of a redirect. */
     private function wantsJson(): bool
@@ -60,6 +60,7 @@ class JobController extends Controller
 
         $data = ['title' => 'Careers', 'activeNav' => 'jobs', 'tab' => $tab];
         $data += match ($tab) {
+            'forme' => $this->forMeTabData(),
             'search' => $this->searchTabData(),
             'companies' => $this->companiesTabData(),
             'saved' => $this->savedTabData(),
@@ -95,6 +96,27 @@ class JobController extends Controller
             'experienceCounts' => Job::countsByExperienceLevel(),
             'locationBreakdown' => Job::locationBreakdown(),
             'latestEmployers' => Company::withOpenJobCounts(null, null, 6),
+        ];
+    }
+
+    private function forMeTabData(): array
+    {
+        if (!Auth::check()) {
+            return ['jobs' => [], 'totalCount' => 0, 'myCategories' => [], 'hasCategories' => false];
+        }
+
+        $userId = (int) Auth::id();
+        $categoryIds = Category::idsForUser($userId);
+        $filters = $this->parseFilters();
+        $filters['category_ids'] = $categoryIds;
+
+        return [
+            'jobs' => $categoryIds ? Job::search($filters) : [],
+            'totalCount' => $categoryIds ? Job::countSearch($filters) : 0,
+            'myCategories' => Category::forUser($userId),
+            'hasCategories' => (bool) $categoryIds,
+            'savedJobIds' => $this->savedJobIds(),
+            'appliedJobIds' => $this->appliedJobIds(),
         ];
     }
 

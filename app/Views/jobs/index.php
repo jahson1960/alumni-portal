@@ -2,6 +2,7 @@
 $authUser = \App\Core\Auth::user();
 $jobTabIcons = [
     'board' => 'fa-solid fa-briefcase',
+    'forme' => 'fa-solid fa-compass',
     'search' => 'fa-solid fa-magnifying-glass',
     'companies' => 'fa-solid fa-building',
     'saved' => 'fa-solid fa-bookmark',
@@ -9,16 +10,18 @@ $jobTabIcons = [
 ];
 $jobTabHero = [
     'board' => ['Job Board', 'Discover opportunities. Advance your career.'],
+    'forme' => ['Jobs for Me', 'Opportunities matched to the job categories you\'re interested in.'],
     'search' => ['Advanced Search', 'Find the perfect opportunity that matches your skills and experience.'],
     'companies' => ['Companies Hiring', 'Top companies from our network that are actively hiring.'],
     'saved' => ['Saved Jobs', 'Opportunities you have bookmarked for later.'],
     'alerts' => ['Job Alerts', 'Get notified the moment a matching role is posted.'],
 ];
-$jobTabs = [
-    'board' => 'Job Board',
-    'search' => 'Advanced Search',
-    'companies' => 'Companies Hiring',
-];
+$jobTabs = ['board' => 'Job Board'];
+if ($authUser) {
+    $jobTabs['forme'] = 'Jobs for Me';
+}
+$jobTabs['search'] = 'Advanced Search';
+$jobTabs['companies'] = 'Companies Hiring';
 if ($authUser) {
     $jobTabs['saved'] = 'Saved Jobs';
     $jobTabs['alerts'] = 'Job Alerts';

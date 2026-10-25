@@ -49,6 +49,28 @@
   </div>
 
   <div class="mt-6 pt-6 border-t border-slate-100">
+    <div class="flex items-center justify-between mb-3">
+      <h3 class="section-title text-xs">Job Categories</h3>
+      <button type="button" id="job-categories-edit-btn" class="text-xs font-semibold text-gold hover:underline">Edit</button>
+    </div>
+    <div class="flex flex-wrap gap-1.5">
+      <?php $selectedCategories = array_filter($allCategories, fn ($c) => in_array((int) $c['id'], $selectedIds, true)); ?>
+      <?php if ($selectedCategories): ?>
+        <?php foreach ($selectedCategories as $cat): $pc = palette_classes($cat['slug']); ?>
+          <span class="badge <?= e($pc['bg']) ?> <?= e($pc['text']) ?>"><?= e($cat['name']) ?></span>
+        <?php endforeach; ?>
+      <?php else: ?>
+        <p class="text-xs text-slate-400">No job categories selected.</p>
+      <?php endif; ?>
+    </div>
+    <form method="POST" action="<?= e(url('admin/alumni/' . $alum['id'] . '/job-categories')) ?>" id="job-categories-form" class="hidden mt-3 space-y-3">
+      <?= csrf_field() ?>
+      <?php require dirname(dirname(__DIR__)) . '/partials/job_category_picker.php'; ?>
+      <button type="submit" class="btn-gold !px-4 !py-2 text-xs">Save Categories</button>
+    </form>
+  </div>
+
+  <div class="mt-6 pt-6 border-t border-slate-100">
     <h3 class="section-title text-xs mb-3">Editor Access</h3>
     <p class="text-xs text-slate-500 mb-3">Editors can see any page restricted to "Editors & Admins" in Page Visibility settings. No admin-panel access is granted.</p>
     <form method="POST" action="<?= e(url('admin/alumni/' . $alum['id'] . '/role')) ?>">
@@ -83,3 +105,16 @@
     </form>
   </div>
 </div>
+
+<script>
+  (function () {
+    var editBtn = document.getElementById('job-categories-edit-btn');
+    var form = document.getElementById('job-categories-form');
+    if (editBtn && form) {
+      editBtn.addEventListener('click', function () {
+        form.classList.toggle('hidden');
+        editBtn.textContent = form.classList.contains('hidden') ? 'Edit' : 'Cancel';
+      });
+    }
+  })();
+</script>

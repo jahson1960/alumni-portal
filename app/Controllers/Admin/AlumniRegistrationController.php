@@ -6,6 +6,7 @@ use App\Controllers\ErrorController;
 use App\Core\Auth;
 use App\Core\Controller;
 use App\Models\AlumniRoster;
+use App\Models\Category;
 use App\Models\EmailQueue;
 use App\Models\User;
 
@@ -33,6 +34,7 @@ class AlumniRegistrationController extends Controller
         $this->view('admin.alumni_registration.create', [
             'title' => 'Register Alumni',
             'activeNav' => 'register_alumni',
+            'allCategories' => Category::forType('job'),
         ], 'admin');
     }
 
@@ -42,6 +44,7 @@ class AlumniRegistrationController extends Controller
 
         $email = trim((string) $this->input('email', ''));
         $matricNumber = trim((string) $this->input('matric_number', ''));
+        $jobCategoryIds = array_map('intval', (array) $this->input('job_categories', []));
 
         $errors = [];
         if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
@@ -60,6 +63,9 @@ class AlumniRegistrationController extends Controller
             } elseif ($rosterEntry['claimed_by_user_id']) {
                 $errors[] = 'An account has already been created for this matric number.';
             }
+        }
+        if (!$jobCategoryIds) {
+            $errors[] = 'Please select at least one job category.';
         }
 
         if ($errors) {
@@ -88,6 +94,7 @@ class AlumniRegistrationController extends Controller
         ]);
 
         AlumniRoster::markClaimed((int) $rosterEntry['id'], $id);
+        Category::syncUserJobCategories($id, $jobCategoryIds);
 
         EmailQueue::enqueue($email, $name, 'Your Rome Business School Nigeria Alumni Portal Account', render_email(
             'Your Alumni Portal Account',

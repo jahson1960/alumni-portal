@@ -210,6 +210,9 @@ if ($authUser && $authUser['program']) {
                     <?= mega_col_heading('Explore Careers') ?>
                     <div class="space-y-1">
                       <?= mega_item(url('jobs'), 'fa-solid fa-briefcase', 'Job Board', 'Browse all job opportunities') ?>
+                      <?php if ($authUser): ?>
+                        <?= mega_item(url('jobs') . '?tab=forme', 'fa-solid fa-compass', 'Jobs for Me', 'Opportunities matched to your interests') ?>
+                      <?php endif; ?>
                       <?= mega_item(url('jobs') . '?tab=search', 'fa-solid fa-magnifying-glass', 'Advanced Search', 'Find jobs that match your skills') ?>
                       <?= mega_item(url('jobs') . '?tab=companies', 'fa-solid fa-building', 'Companies Hiring', 'Explore companies hiring our alumni') ?>
                       <?= mega_item(url('jobs') . '?tab=saved', 'fa-solid fa-bookmark', 'Saved Jobs', 'View and manage your saved jobs') ?>

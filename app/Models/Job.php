@@ -85,6 +85,15 @@ class Job extends Model
             $joins .= " JOIN job_category jc ON jc.job_id = j.id JOIN categories cat ON cat.id = jc.category_id AND cat.type='job' AND cat.slug = :category";
             $params['category'] = $filters['category'];
         }
+        if (!empty($filters['category_ids']) && is_array($filters['category_ids'])) {
+            $placeholders = [];
+            foreach (array_values($filters['category_ids']) as $i => $catId) {
+                $key = 'fm' . $i;
+                $placeholders[] = ':' . $key;
+                $params[$key] = $catId;
+            }
+            $joins .= ' JOIN job_category jcfm ON jcfm.job_id = j.id AND jcfm.category_id IN (' . implode(',', $placeholders) . ')';
+        }
         if (!empty($filters['industry'])) {
             $joins .= ' JOIN companies co ON co.id = j.company_id AND co.industry = :industry';
             $params['industry'] = $filters['industry'];
