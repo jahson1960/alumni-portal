@@ -10,7 +10,7 @@ $fid = 'field_' . (string) $field['id'];
   <label class="flex items-center gap-2 text-sm font-semibold text-primary-navy mb-1.5" <?= $isSnapshot ? '' : 'for="' . e($fid) . '"' ?>>
     <?= e($field['label']) ?>
     <?php if ($field['is_required'] && !$isSnapshot): ?><span class="text-gold">*</span><?php endif; ?>
-    <?php if ($field['profile_field']): ?>
+    <?php if ($field['profile_field'] && trim($prev) !== ''): ?>
       <span class="badge !bg-sky-50 !text-sky-600 !text-[0.6rem] font-semibold inline-flex items-center gap-1"><i class="fa-solid fa-user text-[0.55rem]"></i> From your profile</span>
     <?php endif; ?>
   </label>
