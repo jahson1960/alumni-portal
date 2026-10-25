@@ -58,7 +58,6 @@ class SettingsController extends AdminController
         }
 
         $data['job_posting_mode'] = $this->input('job_posting_mode') === 'direct' ? 'direct' : 'approval';
-        $data['require_login_to_apply'] = $this->input('require_login_to_apply') ? '1' : '0';
 
         $data['theme_mode'] = $this->input('theme_mode') === 'custom' ? 'custom' : 'unified';
 

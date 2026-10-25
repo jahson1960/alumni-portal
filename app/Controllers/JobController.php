@@ -384,13 +384,45 @@ class JobController extends Controller
             return;
         }
 
-        if (!Auth::check() && Setting::get('require_login_to_apply', '0') === '1') {
-            $this->redirect('login?redirect=' . rawurlencode(url('jobs/' . $id)));
+        if (!Auth::check()) {
+            $this->redirect('login?redirect=' . rawurlencode(url('jobs/' . $id . '/apply/continue')));
         }
 
-        if (Auth::check()) {
-            JobApplication::record((int) Auth::id(), (int) $id);
+        $this->recordAndApply($job);
+    }
+
+    /**
+     * GET /jobs/{id}/apply/continue — where a guest lands right after logging in mid-apply
+     * (see the redirect in apply() above). Finishes the apply action that originally required
+     * login, so clicking "Apply" and then logging in completes the application in one go
+     * instead of landing back on the job page needing a second click.
+     */
+    public function applyContinue(string $id): void
+    {
+        if (!Auth::check()) {
+            $this->redirect('login?redirect=' . rawurlencode(url('jobs/' . $id . '/apply/continue')));
         }
+        $job = Job::find((int) $id);
+        if (!$job) {
+            http_response_code(404);
+            (new ErrorController())->notFound();
+            return;
+        }
+        if ($job['apply_type'] === 'form') {
+            // Shouldn't normally be reached - 'form' jobs send guests to the apply form page
+            // itself, not here - but land somewhere sensible if it ever is.
+            $this->redirect('jobs/' . $id . '/apply');
+            return;
+        }
+
+        $this->recordAndApply($job);
+    }
+
+    /** Records the application and carries out the job's apply_type action (email reveal / external redirect). Shared by apply() and applyContinue(). */
+    private function recordAndApply(array $job): void
+    {
+        $id = (int) $job['id'];
+        JobApplication::record((int) Auth::id(), $id);
 
         if ($job['apply_type'] === 'link') {
             header('Location: ' . $job['apply_value']);

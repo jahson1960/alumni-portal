@@ -60,7 +60,7 @@ $experienceLabel = !empty($job['experience_level']) ? (\App\Models\Job::EXPERIEN
                 <a href="<?= e(url('jobs/' . $job['id'] . '/apply')) ?>" class="btn-gold !px-5 !py-2.5 text-sm w-full flex items-center justify-center gap-2"><i class="fa-solid fa-paper-plane"></i> <?= $hasApplied ? 'Edit Application' : 'Apply Now' ?></a>
               <?php endif; ?>
             <?php else: ?>
-              <form method="POST" action="<?= e(url('jobs/' . $job['id'] . '/apply')) ?>" class="<?= $job['apply_type'] === 'email' ? 'job-apply-email-form' : '' ?>">
+              <form method="POST" action="<?= e(url('jobs/' . $job['id'] . '/apply')) ?>" class="<?= ($job['apply_type'] === 'email' && \App\Core\Auth::check()) ? 'job-apply-email-form' : '' ?>">
                 <?= csrf_field() ?>
                 <button type="submit" class="btn-gold !px-5 !py-2.5 text-sm w-full flex items-center justify-center gap-2"><i class="fa-solid fa-paper-plane"></i> <?= $hasApplied ? 'Apply Again' : 'Apply Now' ?></button>
               </form>
@@ -371,7 +371,7 @@ $experienceLabel = !empty($job['experience_level']) ? (\App\Models\Job::EXPERIEN
           <a href="<?= e(url('jobs/' . $job['id'] . '/apply')) ?>" class="btn-gold !px-5 !py-2.5 text-sm w-full flex items-center justify-center gap-2"><i class="fa-solid fa-paper-plane"></i> <?= $hasApplied ? 'Edit Application' : 'Apply Now' ?></a>
         <?php endif; ?>
       <?php else: ?>
-        <form method="POST" action="<?= e(url('jobs/' . $job['id'] . '/apply')) ?>" class="<?= $job['apply_type'] === 'email' ? 'job-apply-email-form' : '' ?>">
+        <form method="POST" action="<?= e(url('jobs/' . $job['id'] . '/apply')) ?>" class="<?= ($job['apply_type'] === 'email' && \App\Core\Auth::check()) ? 'job-apply-email-form' : '' ?>">
           <?= csrf_field() ?>
           <button type="submit" class="btn-gold !px-5 !py-2.5 text-sm w-full flex items-center justify-center gap-2"><i class="fa-solid fa-paper-plane"></i> <?= $hasApplied ? 'Apply Again' : 'Apply Now' ?></button>
         </form>

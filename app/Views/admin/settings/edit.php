@@ -260,15 +260,6 @@
       </label>
     </div>
     <div class="mt-4 pt-4 border-t border-slate-100">
-      <label class="flex items-start gap-2">
-        <input type="checkbox" name="require_login_to_apply" value="1" <?= ($settings['require_login_to_apply'] ?? '0') === '1' ? 'checked' : '' ?> class="mt-1 rounded border-slate-300 text-gold focus:ring-gold">
-        <span>
-          <span class="block text-sm font-semibold text-primary-navy">Require login to apply for jobs</span>
-          <span class="block text-xs text-slate-500">Even when the Job Board is public, visitors must sign in before clicking Apply on a listing.</span>
-        </span>
-      </label>
-    </div>
-    <div class="mt-4 pt-4 border-t border-slate-100">
       <label class="form-label">Company Logo Size</label>
       <p class="text-xs text-slate-400 mb-2">The exact pixel dimensions required for a company logo uploaded on a job post. Shown to posters on the upload area, and enforced instantly &mdash; an image of any other size is rejected.</p>
       <div class="flex items-end gap-3 max-w-xs">
