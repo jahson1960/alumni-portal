@@ -45,7 +45,7 @@
             <?php endif; ?>
           </td>
           <td class="text-right whitespace-nowrap">
-            <a href="<?= e(url('jobs/' . $job['id'] . '/applicants')) ?>" class="text-sky-600 hover:underline mr-3">Applicants</a>
+            <a href="<?= e(url('jobs/' . $job['id'] . '/applicants')) ?>" class="text-sky-600 hover:underline mr-3">Applicants<?= !empty($applicantCounts[$job['id']]) ? ' (' . $applicantCounts[$job['id']] . ')' : '' ?></a>
             <a href="<?= e(url('admin/jobs/' . $job['id'] . '/edit')) ?>" class="text-sky-600 hover:underline mr-3">Edit</a>
             <form method="POST" action="<?= e(url('admin/jobs/' . $job['id'] . '/delete')) ?>" class="inline" onsubmit="return confirm('Delete this job listing?');">
               <?= csrf_field() ?>

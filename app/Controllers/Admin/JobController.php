@@ -9,6 +9,7 @@ use App\Models\ApplicationTemplate;
 use App\Models\Category;
 use App\Models\Company;
 use App\Models\Job;
+use App\Models\JobApplication;
 use App\Models\Notification;
 use App\Models\Setting;
 
@@ -16,11 +17,14 @@ class JobController extends AdminController
 {
     public function index(): void
     {
+        $jobs = Job::all('posted_at DESC, created_at DESC');
+
         $this->view('admin.jobs.index', [
             'title' => 'Jobs',
             'activeNav' => 'jobs',
-            'jobs' => Job::all('posted_at DESC, created_at DESC'),
+            'jobs' => $jobs,
             'pendingCount' => Job::countPendingApproval(),
+            'applicantCounts' => JobApplication::countsForJobs(array_column($jobs, 'id')),
         ]);
     }
 
