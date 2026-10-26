@@ -10,11 +10,12 @@ class EmailQueue extends Model
 
     private const MAX_ATTEMPTS = 5;
 
-    public static function enqueue(string $toEmail, ?string $toName, string $subject, string $html): int
+    public static function enqueue(string $toEmail, ?string $toName, string $subject, string $html, ?string $bcc = null): int
     {
         return static::insertRow('email_queue', [
             'to_email' => $toEmail,
             'to_name' => $toName,
+            'bcc_email' => $bcc,
             'subject' => $subject,
             'html_body' => $html,
         ]);

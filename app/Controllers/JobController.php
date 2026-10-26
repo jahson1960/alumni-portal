@@ -941,6 +941,7 @@ class JobController extends Controller
 
         $senderId = (int) Auth::id();
         $senderName = Auth::user()['name'];
+        $broadcastBcc = $sendEmail ? (trim(Setting::get('broadcast_bcc_email', '')) ?: null) : null;
         $broadcastId = JobBroadcast::create((int) $id, $senderId, $statusFilter, $body, $sendEmail);
         $sentCount = 0;
         foreach ($applicants as $applicant) {
@@ -951,7 +952,8 @@ class JobController extends Controller
                 'new_message',
                 $senderName . ' sent you a message about your application for "' . $job['title'] . '".',
                 'messages/' . $senderId,
-                $sendEmail
+                $sendEmail,
+                $broadcastBcc
             );
             JobBroadcast::addRecipient($broadcastId, $recipientId, $messageId, $notificationId);
             $sentCount++;

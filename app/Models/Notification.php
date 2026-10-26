@@ -12,9 +12,10 @@ class Notification extends Model
      * Inserts the in-app notification, then enqueues a matching branded email - the one choke
      * point for all 14 notification types. Returns the new notification's id. $sendEmail lets a
      * caller skip the email (e.g. a job broadcast whose sender didn't opt into emailing
-     * recipients) while still recording the in-app notification as usual.
+     * recipients) while still recording the in-app notification as usual. $bcc is only used
+     * when $sendEmail is true (e.g. a staff monitoring address on broadcast emails).
      */
-    public static function notify(int $userId, string $type, string $message, ?string $link = null, bool $sendEmail = true): int
+    public static function notify(int $userId, string $type, string $message, ?string $link = null, bool $sendEmail = true, ?string $bcc = null): int
     {
         $id = static::insertRow('notifications', [
             'user_id' => $userId,
@@ -30,7 +31,7 @@ class Notification extends Model
                 '<p>Hi ' . e($user['first_name'] ?: $user['name']) . ',</p><p>' . e($message) . '</p>',
                 $link !== null ? 'View' : null,
                 $link
-            ));
+            ), $bcc);
         }
 
         return $id;

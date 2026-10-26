@@ -17,7 +17,10 @@
     <tbody>
       <?php foreach ($emails as $email): ?>
         <tr>
-          <td class="font-medium text-primary-navy"><?= e($email['to_name'] ?: $email['to_email']) ?><br><span class="text-xs text-slate-400"><?= e($email['to_email']) ?></span></td>
+          <td class="font-medium text-primary-navy">
+            <?= e($email['to_name'] ?: $email['to_email']) ?><br><span class="text-xs text-slate-400"><?= e($email['to_email']) ?></span>
+            <?php if (!empty($email['bcc_email'])): ?><br><span class="text-[0.65rem] text-sky-600"><i class="fa-regular fa-eye"></i> BCC: <?= e($email['bcc_email']) ?></span><?php endif; ?>
+          </td>
           <td class="text-sm text-slate-600"><?= e($email['subject']) ?></td>
           <td>
             <?php if ($email['status'] === 'sent'): ?>

@@ -17,7 +17,7 @@ class Mailer
      *
      * @return true|string true on success, or a human-readable error message on failure.
      */
-    public static function send(string $toEmail, ?string $toName, string $subject, string $html): bool|string
+    public static function send(string $toEmail, ?string $toName, string $subject, string $html, ?string $bcc = null): bool|string
     {
         $config = require __DIR__ . '/../../config/config.php';
         $mail = $config['mail'] ?? [];
@@ -40,6 +40,9 @@ class Mailer
 
             $mailer->setFrom($mail['from_email'] ?? 'noreply@example.com', $mail['from_name'] ?? '');
             $mailer->addAddress($toEmail, $toName ?? '');
+            if ($bcc !== null && $bcc !== '') {
+                $mailer->addBCC($bcc);
+            }
 
             $mailer->isHTML(true);
             $mailer->Subject = $subject;

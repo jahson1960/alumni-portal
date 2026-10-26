@@ -1114,6 +1114,7 @@ CREATE TABLE email_queue (
   id INT AUTO_INCREMENT PRIMARY KEY,
   to_email VARCHAR(150) NOT NULL,
   to_name VARCHAR(150) NULL,
+  bcc_email VARCHAR(150) NULL,
   subject VARCHAR(200) NOT NULL,
   html_body MEDIUMTEXT NOT NULL,
   status ENUM('pending','sent','failed') NOT NULL DEFAULT 'pending',

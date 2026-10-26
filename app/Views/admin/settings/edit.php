@@ -254,6 +254,12 @@
       </div>
     </div>
     <p class="text-xs text-slate-400 mt-3">Example: 5 per batch with a 2-minute gap sends 20 emails as four batches, about 6 minutes apart start to finish.</p>
+
+    <div class="mt-4 pt-4 border-t border-slate-100">
+      <label class="form-label" for="broadcast_bcc_email">Broadcast Monitoring BCC</label>
+      <p class="text-xs text-slate-400 mb-2">If set, this address is BCC'd on every broadcast email sent to applicants, so a staff member can monitor activity. Leave blank for no BCC.</p>
+      <input type="email" id="broadcast_bcc_email" name="broadcast_bcc_email" class="form-input max-w-sm" placeholder="staff@rbsnapps.com" value="<?= e($settings['broadcast_bcc_email'] ?? '') ?>">
+    </div>
   </div>
 
   <div class="card p-6">

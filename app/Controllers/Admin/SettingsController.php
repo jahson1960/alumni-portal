@@ -195,6 +195,14 @@ class SettingsController extends AdminController
         $emailBatchInterval = (int) $this->input('email_batch_interval_minutes', 2);
         $data['email_batch_interval_minutes'] = (string) max(0, min(120, $emailBatchInterval));
 
+        // Staff address BCC'd on every broadcast email sent to applicants, so someone can
+        // monitor what's going out. Optional - left blank, no BCC is added.
+        $broadcastBcc = trim((string) $this->input('broadcast_bcc_email', ''));
+        if ($broadcastBcc !== '' && !filter_var($broadcastBcc, FILTER_VALIDATE_EMAIL)) {
+            $errors[] = 'Broadcast BCC must be a valid email address.';
+        }
+        $data['broadcast_bcc_email'] = $broadcastBcc;
+
         if ($errors) {
             $_SESSION['_errors'] = $errors;
             $this->redirect('admin/settings');

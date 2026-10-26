@@ -61,7 +61,7 @@ if (!$rows) {
 }
 
 foreach ($rows as $row) {
-    $result = Mailer::send($row['to_email'], $row['to_name'], $row['subject'], $row['html_body']);
+    $result = Mailer::send($row['to_email'], $row['to_name'], $row['subject'], $row['html_body'], $row['bcc_email'] ?? null);
     if ($result === true) {
         EmailQueue::markSent((int) $row['id']);
         echo "Sent #{$row['id']} to {$row['to_email']}\n";
