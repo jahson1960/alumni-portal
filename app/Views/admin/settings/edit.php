@@ -241,6 +241,22 @@
   </div>
 
   <div class="card p-6">
+    <h3 class="section-title text-xs mb-1">Email Delivery Rate</h3>
+    <p class="text-xs text-slate-400 mb-4">Controls how fast queued emails (broadcasts, notifications, account credentials) actually go out. Sending too many at once can trip a mail provider's spam filters, so the background worker sends a limited batch, waits, then sends the next batch.</p>
+    <div class="grid grid-cols-2 gap-4 max-w-sm">
+      <div>
+        <label class="form-label" for="email_batch_size">Emails per batch</label>
+        <input type="number" id="email_batch_size" name="email_batch_size" min="1" max="100" step="1" class="form-input" value="<?= e($settings['email_batch_size'] ?? '20') ?>">
+      </div>
+      <div>
+        <label class="form-label" for="email_batch_interval_minutes">Minutes between batches</label>
+        <input type="number" id="email_batch_interval_minutes" name="email_batch_interval_minutes" min="0" max="120" step="1" class="form-input" value="<?= e($settings['email_batch_interval_minutes'] ?? '2') ?>">
+      </div>
+    </div>
+    <p class="text-xs text-slate-400 mt-3">Example: 5 per batch with a 2-minute gap sends 20 emails as four batches, about 6 minutes apart start to finish.</p>
+  </div>
+
+  <div class="card p-6">
     <h3 class="section-title text-xs mb-1">Alumni Job Postings</h3>
     <p class="text-xs text-slate-400 mb-4">Controls what happens when an alumnus submits a job through "Post a Job" on the public site.</p>
     <div class="space-y-2">

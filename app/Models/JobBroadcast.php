@@ -24,13 +24,14 @@ class JobBroadcast extends Model
         return $stmt->fetchAll();
     }
 
-    public static function create(int $jobId, int $senderId, string $statusFilter, string $body): int
+    public static function create(int $jobId, int $senderId, string $statusFilter, string $body, bool $viaEmail = false): int
     {
         return static::insertRow('job_broadcasts', [
             'job_id' => $jobId,
             'sender_id' => $senderId,
             'status_filter' => $statusFilter,
             'body' => $body,
+            'via_email' => $viaEmail ? 1 : 0,
         ]);
     }
 

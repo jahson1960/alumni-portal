@@ -684,6 +684,8 @@ class JobController extends Controller
             'fields' => $fields,
             'applicants' => $applicants,
             'broadcasts' => JobBroadcast::forJob((int) $id),
+            'emailBatchSize' => (int) Setting::get('email_batch_size', '20'),
+            'emailBatchInterval' => (int) Setting::get('email_batch_interval_minutes', '2'),
         ]);
     }
 
@@ -921,6 +923,7 @@ class JobController extends Controller
 
         $body = trim((string) $this->input('body', ''));
         $statusFilter = $this->input('status', 'all');
+        $sendEmail = (bool) $this->input('send_email');
         $statusLabels = JobBroadcast::STATUS_LABELS;
         if (!array_key_exists($statusFilter, $statusLabels)) {
             $statusFilter = 'all';
@@ -938,7 +941,7 @@ class JobController extends Controller
 
         $senderId = (int) Auth::id();
         $senderName = Auth::user()['name'];
-        $broadcastId = JobBroadcast::create((int) $id, $senderId, $statusFilter, $body);
+        $broadcastId = JobBroadcast::create((int) $id, $senderId, $statusFilter, $body, $sendEmail);
         $sentCount = 0;
         foreach ($applicants as $applicant) {
             $recipientId = (int) $applicant['user_id'];
@@ -947,7 +950,8 @@ class JobController extends Controller
                 $recipientId,
                 'new_message',
                 $senderName . ' sent you a message about your application for "' . $job['title'] . '".',
-                'messages/' . $senderId
+                'messages/' . $senderId,
+                $sendEmail
             );
             JobBroadcast::addRecipient($broadcastId, $recipientId, $messageId, $notificationId);
             $sentCount++;
@@ -958,7 +962,8 @@ class JobController extends Controller
             $this->flash('error', 'No applicants matched "' . $statusLabels[$statusFilter] . '" - nothing was sent.');
         } else {
             JobBroadcast::setRecipientCount($broadcastId, $sentCount);
-            $this->flash('success', 'Message sent to ' . $sentCount . ' ' . ($sentCount === 1 ? 'applicant' : 'applicants') . ' (' . $statusLabels[$statusFilter] . ').');
+            $emailNote = $sendEmail ? ' and emailed' : '';
+            $this->flash('success', 'Message sent' . $emailNote . ' to ' . $sentCount . ' ' . ($sentCount === 1 ? 'applicant' : 'applicants') . ' (' . $statusLabels[$statusFilter] . ').');
         }
 
         $this->redirect('jobs/' . $id . '/applicants');

@@ -32,8 +32,29 @@ require ROOT_PATH . '/app/Core/helpers.php';
 
 use App\Core\Mailer;
 use App\Models\EmailQueue;
+use App\Models\Setting;
 
-$rows = EmailQueue::pending(20);
+// Admin-configurable send rate (Admin > Settings > Email Delivery Rate), so a large broadcast
+// doesn't fire off dozens of emails in the same minute and trip a mail provider's spam filters.
+// This worker is still invoked every minute by cron, but only actually sends a batch once the
+// configured interval has elapsed since the last one - tracked via a plain settings row rather
+// than requiring the cron schedule itself to match the configured interval.
+$batchSize = max(1, (int) Setting::get('email_batch_size', '20'));
+$intervalMinutes = max(0, (int) Setting::get('email_batch_interval_minutes', '2'));
+
+if ($intervalMinutes > 0) {
+    $lastSentAt = Setting::get('email_last_batch_sent_at', '');
+    if ($lastSentAt !== '') {
+        $elapsedSeconds = time() - strtotime($lastSentAt);
+        $waitSeconds = $intervalMinutes * 60 - $elapsedSeconds;
+        if ($waitSeconds > 0) {
+            echo "Rate limit: next batch in {$waitSeconds}s.\n";
+            exit(0);
+        }
+    }
+}
+
+$rows = EmailQueue::pending($batchSize);
 if (!$rows) {
     echo "No pending emails.\n";
     exit(0);
@@ -49,3 +70,5 @@ foreach ($rows as $row) {
         echo "Failed #{$row['id']} to {$row['to_email']}: {$result}\n";
     }
 }
+
+Setting::set('email_last_batch_sent_at', date('Y-m-d H:i:s'));

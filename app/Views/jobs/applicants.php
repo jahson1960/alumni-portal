@@ -284,8 +284,17 @@ foreach ($applicants as $a) {
         <div>
           <label class="text-xs font-semibold text-slate-600 mb-1.5 block">Message</label>
           <textarea name="body" rows="5" required maxlength="2000" class="form-input text-sm resize-none" placeholder="Write a message to send to the selected applicants..."></textarea>
-          <p class="text-[0.65rem] text-slate-400 mt-1.5"><i class="fa-regular fa-circle-info"></i> Every recipient gets this as a direct message and a notification.</p>
+          <p class="text-[0.65rem] text-slate-400 mt-1.5"><i class="fa-regular fa-circle-info"></i> Every recipient always gets this as a direct message and a notification.</p>
         </div>
+        <label class="flex items-start gap-2.5 p-3 rounded-lg border border-slate-100 bg-slate-50 cursor-pointer">
+          <input type="checkbox" name="send_email" value="1" class="mt-0.5 rounded border-slate-300 text-gold focus:ring-gold">
+          <span>
+            <span class="block text-xs font-semibold text-primary-navy">Also send via email</span>
+            <span class="block text-[0.65rem] text-slate-500 mt-0.5">
+              Emails go out gradually (<?= (int) $emailBatchSize ?> at a time, every <?= (int) $emailBatchInterval ?> minute<?= (int) $emailBatchInterval === 1 ? '' : 's' ?>) to avoid tripping spam filters &mdash; a large broadcast may take a while to fully deliver.
+            </span>
+          </span>
+        </label>
         <div class="flex items-center justify-end gap-2 pt-1">
           <button type="button" id="broadcast-cancel-btn" class="btn bg-white border border-slate-200 !text-slate-700 hover:bg-slate-50 !px-4 !py-2 text-xs">Cancel</button>
           <button type="submit" id="broadcast-submit-btn" class="btn-gold !px-4 !py-2 text-xs flex items-center gap-1.5"><i class="fa-solid fa-paper-plane"></i> Send Broadcast</button>
@@ -302,6 +311,7 @@ foreach ($applicants as $a) {
             <div class="flex items-start justify-between gap-2 mb-1.5">
               <div class="flex items-center gap-1.5 flex-wrap">
                 <span class="badge bg-slate-100 text-slate-600 !text-[0.65rem]"><?= e(\App\Models\JobBroadcast::STATUS_LABELS[$b['status_filter']] ?? 'All Applicants') ?></span>
+                <?php if ($b['via_email']): ?><span class="badge bg-emerald-50 text-emerald-600 !text-[0.6rem] inline-flex items-center gap-1"><i class="fa-regular fa-envelope"></i> Emailed</span><?php endif; ?>
                 <span class="text-[0.65rem] text-slate-400"><?= e(time_ago($b['created_at'])) ?></span>
                 <?php if ($recalled): ?><span class="badge bg-red-100 text-red-600 !text-[0.6rem] uppercase">Recalled</span><?php endif; ?>
               </div>

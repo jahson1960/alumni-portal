@@ -1083,6 +1083,7 @@ CREATE TABLE job_broadcasts (
   status_filter VARCHAR(30) NOT NULL DEFAULT 'all',
   body TEXT NOT NULL,
   recipient_count INT NOT NULL DEFAULT 0,
+  via_email TINYINT(1) NOT NULL DEFAULT 0,
   recalled_at TIMESTAMP NULL,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   CONSTRAINT fk_job_broadcasts_job FOREIGN KEY (job_id) REFERENCES jobs(id) ON DELETE CASCADE,

@@ -186,6 +186,15 @@ class SettingsController extends AdminController
         $companyLogoHeight = (int) $this->input('company_logo_height', 200);
         $data['company_logo_height'] = (string) max(50, min(1000, $companyLogoHeight ?: 200));
 
+        // How fast the queued-email background worker actually sends - a limited batch, then a
+        // wait, then the next batch - so a large broadcast doesn't trip a mail provider's spam
+        // filters. 0 minutes is a valid, deliberate choice (unthrottled), so it's clamped but
+        // never falsy-defaulted away like the other numeric settings above.
+        $emailBatchSize = (int) $this->input('email_batch_size', 20);
+        $data['email_batch_size'] = (string) max(1, min(100, $emailBatchSize ?: 20));
+        $emailBatchInterval = (int) $this->input('email_batch_interval_minutes', 2);
+        $data['email_batch_interval_minutes'] = (string) max(0, min(120, $emailBatchInterval));
+
         if ($errors) {
             $_SESSION['_errors'] = $errors;
             $this->redirect('admin/settings');
