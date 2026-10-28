@@ -31,6 +31,14 @@ abstract class Controller
         exit;
     }
 
+    /** Recruiter accounts are scoped to Jobs + Messages only - call from a controller's constructor to keep them off the alumni social features (Directory, Connections, Feed, Mentorship). */
+    protected function blockRecruiter(string $redirectTo = 'jobs'): void
+    {
+        if (Auth::isRecruiter()) {
+            $this->redirect($redirectTo);
+        }
+    }
+
     /** Redirects to the page the request came from (same-origin only), or a default path. */
     protected function redirectBack(string $default): void
     {

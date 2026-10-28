@@ -29,6 +29,7 @@ $navItems = [
     'alumni' => ['label' => 'Alumni', 'icon' => 'fa-user-group', 'href' => url('admin/alumni')],
     'alumni_roster' => ['label' => 'Alumni Roster', 'icon' => 'fa-id-card', 'href' => url('admin/alumni-roster')],
     'register_alumni' => ['label' => 'Register Alumni', 'icon' => 'fa-user-plus', 'href' => url('admin/register-alumni')],
+    'create_staff' => ['label' => 'Create Staff Account', 'icon' => 'fa-user-shield', 'href' => url('admin/create-staff')],
     'email_queue' => ['label' => 'Email Queue', 'icon' => 'fa-envelope', 'href' => url('admin/email-queue')],
     'profile_reports' => ['label' => 'Profile Reports', 'icon' => 'fa-flag', 'href' => url('admin/profile-reports')],
 ];

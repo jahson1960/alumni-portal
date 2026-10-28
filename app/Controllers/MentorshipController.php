@@ -14,6 +14,11 @@ class MentorshipController extends Controller
     private const CAREER_STAGES = ['early' => 'Early Career', 'mid' => 'Mid-Career', 'senior' => 'Senior / Executive'];
     private const AVAILABILITY = ['open' => 'Actively Available', 'limited' => 'Limited Availability', 'closed' => 'Not Available'];
 
+    public function __construct()
+    {
+        $this->blockRecruiter();
+    }
+
     public function index(): void
     {
         $this->requireVisibility('mentorship');

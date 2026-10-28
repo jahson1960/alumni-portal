@@ -18,7 +18,7 @@
 -- ---------------------------------------------------------------------
 CREATE TABLE users (
   id INT AUTO_INCREMENT PRIMARY KEY,
-  role ENUM('admin','editor','alumni') NOT NULL DEFAULT 'alumni',
+  role ENUM('admin','editor','alumni','recruiter') NOT NULL DEFAULT 'alumni',
   name VARCHAR(150) NOT NULL,
   first_name VARCHAR(100) NULL,
   other_names VARCHAR(100) NULL,

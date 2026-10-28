@@ -20,7 +20,7 @@ class AlumniController extends AdminController
     public function show(string $id): void
     {
         $alum = User::find((int) $id);
-        if (!$alum || !in_array($alum['role'], ['alumni', 'editor'], true)) {
+        if (!$alum || !in_array($alum['role'], ['alumni', 'editor', 'recruiter'], true)) {
             $this->flash('error', 'Alumni not found.');
             $this->redirect('admin/alumni');
         }
@@ -42,7 +42,7 @@ class AlumniController extends AdminController
     {
         $this->requireCsrf();
         $alum = User::find((int) $id);
-        if (!$alum || !in_array($alum['role'], ['alumni', 'editor'], true)) {
+        if (!$alum || !in_array($alum['role'], ['alumni', 'editor', 'recruiter'], true)) {
             $this->flash('error', 'Alumni not found.');
             $this->redirect('admin/alumni');
         }
@@ -79,7 +79,7 @@ class AlumniController extends AdminController
     {
         $this->requireCsrf();
         $alum = User::find((int) $id);
-        if (!$alum || !in_array($alum['role'], ['alumni', 'editor'], true)) {
+        if (!$alum || !in_array($alum['role'], ['alumni', 'editor', 'recruiter'], true)) {
             $this->flash('error', 'Alumni not found.');
             $this->redirect('admin/alumni');
         }

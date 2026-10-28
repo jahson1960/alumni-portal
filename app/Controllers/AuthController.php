@@ -114,7 +114,12 @@ class AuthController extends Controller
         if (Auth::attempt($email, $password)) {
             $intended = sanitize_redirect_target($_SESSION['_intended_url'] ?? null);
             unset($_SESSION['_intended_url']);
-            $destination = $intended ?? url(Auth::isAdmin() ? 'admin/dashboard' : '/');
+            $defaultDestination = match (true) {
+                Auth::isAdmin() => 'admin/dashboard',
+                Auth::isRecruiter() => 'jobs/mine',
+                default => '/',
+            };
+            $destination = $intended ?? url($defaultDestination);
 
             if (!empty(Auth::user()['must_change_password'])) {
                 $_SESSION['_post_password_change_redirect'] = $destination;

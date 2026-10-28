@@ -198,7 +198,7 @@ class User extends Model
 
     public static function allAlumniAdmin(): array
     {
-        return static::db()->query("SELECT * FROM users WHERE role IN ('alumni','editor') ORDER BY created_at DESC")->fetchAll();
+        return static::db()->query("SELECT * FROM users WHERE role IN ('alumni','editor','recruiter') ORDER BY created_at DESC")->fetchAll();
     }
 
     public static function adminIds(): array

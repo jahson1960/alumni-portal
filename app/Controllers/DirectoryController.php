@@ -20,6 +20,11 @@ class DirectoryController extends Controller
     private const PER_PAGE_OPTIONS = [12, 24, 48];
     private const VIEWS = ['all', 'programme', 'country', 'cohort', 'saved'];
 
+    public function __construct()
+    {
+        $this->blockRecruiter();
+    }
+
     public function index(): void
     {
         $this->requireVisibility('directory');

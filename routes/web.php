@@ -339,4 +339,9 @@ $router->get('/admin/register-alumni', 'Admin\\AlumniRegistrationController@crea
 $router->post('/admin/register-alumni', 'Admin\\AlumniRegistrationController@store');
 $router->get('/admin/register-alumni/success', 'Admin\\AlumniRegistrationController@success');
 
+// Admin-only: create Admin/Editor/Recruiter accounts directly (no alumni roster).
+$router->get('/admin/create-staff', 'Admin\\StaffController@create');
+$router->post('/admin/create-staff', 'Admin\\StaffController@store');
+$router->get('/admin/create-staff/success', 'Admin\\StaffController@success');
+
 return $router;

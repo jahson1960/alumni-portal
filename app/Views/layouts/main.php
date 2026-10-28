@@ -100,7 +100,7 @@ if ($authUser && $authUser['program']) {
             <i class="bi bi-house"></i><span>Home</span>
           </a>
 
-          <?php if (\App\Models\PageVisibility::shouldShowInNav('directory', $authUser)): ?>
+          <?php if (\App\Models\PageVisibility::shouldShowInNav('directory', $authUser) && !\App\Core\Auth::isRecruiter()): ?>
           <div class="relative group h-full" data-mega-group>
             <button class="top-pill h-full <?= $isNetworkActive ? 'active' : '' ?>">
               <i class="bi bi-people"></i><span>Alumni Network</span>
@@ -193,6 +193,14 @@ if ($authUser && $authUser['program']) {
               </div>
             </div>
           </div>
+          <?php endif; ?>
+
+          <?php if (\App\Core\Auth::isRecruiter()): ?>
+            <div class="relative h-full">
+              <a href="<?= e(url('messages')) ?>" class="top-pill h-full hover:!text-gold hover:!bg-white/10 <?= $activeNav === 'messages' ? 'active' : '' ?>">
+                <i class="fa-solid fa-envelope"></i><span>Messages</span>
+              </a>
+            </div>
           <?php endif; ?>
 
           <?php if (\App\Models\PageVisibility::shouldShowInNav('jobs', $authUser)): ?>
@@ -899,15 +907,23 @@ if ($authUser && $authUser['program']) {
           <div class="border-t border-white/10"></div>
         <?php endif; ?>
 
-        <?php $mobileAccordion('network', 'directory', 'fa-solid fa-users', 'Alumni Network', 'Connect, collaborate and engage with fellow alumni around the world.', array_filter([
+        <?php if (\App\Core\Auth::isRecruiter()): ?>
+          <a href="<?= e(url('messages')) ?>" class="flex items-center gap-3 py-3<?= $activeNav === 'messages' ? ' border-l-2 border-gold bg-white/5 -mx-4 px-4' : '' ?>">
+            <i class="fa-solid fa-envelope <?= $activeNav === 'messages' ? 'text-gold' : 'text-[var(--menu-item-text)] opacity-70' ?> w-5 text-center flex-shrink-0"></i>
+            <span class="text-sm font-semibold text-[var(--menu-item-text)] <?= $activeNav === 'messages' ? '' : 'opacity-90' ?>">Messages</span>
+          </a>
+          <div class="border-t border-white/10"></div>
+        <?php endif; ?>
+
+        <?php if (!\App\Core\Auth::isRecruiter()): $mobileAccordion('network', 'directory', 'fa-solid fa-users', 'Alumni Network', 'Connect, collaborate and engage with fellow alumni around the world.', array_filter([
           ['href' => url('directory'), 'icon' => 'fa-solid fa-magnifying-glass', 'label' => 'Search Alumni', 'desc' => 'Find and connect with fellow alumni'],
           $authUser ? ['href' => url('directory?view=saved'), 'icon' => 'fa-solid fa-bookmark', 'label' => 'Saved Alumni', 'desc' => 'Browse your saved fellow alumni'] : null,
           ['href' => url('directory?view=country'), 'icon' => 'fa-solid fa-location-dot', 'label' => 'Alumni Map', 'desc' => 'Explore where alumni are located worldwide'],
           ['href' => url('directory?view=cohort'), 'icon' => 'fa-solid fa-graduation-cap', 'label' => 'Find by Cohort', 'desc' => 'Browse alumni by programme or class year'],
           ['href' => url('businesses'), 'icon' => 'fa-solid fa-store', 'label' => 'Alumni Businesses', 'desc' => 'Discover businesses run by alumni'],
-        ])); ?>
+        ])); endif; ?>
 
-        <?php if ($authUser): $mobileAccordion('connections', 'connections', 'fa-solid fa-user-group', 'Connections', 'Grow your professional network.', [
+        <?php if ($authUser && !\App\Core\Auth::isRecruiter()): $mobileAccordion('connections', 'connections', 'fa-solid fa-user-group', 'Connections', 'Grow your professional network.', [
           ['href' => url('connections'), 'icon' => 'fa-solid fa-user-group', 'label' => 'My Connections', 'desc' => 'Keep in touch with your connections'],
           ['href' => url('connections#requests'), 'icon' => 'fa-solid fa-user-plus', 'label' => 'Connection Requests', 'desc' => 'Manage incoming and outgoing requests'],
           ['href' => url('connections#suggested'), 'icon' => 'fa-solid fa-star', 'label' => 'Suggested Connections', 'desc' => 'Alumni you may want to connect with'],
@@ -1072,7 +1088,11 @@ if ($authUser && $authUser['program']) {
   <nav class="lg:hidden fixed bottom-0 left-0 right-0 h-[60px] bg-white border-t border-slate-200 flex justify-around items-center z-50">
     <a href="<?= e(url('/')) ?>" class="flex flex-col items-center gap-0.5 text-[0.65rem] font-medium <?= $activeNav === 'home' ? 'text-gold font-bold' : 'text-slate-500' ?>"><i class="fa-solid fa-house text-lg"></i>Home</a>
     <a href="<?= e(url('jobs')) ?>" class="flex flex-col items-center gap-0.5 text-[0.65rem] font-medium <?= $activeNav === 'jobs' ? 'text-gold font-bold' : 'text-slate-500' ?>"><i class="fa-solid fa-briefcase text-lg"></i>Jobs</a>
-    <a href="<?= e(url('directory')) ?>" class="flex flex-col items-center gap-0.5 text-[0.65rem] font-medium <?= $activeNav === 'directory' ? 'text-gold font-bold' : 'text-slate-500' ?>"><i class="fa-solid fa-user-group text-lg"></i>Network</a>
+    <?php if (\App\Core\Auth::isRecruiter()): ?>
+      <a href="<?= e(url('messages')) ?>" class="flex flex-col items-center gap-0.5 text-[0.65rem] font-medium <?= $activeNav === 'messages' ? 'text-gold font-bold' : 'text-slate-500' ?>"><i class="fa-solid fa-envelope text-lg"></i>Messages</a>
+    <?php else: ?>
+      <a href="<?= e(url('directory')) ?>" class="flex flex-col items-center gap-0.5 text-[0.65rem] font-medium <?= $activeNav === 'directory' ? 'text-gold font-bold' : 'text-slate-500' ?>"><i class="fa-solid fa-user-group text-lg"></i>Network</a>
+    <?php endif; ?>
     <a href="<?= e(url('events')) ?>" class="flex flex-col items-center gap-0.5 text-[0.65rem] font-medium <?= $activeNav === 'events' ? 'text-gold font-bold' : 'text-slate-500' ?>"><i class="fa-solid fa-calendar-days text-lg"></i>Events</a>
     <button type="button" id="mobile-menu-open-bottom" class="flex flex-col items-center gap-0.5 text-[0.65rem] font-medium text-slate-500 cursor-pointer"><i class="fa-solid fa-bars text-lg"></i>More</button>
   </nav>

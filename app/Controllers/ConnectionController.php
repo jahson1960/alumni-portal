@@ -18,6 +18,7 @@ class ConnectionController extends Controller
             header('Location: ' . url('login'));
             exit;
         }
+        $this->blockRecruiter();
     }
 
     private const SORTS = ['recent', 'name_asc', 'name_desc'];

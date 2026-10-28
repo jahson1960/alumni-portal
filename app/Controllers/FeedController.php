@@ -43,6 +43,7 @@ class FeedController extends Controller
             header('Location: ' . url('login'));
             exit;
         }
+        $this->blockRecruiter();
     }
 
     public function index(): void
