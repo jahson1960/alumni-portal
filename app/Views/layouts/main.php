@@ -214,6 +214,7 @@ if ($authUser && $authUser['program']) {
               <div data-mega-box class="mx-auto bg-[var(--menu-panel-bg)] shadow-2xl rounded-xl border border-slate-100 overflow-hidden w-[min(94vw,1080px)] max-h-[calc(100vh-var(--header-height)-1rem)] flex flex-col translate-y-[var(--dropdown-offset)]">
                 <div class="p-6 grid grid-cols-1 md:grid-cols-[repeat(3,1fr)_300px] gap-8 overflow-y-auto min-h-0 mega-scroll">
 
+                  <?php if (!\App\Core\Auth::isRecruiter()): ?>
                   <div>
                     <?= mega_col_heading('Explore Careers') ?>
                     <div class="space-y-1">
@@ -227,6 +228,7 @@ if ($authUser && $authUser['program']) {
                       <?= mega_item(url('jobs') . '?tab=alerts', 'fa-regular fa-bell', 'Job Alerts', 'Create alerts and never miss an opportunity') ?>
                     </div>
                   </div>
+                  <?php endif; ?>
 
                   <?php if ($authUser && $authUser['role'] === 'admin'): ?>
                     <div>
@@ -236,6 +238,15 @@ if ($authUser && $authUser['program']) {
                         <?= mega_item(url('admin/jobs'), 'fa-solid fa-list-check', 'Manage Jobs', 'Edit, close or manage your job posts') ?>
                         <?= mega_item(url('admin/jobs'), 'fa-solid fa-user-group', 'Applications', 'View and manage applications') ?>
                         <?= mega_item(url('directory'), 'fa-solid fa-address-book', 'Talent Search', 'Search our alumni talent pool') ?>
+                      </div>
+                    </div>
+                  <?php elseif (\App\Core\Auth::isRecruiter()): ?>
+                    <div>
+                      <?= mega_col_heading('Post & Manage') ?>
+                      <div class="space-y-1">
+                        <?= mega_item(url('jobs/post'), 'fa-solid fa-square-plus', 'Post a Job', 'Share an opportunity') ?>
+                        <?= mega_item(url('jobs/mine'), 'fa-solid fa-list-check', 'My Job Posts', 'Edit, close or manage your job posts') ?>
+                        <?= mega_item(url('messages'), 'fa-regular fa-envelope', 'Messages', 'Your private conversations') ?>
                       </div>
                     </div>
                   <?php elseif ($authUser): ?>
@@ -264,7 +275,9 @@ if ($authUser && $authUser['program']) {
                       <?= mega_item(url('resources'), 'fa-solid fa-file-lines', 'Career Resources', 'Guides, tips and templates') ?>
                       <?= mega_item(url('resources') . '?tab=resume-review', 'fa-solid fa-shield-halved', 'Resume Review', 'Get your resume reviewed by experts') ?>
                       <?= mega_item(url('resources') . '?tab=interview-prep', 'fa-regular fa-comment-dots', 'Interview Prep', 'Practice and prepare for interviews') ?>
-                      <?= mega_item(url('mentorship'), 'fa-solid fa-chalkboard-user', 'Mentorship', 'Find a mentor or become a mentor') ?>
+                      <?php if (!\App\Core\Auth::isRecruiter()): ?>
+                        <?= mega_item(url('mentorship'), 'fa-solid fa-chalkboard-user', 'Mentorship', 'Find a mentor or become a mentor') ?>
+                      <?php endif; ?>
                       <?= mega_item(url('events') . '?view=webinars', 'fa-solid fa-video', 'Career Webinars', 'Watch webinars and career sessions') ?>
                     </div>
                   </div>
@@ -936,12 +949,13 @@ if ($authUser && $authUser['program']) {
 
         <?php
           $isAdmin = $authUser && $authUser['role'] === 'admin';
+          $isRecruiter = \App\Core\Auth::isRecruiter();
           $mobileAccordion('careers', 'jobs', 'fa-solid fa-briefcase', 'Careers', 'Jobs, resources and opportunities.', array_filter([
-            ['href' => url('jobs'), 'icon' => 'fa-solid fa-briefcase', 'label' => 'Job Board', 'desc' => 'Browse open roles from alumni and partners'],
-            ['href' => url('jobs') . '?tab=search', 'icon' => 'fa-solid fa-magnifying-glass', 'label' => 'Advanced Search', 'desc' => 'Filter jobs by type, location and more'],
-            ['href' => url('jobs') . '?tab=companies', 'icon' => 'fa-solid fa-building', 'label' => 'Companies Hiring', 'desc' => 'See which companies are hiring'],
-            $authUser ? ['href' => url('jobs') . '?tab=saved', 'icon' => 'fa-solid fa-bookmark', 'label' => 'Saved Jobs', 'desc' => "Jobs you've bookmarked"] : null,
-            $authUser ? ['href' => url('jobs') . '?tab=alerts', 'icon' => 'fa-regular fa-bell', 'label' => 'Job Alerts', 'desc' => 'Get notified about new matching jobs'] : null,
+            $isRecruiter ? null : ['href' => url('jobs'), 'icon' => 'fa-solid fa-briefcase', 'label' => 'Job Board', 'desc' => 'Browse open roles from alumni and partners'],
+            $isRecruiter ? null : ['href' => url('jobs') . '?tab=search', 'icon' => 'fa-solid fa-magnifying-glass', 'label' => 'Advanced Search', 'desc' => 'Filter jobs by type, location and more'],
+            $isRecruiter ? null : ['href' => url('jobs') . '?tab=companies', 'icon' => 'fa-solid fa-building', 'label' => 'Companies Hiring', 'desc' => 'See which companies are hiring'],
+            ($authUser && !$isRecruiter) ? ['href' => url('jobs') . '?tab=saved', 'icon' => 'fa-solid fa-bookmark', 'label' => 'Saved Jobs', 'desc' => "Jobs you've bookmarked"] : null,
+            ($authUser && !$isRecruiter) ? ['href' => url('jobs') . '?tab=alerts', 'icon' => 'fa-regular fa-bell', 'label' => 'Job Alerts', 'desc' => 'Get notified about new matching jobs'] : null,
             ['href' => url('resources'), 'icon' => 'fa-solid fa-file-lines', 'label' => 'Career Resources', 'desc' => 'Guides, templates and career tools'],
             $isAdmin ? ['href' => url('admin/jobs/create'), 'icon' => 'fa-solid fa-square-plus', 'label' => 'Post a Job', 'desc' => 'Add a new job listing'] : ($authUser ? ['href' => url('jobs/post'), 'icon' => 'fa-solid fa-square-plus', 'label' => 'Post a Job', 'desc' => 'Share an opportunity with alumni'] : null),
             $isAdmin ? ['href' => url('admin/jobs'), 'icon' => 'fa-solid fa-list-check', 'label' => 'Manage Jobs', 'desc' => 'Review and manage job listings'] : ($authUser ? ['href' => url('jobs/mine'), 'icon' => 'fa-solid fa-list-check', 'label' => 'My Job Posts', 'desc' => "Jobs you've posted"] : null),
@@ -966,8 +980,8 @@ if ($authUser && $authUser['program']) {
             ['href' => url('spotlight'), 'icon' => 'fa-solid fa-star', 'label' => 'Alumni Spotlight', 'desc' => 'Celebrating alumni achievements'],
             ['href' => url('give'), 'icon' => 'fa-solid fa-hand-holding-heart', 'label' => 'Give Back', 'desc' => 'Support scholarships and alumni causes'],
             ['href' => url('resources'), 'icon' => 'fa-solid fa-file-lines', 'label' => 'Career Resources', 'desc' => 'Guides, templates and career tools'],
-            ['href' => url('mentorship'), 'icon' => 'fa-solid fa-chalkboard-user', 'label' => 'Mentorship', 'desc' => 'Find or become a mentor'],
-            ['href' => url('connections'), 'icon' => 'fa-solid fa-user-group', 'label' => 'My Connections', 'desc' => 'Keep in touch with your connections'],
+            $isRecruiter ? null : ['href' => url('mentorship'), 'icon' => 'fa-solid fa-chalkboard-user', 'label' => 'Mentorship', 'desc' => 'Find or become a mentor'],
+            $isRecruiter ? null : ['href' => url('connections'), 'icon' => 'fa-solid fa-user-group', 'label' => 'My Connections', 'desc' => 'Keep in touch with your connections'],
           ]));
         ?>
 

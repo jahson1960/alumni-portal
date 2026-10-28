@@ -44,6 +44,12 @@ class JobController extends Controller
     {
         $this->requireVisibility('jobs');
 
+        // Recruiters only manage their own postings - the Job Board, search, saved jobs, etc.
+        // (browsing/discovering jobs across the whole platform) aren't for them.
+        if (Auth::isRecruiter()) {
+            $this->redirect('jobs/mine');
+        }
+
         $tab = in_array($this->input('tab'), self::TABS, true) ? $this->input('tab') : 'board';
         if (!PageTabVisibility::isVisible('jobs', $tab)) {
             $fallback = PageTabVisibility::firstVisibleTab('jobs', self::TABS);
@@ -209,6 +215,10 @@ class JobController extends Controller
             http_response_code(404);
             (new ErrorController())->notFound();
             return;
+        }
+        // Recruiters only see jobs they posted themselves - not the rest of the board.
+        if (Auth::isRecruiter() && !$isOwnerOrAdmin) {
+            $this->redirect('jobs/mine');
         }
 
         $poster = !empty($job['posted_by']) ? User::find((int) $job['posted_by']) : null;
