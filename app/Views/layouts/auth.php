@@ -13,6 +13,9 @@ $authFontQuery = implode('&', array_map(fn ($f) => 'family=' . str_replace(' ', 
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title><?= e($pageTitle) ?></title>
+  <?php if (!empty($authSettings['site_favicon'])): ?>
+    <link rel="icon" href="<?= e($authSettings['site_favicon']) ?>">
+  <?php endif; ?>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <link href="https://fonts.googleapis.com/css2?<?= $authFontQuery ?>&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="<?= e(versioned_asset('css/app.css')) ?>">
