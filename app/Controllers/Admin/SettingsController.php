@@ -91,9 +91,6 @@ class SettingsController extends AdminController
             'menu_panel_bg_mobile' => '#091a2e',
             'menu_item_text_desktop' => '#091a2e',
             'menu_item_text_mobile' => '#ffffff',
-            'admin_email_header_bg' => $this->input('header_bg_desktop', '#091a2e'),
-            'admin_email_header_text' => $this->input('header_text_desktop', '#ffffff'),
-            'admin_email_button_color' => $this->input('theme_button_color', '#d49326'),
         ] as $key => $default) {
             $data[$key] = valid_hex_color($this->input($key), $default);
         }
@@ -185,23 +182,6 @@ class SettingsController extends AdminController
         $data['company_logo_width'] = (string) max(50, min(1000, $companyLogoWidth ?: 200));
         $companyLogoHeight = (int) $this->input('company_logo_height', 200);
         $data['company_logo_height'] = (string) max(50, min(1000, $companyLogoHeight ?: 200));
-
-        // How fast the queued-email background worker actually sends - a limited batch, then a
-        // wait, then the next batch - so a large broadcast doesn't trip a mail provider's spam
-        // filters. 0 minutes is a valid, deliberate choice (unthrottled), so it's clamped but
-        // never falsy-defaulted away like the other numeric settings above.
-        $emailBatchSize = (int) $this->input('email_batch_size', 20);
-        $data['email_batch_size'] = (string) max(1, min(100, $emailBatchSize ?: 20));
-        $emailBatchInterval = (int) $this->input('email_batch_interval_minutes', 2);
-        $data['email_batch_interval_minutes'] = (string) max(0, min(120, $emailBatchInterval));
-
-        // Staff address BCC'd on every broadcast email sent to applicants, so someone can
-        // monitor what's going out. Optional - left blank, no BCC is added.
-        $broadcastBcc = trim((string) $this->input('broadcast_bcc_email', ''));
-        if ($broadcastBcc !== '' && !filter_var($broadcastBcc, FILTER_VALIDATE_EMAIL)) {
-            $errors[] = 'Broadcast BCC must be a valid email address.';
-        }
-        $data['broadcast_bcc_email'] = $broadcastBcc;
 
         if ($errors) {
             $_SESSION['_errors'] = $errors;

@@ -202,8 +202,11 @@ $router->get('/admin/settings', 'Admin\\SettingsController@edit');
 $router->post('/admin/settings', 'Admin\\SettingsController@update');
 $router->get('/admin/page-visibility', 'Admin\\PageVisibilityController@edit');
 $router->post('/admin/page-visibility', 'Admin\\PageVisibilityController@update');
-$router->get('/admin/email-queue', 'Admin\\EmailQueueController@index');
-$router->post('/admin/email-queue/{id}/retry', 'Admin\\EmailQueueController@retry');
+$router->get('/admin/emails', 'Admin\\EmailController@index');
+$router->post('/admin/emails/settings', 'Admin\\EmailController@updateSettings');
+$router->post('/admin/emails/{id}/retry', 'Admin\\EmailController@retry');
+// Old bookmarked URL - the queue tab is this page's default, so it lands in the same place.
+$router->get('/admin/email-queue', 'Admin\\EmailController@index');
 $router->get('/admin/profile-reports', 'Admin\\ProfileReportsController@index');
 $router->post('/admin/profile-reports/{id}/resolve', 'Admin\\ProfileReportsController@resolve');
 $router->post('/admin/profile-reports/{id}/dismiss', 'Admin\\ProfileReportsController@dismiss');

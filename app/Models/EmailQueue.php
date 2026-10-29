@@ -60,4 +60,16 @@ class EmailQueue extends Model
     {
         return static::db()->query('SELECT * FROM email_queue ORDER BY created_at DESC LIMIT ' . max(1, $limit))->fetchAll();
     }
+
+    public static function paginated(int $limit, int $offset): array
+    {
+        $stmt = static::db()->prepare('SELECT * FROM email_queue ORDER BY created_at DESC LIMIT ' . max(1, $limit) . ' OFFSET ' . max(0, $offset));
+        $stmt->execute();
+        return $stmt->fetchAll();
+    }
+
+    public static function countAll(): int
+    {
+        return (int) static::db()->query('SELECT COUNT(*) FROM email_queue')->fetchColumn();
+    }
 }
