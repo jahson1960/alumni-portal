@@ -204,6 +204,7 @@ $router->get('/admin/page-visibility', 'Admin\\PageVisibilityController@edit');
 $router->post('/admin/page-visibility', 'Admin\\PageVisibilityController@update');
 $router->get('/admin/emails', 'Admin\\EmailController@index');
 $router->post('/admin/emails/settings', 'Admin\\EmailController@updateSettings');
+$router->post('/admin/emails/connection', 'Admin\\EmailController@updateConnection');
 $router->post('/admin/emails/{id}/retry', 'Admin\\EmailController@retry');
 // Old bookmarked URL - the queue tab is this page's default, so it lands in the same place.
 $router->get('/admin/email-queue', 'Admin\\EmailController@index');
