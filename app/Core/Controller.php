@@ -16,6 +16,11 @@ abstract class Controller
         require $viewFile;
         $content = ob_get_clean();
 
+        // Old form input (see old()) is meant to survive exactly one rendered page after a
+        // failed submission - the view above just had its one chance to read it via old(), so
+        // clear it now instead of leaving it to resurface on some unrelated page later.
+        unset($_SESSION['_old']);
+
         if ($layout === false) {
             echo $content;
             return;
