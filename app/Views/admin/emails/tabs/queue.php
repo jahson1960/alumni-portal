@@ -1,8 +1,6 @@
-<div class="flex justify-between items-center mb-4">
-  <p class="text-sm text-slate-500"><?= number_format($totalCount) ?> email<?= $totalCount === 1 ? '' : 's' ?> queued</p>
-</div>
-
 <p class="text-sm text-slate-500 mb-4">Every email the app sends — account credentials, password resets, and notification emails — passes through this queue. A background worker sends <code>pending</code> rows; a row flips to <code>failed</code> after 5 failed attempts and can be retried below.</p>
+
+<?php require dirname(__DIR__, 3) . '/partials/admin_pagination.php'; ?>
 
 <div class="card overflow-x-auto">
   <table class="table-base">
@@ -55,20 +53,3 @@
     </tbody>
   </table>
 </div>
-
-<?php if ($totalPages > 1): ?>
-  <?php $qs = function (array $overrides) {
-      $params = array_merge(['tab' => 'queue'], $overrides);
-      return '?' . http_build_query($params);
-  }; ?>
-  <div class="flex items-center justify-between mt-4">
-    <p class="text-xs text-slate-400">Showing <?= number_format(($page - 1) * $perPage + 1) ?>&ndash;<?= number_format(min($page * $perPage, $totalCount)) ?> of <?= number_format($totalCount) ?></p>
-    <div class="flex items-center gap-1.5">
-      <a href="<?= e(url('admin/emails') . $qs(['page' => max(1, $page - 1)])) ?>" class="w-8 h-8 rounded-lg border border-slate-200 flex items-center justify-center text-slate-400 hover:text-primary-navy <?= $page <= 1 ? 'pointer-events-none opacity-40' : '' ?>"><i class="fa-solid fa-arrow-left text-xs"></i></a>
-      <?php for ($p = 1; $p <= $totalPages; $p++): ?>
-        <a href="<?= e(url('admin/emails') . $qs(['page' => $p])) ?>" class="w-8 h-8 rounded-lg flex items-center justify-center text-xs font-semibold <?= $p === $page ? 'bg-gold text-white' : 'border border-slate-200 text-slate-600 hover:bg-slate-50' ?>"><?= $p ?></a>
-      <?php endfor; ?>
-      <a href="<?= e(url('admin/emails') . $qs(['page' => min($totalPages, $page + 1)])) ?>" class="w-8 h-8 rounded-lg border border-slate-200 flex items-center justify-center text-slate-400 hover:text-primary-navy <?= $page >= $totalPages ? 'pointer-events-none opacity-40' : '' ?>"><i class="fa-solid fa-arrow-right text-xs"></i></a>
-    </div>
-  </div>
-<?php endif; ?>

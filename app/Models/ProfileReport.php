@@ -24,6 +24,25 @@ class ProfileReport extends Model
         )->fetchAll();
     }
 
+    public static function paginateWithUsers(int $limit, int $offset): array
+    {
+        $stmt = static::db()->prepare(
+            "SELECT r.*, reporter.name AS reporter_name, reported.name AS reported_name, reported.id AS reported_id
+             FROM profile_reports r
+             JOIN users reporter ON reporter.id = r.reporter_id
+             JOIN users reported ON reported.id = r.reported_user_id
+             ORDER BY (r.status = 'pending') DESC, r.created_at DESC
+             LIMIT " . max(1, $limit) . ' OFFSET ' . max(0, $offset)
+        );
+        $stmt->execute();
+        return $stmt->fetchAll();
+    }
+
+    public static function countAll(): int
+    {
+        return (int) static::db()->query('SELECT COUNT(*) FROM profile_reports')->fetchColumn();
+    }
+
     public static function markResolved(int $id): void
     {
         $stmt = static::db()->prepare("UPDATE profile_reports SET status = 'resolved', resolved_at = NOW() WHERE id = ?");

@@ -8,10 +8,12 @@ class DonationMethodController extends AdminController
 {
     public function index(): void
     {
+        $p = $this->paginate(DonationMethod::count(), 30);
         $this->view('admin.donation_methods.index', [
             'title' => 'Donation Methods',
             'activeNav' => 'donation_methods',
-            'methods' => DonationMethod::all(),
+            'methods' => DonationMethod::paginate($p['perPage'], $p['offset'], 'sort_order ASC, id ASC'),
+            ...$p,
         ]);
     }
 

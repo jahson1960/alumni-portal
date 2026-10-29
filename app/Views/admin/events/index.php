@@ -1,7 +1,9 @@
 <div class="flex justify-between items-center mb-4">
-  <p class="text-sm text-slate-500"><?= count($events) ?> event<?= count($events) === 1 ? '' : 's' ?></p>
+  <h2 class="text-sm font-bold text-primary-navy">Events</h2>
   <a href="<?= e(url('admin/events/create')) ?>" class="btn-gold !px-4 !py-2 text-xs">+ New Event</a>
 </div>
+
+<?php require dirname(__DIR__, 2) . '/partials/admin_pagination.php'; ?>
 
 <div class="card overflow-x-auto">
   <table class="table-base">

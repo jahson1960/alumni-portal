@@ -8,10 +8,12 @@ class EventController extends AdminController
 {
     public function index(): void
     {
+        $p = $this->paginate(Event::count(), 30);
         $this->view('admin.events.index', [
             'title' => 'Events',
             'activeNav' => 'events',
-            'events' => Event::all('event_date DESC'),
+            'events' => Event::paginate($p['perPage'], $p['offset'], 'event_date DESC'),
+            ...$p,
         ]);
     }
 

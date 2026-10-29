@@ -8,10 +8,12 @@ class BenefitController extends AdminController
 {
     public function index(): void
     {
+        $p = $this->paginate(Benefit::count(), 30);
         $this->view('admin.benefits.index', [
             'title' => 'Benefits',
             'activeNav' => 'benefits',
-            'benefits' => Benefit::all('category ASC, title ASC'),
+            'benefits' => Benefit::paginate($p['perPage'], $p['offset'], 'category ASC, title ASC'),
+            ...$p,
         ]);
     }
 

@@ -12,22 +12,17 @@ $navItems = [
     'settings' => ['label' => 'Site Settings', 'icon' => 'fa-sliders', 'href' => url('admin/settings')],
     'page_visibility' => ['label' => 'Page Visibility', 'icon' => 'fa-eye', 'href' => url('admin/page-visibility')],
     'hero_slides' => ['label' => 'Hero Slides', 'icon' => 'fa-images', 'href' => url('admin/hero-slides')],
-    'news' => ['label' => 'News & Blog', 'icon' => 'fa-newspaper', 'href' => url('admin/news')],
-    'jobs' => ['label' => 'Jobs', 'icon' => 'fa-briefcase', 'href' => url('admin/jobs')],
+    'news' => ['label' => 'News & Blog', 'icon' => 'fa-newspaper', 'href' => url('admin/news'), 'matches' => ['news', 'news_categories']],
+    'jobs' => ['label' => 'Jobs', 'icon' => 'fa-briefcase', 'href' => url('admin/jobs'), 'matches' => ['jobs', 'job_categories']],
     'companies' => ['label' => 'Companies', 'icon' => 'fa-building', 'href' => url('admin/companies')],
     'events' => ['label' => 'Events', 'icon' => 'fa-calendar-days', 'href' => url('admin/events')],
     'resources' => ['label' => 'Resources', 'icon' => 'fa-folder-open', 'href' => url('admin/resources')],
-    'categories' => ['label' => 'Categories', 'icon' => 'fa-tags', 'href' => url('admin/categories')],
     'mentorship_areas' => ['label' => 'Mentorship Areas', 'icon' => 'fa-people-arrows', 'href' => url('admin/mentorship-areas')],
     'programs' => ['label' => 'Programs', 'icon' => 'fa-graduation-cap', 'href' => url('admin/programs')],
     'articles' => ['label' => 'Article Review', 'icon' => 'fa-book', 'href' => url('admin/articles')],
-    'campaigns' => ['label' => 'Giving Campaigns', 'icon' => 'fa-hand-holding-heart', 'href' => url('admin/campaigns')],
-    'donation_methods' => ['label' => 'Donation Methods', 'icon' => 'fa-building-columns', 'href' => url('admin/donation-methods')],
-    'donation_confirmations' => ['label' => 'Donation Confirmations', 'icon' => 'fa-clipboard-check', 'href' => url('admin/donation-confirmations')],
-    'giving_causes' => ['label' => 'Give Back Causes', 'icon' => 'fa-heart', 'href' => url('admin/giving-causes')],
+    'giving' => ['label' => 'Giving & Donations', 'icon' => 'fa-hand-holding-heart', 'href' => url('admin/campaigns'), 'matches' => ['campaigns', 'donation_methods', 'donation_confirmations', 'giving_causes']],
     'benefits' => ['label' => 'Benefits', 'icon' => 'fa-gift', 'href' => url('admin/benefits')],
-    'alumni' => ['label' => 'Alumni', 'icon' => 'fa-user-group', 'href' => url('admin/alumni')],
-    'alumni_roster' => ['label' => 'Alumni Roster', 'icon' => 'fa-id-card', 'href' => url('admin/alumni-roster')],
+    'alumni' => ['label' => 'Alumni', 'icon' => 'fa-user-group', 'href' => url('admin/alumni'), 'matches' => ['alumni', 'alumni_roster', 'register_alumni']],
     'register_alumni' => ['label' => 'Register Alumni', 'icon' => 'fa-user-plus', 'href' => url('admin/register-alumni')],
     'create_staff' => ['label' => 'Create Staff Account', 'icon' => 'fa-user-shield', 'href' => url('admin/create-staff')],
     'emails' => ['label' => 'Emails', 'icon' => 'fa-envelope', 'href' => url('admin/emails')],
@@ -38,6 +33,9 @@ $navItems = [
 // so an editor who lands on this layout (via AlumniRegistrationController) sees just this link.
 if (Auth::isEditor()) {
     $navItems = array_intersect_key($navItems, ['register_alumni' => true]);
+} else {
+    // Admins reach Register Alumni via the tab bar on the Alumni page instead of a separate link.
+    unset($navItems['register_alumni']);
 }
 ?>
 <!DOCTYPE html>
@@ -66,7 +64,7 @@ if (Auth::isEditor()) {
     </div>
     <nav class="flex-1 px-3 py-4 space-y-1">
       <?php foreach ($navItems as $key => $item): ?>
-        <a href="<?= e($item['href']) ?>" class="admin-nav-link <?= $activeNav === $key ? 'active' : '' ?>">
+        <a href="<?= e($item['href']) ?>" class="admin-nav-link <?= in_array($activeNav, $item['matches'] ?? [$key], true) ? 'active' : '' ?>">
           <i class="fa-solid <?= e($item['icon']) ?> w-4 text-center"></i> <?= e($item['label']) ?>
         </a>
       <?php endforeach; ?>

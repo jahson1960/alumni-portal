@@ -15,6 +15,20 @@ class Category extends Model
         return $stmt->fetchAll();
     }
 
+    public static function paginateByType(string $type, int $limit, int $offset): array
+    {
+        $stmt = static::db()->prepare('SELECT * FROM categories WHERE type = ? ORDER BY name ASC LIMIT ' . max(1, $limit) . ' OFFSET ' . max(0, $offset));
+        $stmt->execute([$type]);
+        return $stmt->fetchAll();
+    }
+
+    public static function countByType(string $type): int
+    {
+        $stmt = static::db()->prepare('SELECT COUNT(*) FROM categories WHERE type = ?');
+        $stmt->execute([$type]);
+        return (int) $stmt->fetchColumn();
+    }
+
     public static function create(string $type, string $name): int
     {
         return static::insertRow('categories', [

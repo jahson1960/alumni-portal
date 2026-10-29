@@ -9,10 +9,12 @@ class CampaignController extends AdminController
 {
     public function index(): void
     {
+        $p = $this->paginate(Campaign::count(), 30);
         $this->view('admin.campaigns.index', [
             'title' => 'Giving Campaigns',
             'activeNav' => 'campaigns',
-            'campaigns' => Campaign::all('created_at DESC'),
+            'campaigns' => Campaign::paginate($p['perPage'], $p['offset'], 'created_at DESC'),
+            ...$p,
         ]);
     }
 

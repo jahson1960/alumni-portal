@@ -1,7 +1,9 @@
 <div class="flex justify-between items-center mb-4">
-  <p class="text-sm text-slate-500"><?= count($companies) ?> compan<?= count($companies) === 1 ? 'y' : 'ies' ?></p>
+  <h2 class="text-sm font-bold text-primary-navy">Companies</h2>
   <a href="<?= e(url('admin/companies/create')) ?>" class="btn-gold !px-4 !py-2 text-xs">+ New Company</a>
 </div>
+
+<?php require dirname(__DIR__, 2) . '/partials/admin_pagination.php'; ?>
 
 <div class="card overflow-x-auto">
   <table class="table-base">

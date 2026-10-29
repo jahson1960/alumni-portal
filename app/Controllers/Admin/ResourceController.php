@@ -8,10 +8,12 @@ class ResourceController extends AdminController
 {
     public function index(): void
     {
+        $p = $this->paginate(Resource::count(), 30);
         $this->view('admin.resources.index', [
             'title' => 'Resources',
             'activeNav' => 'resources',
-            'resources' => Resource::all('category ASC, title ASC'),
+            'resources' => Resource::paginate($p['perPage'], $p['offset'], 'category ASC, title ASC'),
+            ...$p,
         ]);
     }
 

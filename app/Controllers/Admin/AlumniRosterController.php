@@ -9,10 +9,12 @@ class AlumniRosterController extends AdminController
 {
     public function index(): void
     {
+        $p = $this->paginate(AlumniRoster::count(), 30);
         $this->view('admin.alumni_roster.index', [
             'title' => 'Alumni Roster',
             'activeNav' => 'alumni_roster',
-            'rows' => AlumniRoster::all(),
+            'rows' => AlumniRoster::paginate($p['perPage'], $p['offset'], 'created_at DESC'),
+            ...$p,
         ]);
     }
 

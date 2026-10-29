@@ -8,10 +8,12 @@ class ProgramController extends AdminController
 {
     public function index(): void
     {
+        $p = $this->paginate(Program::count(), 30);
         $this->view('admin.programs.index', [
             'title' => 'Programs',
             'activeNav' => 'programs',
-            'programs' => Program::all('name ASC'),
+            'programs' => Program::paginate($p['perPage'], $p['offset'], 'name ASC'),
+            ...$p,
         ]);
     }
 

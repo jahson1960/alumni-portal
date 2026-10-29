@@ -1,5 +1,7 @@
+<?php $tabs = admin_jobs_tabs(); require dirname(__DIR__, 2) . '/partials/admin_group_tabs.php'; ?>
+
 <div class="flex justify-between items-center mb-4">
-  <p class="text-sm text-slate-500"><?= count($jobs) ?> listing<?= count($jobs) === 1 ? '' : 's' ?></p>
+  <h2 class="text-sm font-bold text-primary-navy">Jobs</h2>
   <div class="flex items-center gap-3">
     <?php if ($pendingCount > 0): ?>
       <a href="<?= e(url('admin/jobs/pending')) ?>" class="btn bg-amber-100 text-amber-700 hover:bg-amber-200 !px-4 !py-2 text-xs">
@@ -9,6 +11,8 @@
     <a href="<?= e(url('admin/jobs/create')) ?>" class="btn-gold !px-4 !py-2 text-xs">+ New Job</a>
   </div>
 </div>
+
+<?php require dirname(__DIR__, 2) . '/partials/admin_pagination.php'; ?>
 
 <div class="card overflow-x-auto">
   <table class="table-base">

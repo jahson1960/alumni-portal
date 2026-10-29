@@ -12,10 +12,12 @@ class AlumniController extends AdminController
 {
     public function index(): void
     {
+        $p = $this->paginate(User::countAlumniAdmin(), 30);
         $this->view('admin.alumni.index', [
-            'title' => 'Alumni',
+            'title' => 'Registered Alumni',
             'activeNav' => 'alumni',
-            'alumni' => User::allAlumniAdmin(),
+            'alumni' => User::paginateAlumniAdmin($p['perPage'], $p['offset']),
+            ...$p,
         ]);
     }
 

@@ -8,10 +8,12 @@ class ProfileReportsController extends AdminController
 {
     public function index(): void
     {
+        $p = $this->paginate(ProfileReport::countAll(), 30);
         $this->view('admin.profile_reports.index', [
             'title' => 'Profile Reports',
             'activeNav' => 'profile_reports',
-            'reports' => ProfileReport::allWithUsers(),
+            'reports' => ProfileReport::paginateWithUsers($p['perPage'], $p['offset']),
+            ...$p,
         ]);
     }
 

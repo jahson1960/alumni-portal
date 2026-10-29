@@ -916,3 +916,68 @@ function time_ago(?string $datetime): string
     }
     return (int) floor($diff / 604800) . 'w ago';
 }
+
+/**
+ * Builds a query string from the current request's $_GET merged with $overrides, for admin
+ * table pagination links. $prefix (when a page paginates more than one independent table)
+ * prefixes override keys so e.g. ['page' => 2] with $prefix 'pending' becomes pending_page=2
+ * without touching the other table's own page/per_page params already in $_GET.
+ */
+function admin_qs(array $overrides = [], string $prefix = ''): string
+{
+    if ($prefix !== '') {
+        $prefixed = [];
+        foreach ($overrides as $key => $value) {
+            $prefixed[$prefix . '_' . $key] = $value;
+        }
+        $overrides = $prefixed;
+    }
+    $params = array_merge($_GET, $overrides);
+    return '?' . http_build_query($params);
+}
+
+/** Tab list for the Giving & Donations admin group — each member page links to its own real route. */
+function admin_giving_tabs(): array
+{
+    return [
+        ['key' => 'campaigns', 'label' => 'Campaigns', 'icon' => 'fa-solid fa-hand-holding-heart', 'href' => url('admin/campaigns')],
+        ['key' => 'donation_methods', 'label' => 'Donation Methods', 'icon' => 'fa-solid fa-building-columns', 'href' => url('admin/donation-methods')],
+        ['key' => 'donation_confirmations', 'label' => 'Donation Confirmations', 'icon' => 'fa-solid fa-clipboard-check', 'href' => url('admin/donation-confirmations')],
+        ['key' => 'giving_causes', 'label' => 'Give Back Causes', 'icon' => 'fa-solid fa-heart', 'href' => url('admin/giving-causes')],
+    ];
+}
+
+/**
+ * Tab list for the Alumni admin group. Editors can only use Register Alumni (same restriction
+ * as their single sidebar link), so they only ever see that one tab.
+ */
+function admin_alumni_tabs(): array
+{
+    $tabs = [
+        ['key' => 'alumni', 'label' => 'Registered Alumni', 'icon' => 'fa-solid fa-user-group', 'href' => url('admin/alumni')],
+        ['key' => 'alumni_roster', 'label' => 'Alumni Roster', 'icon' => 'fa-solid fa-id-card', 'href' => url('admin/alumni-roster')],
+        ['key' => 'register_alumni', 'label' => 'Register Alumni', 'icon' => 'fa-solid fa-user-plus', 'href' => url('admin/register-alumni')],
+    ];
+    if (\App\Core\Auth::isEditor()) {
+        return array_values(array_filter($tabs, fn ($t) => $t['key'] === 'register_alumni'));
+    }
+    return $tabs;
+}
+
+/** Tab list for the Jobs admin group. */
+function admin_jobs_tabs(): array
+{
+    return [
+        ['key' => 'jobs', 'label' => 'Jobs', 'icon' => 'fa-solid fa-briefcase', 'href' => url('admin/jobs')],
+        ['key' => 'job_categories', 'label' => 'Job Categories', 'icon' => 'fa-solid fa-tags', 'href' => url('admin/job-categories')],
+    ];
+}
+
+/** Tab list for the News & Blog admin group. */
+function admin_news_tabs(): array
+{
+    return [
+        ['key' => 'news', 'label' => 'News & Blog', 'icon' => 'fa-solid fa-newspaper', 'href' => url('admin/news')],
+        ['key' => 'news_categories', 'label' => 'News Categories', 'icon' => 'fa-solid fa-tags', 'href' => url('admin/news-categories')],
+    ];
+}

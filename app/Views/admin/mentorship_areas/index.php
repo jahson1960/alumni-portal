@@ -9,6 +9,8 @@
     </form>
   </div>
 
+  <?php require dirname(__DIR__, 2) . '/partials/admin_pagination.php'; ?>
+
   <div class="card overflow-x-auto">
     <table class="table-base">
       <tbody>

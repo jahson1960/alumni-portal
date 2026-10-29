@@ -179,4 +179,33 @@ abstract class Controller
     {
         $_SESSION['_old'] = $data;
     }
+
+    /**
+     * Computes page/perPage/offset for an admin list table from the request's {$prefix}page and
+     * {$prefix}per_page query params. $prefix lets one page paginate more than one independent
+     * table (e.g. Article Review's pending + published lists) without their params colliding.
+     *
+     * @return array{page:int,perPage:int,offset:int,totalPages:int,totalCount:int}
+     */
+    protected function paginate(int $totalCount, int $defaultPerPage = 30, string $prefix = ''): array
+    {
+        $keyPrefix = $prefix !== '' ? $prefix . '_' : '';
+        $allowed = [30, 50, 100, 200];
+        $perPage = (int) $this->input($keyPrefix . 'per_page', $defaultPerPage);
+        if (!in_array($perPage, $allowed, true)) {
+            $perPage = $defaultPerPage;
+        }
+
+        $totalPages = max(1, (int) ceil($totalCount / $perPage));
+        $page = max(1, (int) $this->input($keyPrefix . 'page', 1));
+        $page = min($page, $totalPages);
+
+        return [
+            'page' => $page,
+            'perPage' => $perPage,
+            'offset' => ($page - 1) * $perPage,
+            'totalPages' => $totalPages,
+            'totalCount' => $totalCount,
+        ];
+    }
 }

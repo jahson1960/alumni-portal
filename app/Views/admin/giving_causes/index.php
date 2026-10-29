@@ -1,7 +1,11 @@
+<?php $tabs = admin_giving_tabs(); require dirname(__DIR__, 2) . '/partials/admin_group_tabs.php'; ?>
+
 <div class="flex justify-between items-center mb-4">
-  <p class="text-sm text-slate-500"><?= count($causes) ?> cause<?= count($causes) === 1 ? '' : 's' ?> &mdash; shown as individual links in the "Give Back" mega-menu</p>
+  <h2 class="text-sm font-bold text-primary-navy">Give Back &mdash; Causes</h2>
   <a href="<?= e(url('admin/giving-causes/create')) ?>" class="btn-gold !px-4 !py-2 text-xs">+ New Cause</a>
 </div>
+
+<?php require dirname(__DIR__, 2) . '/partials/admin_pagination.php'; ?>
 
 <div class="card overflow-x-auto">
   <table class="table-base">

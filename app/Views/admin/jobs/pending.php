@@ -1,6 +1,9 @@
 <a href="<?= e(url('admin/jobs')) ?>" class="text-xs text-slate-500 hover:text-gold mb-4 inline-block"><i class="fa-solid fa-arrow-left"></i> Back to Jobs</a>
 
-<h3 class="section-title text-xs mb-3">Awaiting Review (<?= count($jobs) ?>)</h3>
+<h3 class="section-title text-xs mb-3">Awaiting Review (<?= number_format($totalCount) ?>)</h3>
+
+<?php require dirname(__DIR__, 2) . '/partials/admin_pagination.php'; ?>
+
 <div class="card overflow-x-auto">
   <table class="table-base">
     <thead><tr><th>Title</th><th>Company</th><th>Posted By</th><th>Submitted</th><th></th></tr></thead>

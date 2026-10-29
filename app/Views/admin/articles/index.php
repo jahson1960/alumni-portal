@@ -1,4 +1,11 @@
-<h3 class="section-title text-xs mb-3">Pending Review (<?= count($pending) ?>)</h3>
+<h3 class="section-title text-xs mb-3">Pending Review (<?= number_format($pendingPagination['totalCount']) ?>)</h3>
+
+<?php
+['page' => $page, 'perPage' => $perPage, 'totalPages' => $totalPages, 'totalCount' => $totalCount] = $pendingPagination;
+$prefix = 'pending';
+require dirname(__DIR__, 2) . '/partials/admin_pagination.php';
+?>
+
 <div class="card overflow-x-auto mb-8">
   <table class="table-base">
     <thead><tr><th>Title</th><th>Author</th><th>Category</th><th>Submitted</th><th></th></tr></thead>
@@ -28,7 +35,14 @@
   </table>
 </div>
 
-<h3 class="section-title text-xs mb-3">Published (<?= count($published) ?>)</h3>
+<h3 class="section-title text-xs mb-3">Published (<?= number_format($publishedPagination['totalCount']) ?>)</h3>
+
+<?php
+['page' => $page, 'perPage' => $perPage, 'totalPages' => $totalPages, 'totalCount' => $totalCount] = $publishedPagination;
+$prefix = 'published';
+require dirname(__DIR__, 2) . '/partials/admin_pagination.php';
+?>
+
 <div class="card overflow-x-auto">
   <table class="table-base">
     <thead><tr><th>Title</th><th>Author</th><th>Category</th><th>Published</th><th></th></tr></thead>

@@ -10,10 +10,12 @@ class CompanyController extends AdminController
 {
     public function index(): void
     {
+        $p = $this->paginate(Company::count(), 30);
         $this->view('admin.companies.index', [
             'title' => 'Companies',
             'activeNav' => 'companies',
-            'companies' => Company::all(),
+            'companies' => Company::paginate($p['perPage'], $p['offset'], 'name ASC'),
+            ...$p,
         ]);
     }
 

@@ -293,8 +293,10 @@ $router->post('/admin/hero-slides/{id}', 'Admin\\HeroSlideController@update');
 $router->post('/admin/hero-slides/{id}/delete', 'Admin\\HeroSlideController@destroy');
 $router->post('/admin/hero-slides/{id}/toggle', 'Admin\\HeroSlideController@toggle');
 
-// Admin: categories
+// Admin: categories (split into Job Categories, tabbed with Jobs, and News Categories, tabbed with News & Blog)
 $router->get('/admin/categories', 'Admin\\CategoryController@index');
+$router->get('/admin/job-categories', 'Admin\\CategoryController@jobIndex');
+$router->get('/admin/news-categories', 'Admin\\CategoryController@newsIndex');
 $router->post('/admin/categories', 'Admin\\CategoryController@store');
 $router->get('/admin/categories/{id}/edit', 'Admin\\CategoryController@edit');
 $router->post('/admin/categories/{id}', 'Admin\\CategoryController@update');

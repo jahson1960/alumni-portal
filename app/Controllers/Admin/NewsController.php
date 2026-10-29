@@ -11,10 +11,12 @@ class NewsController extends AdminController
 {
     public function index(): void
     {
+        $p = $this->paginate(NewsPost::count(), 30);
         $this->view('admin.news.index', [
             'title' => 'News & Blog',
             'activeNav' => 'news',
-            'posts' => NewsPost::all('created_at DESC'),
+            'posts' => NewsPost::paginate($p['perPage'], $p['offset'], 'created_at DESC'),
+            ...$p,
         ]);
     }
 

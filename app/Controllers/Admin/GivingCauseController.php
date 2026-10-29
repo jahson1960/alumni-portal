@@ -10,10 +10,12 @@ class GivingCauseController extends AdminController
 
     public function index(): void
     {
+        $p = $this->paginate(GivingCause::count(), 30);
         $this->view('admin.giving_causes.index', [
             'title' => 'Give Back — Causes',
             'activeNav' => 'giving_causes',
-            'causes' => GivingCause::allOrdered(),
+            'causes' => GivingCause::paginate($p['perPage'], $p['offset'], 'column_group ASC, sort_order ASC, id ASC'),
+            ...$p,
         ]);
     }
 

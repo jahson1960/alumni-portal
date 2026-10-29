@@ -1,4 +1,5 @@
-<a href="<?= e(url('admin/categories')) ?>" class="text-xs text-slate-500 hover:text-gold mb-4 inline-block"><i class="fa-solid fa-arrow-left"></i> Back to Categories</a>
+<?php $backTo = $category['type'] === 'news' ? ['admin/news-categories', 'News Categories'] : ['admin/job-categories', 'Job Categories']; ?>
+<a href="<?= e(url($backTo[0])) ?>" class="text-xs text-slate-500 hover:text-gold mb-4 inline-block"><i class="fa-solid fa-arrow-left"></i> Back to <?= e($backTo[1]) ?></a>
 
 <?php require dirname(dirname(__DIR__)) . '/partials/errors.php'; ?>
 

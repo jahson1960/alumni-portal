@@ -1,10 +1,14 @@
+<?php $tabs = admin_alumni_tabs(); require dirname(__DIR__, 2) . '/partials/admin_group_tabs.php'; ?>
+
 <div class="flex justify-between items-center mb-4">
   <div>
-    <p class="text-sm text-slate-500"><?= count($rows) ?> roster entr<?= count($rows) === 1 ? 'y' : 'ies' ?></p>
+    <h2 class="text-sm font-bold text-primary-navy">Alumni Roster</h2>
     <p class="text-xs text-slate-400">A matric number must match a row here before someone can register — their name, program, cohort and graduation year are pulled from that row automatically. Each row can only be claimed by one account.</p>
   </div>
   <a href="<?= e(url('admin/alumni-roster/create')) ?>" class="btn-gold !px-4 !py-2 text-xs flex-shrink-0">+ New Entry</a>
 </div>
+
+<?php require dirname(__DIR__, 2) . '/partials/admin_pagination.php'; ?>
 
 <div class="card overflow-x-auto">
   <table class="table-base">

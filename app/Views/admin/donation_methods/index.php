@@ -1,10 +1,14 @@
+<?php $tabs = admin_giving_tabs(); require dirname(__DIR__, 2) . '/partials/admin_group_tabs.php'; ?>
+
 <div class="flex justify-between items-center mb-4">
   <div>
-    <p class="text-sm text-slate-500"><?= count($methods) ?> donation method<?= count($methods) === 1 ? '' : 's' ?></p>
+    <h2 class="text-sm font-bold text-primary-navy">Donation Methods</h2>
     <p class="text-xs text-slate-400">Shown to every alumnus who clicks "Give to this Campaign" on the Give Back page, for any campaign.</p>
   </div>
   <a href="<?= e(url('admin/donation-methods/create')) ?>" class="btn-gold !px-4 !py-2 text-xs flex-shrink-0">+ New Method</a>
 </div>
+
+<?php require dirname(__DIR__, 2) . '/partials/admin_pagination.php'; ?>
 
 <div class="card overflow-x-auto">
   <table class="table-base">

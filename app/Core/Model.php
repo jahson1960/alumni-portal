@@ -25,6 +25,18 @@ abstract class Model
         return static::db()->query('SELECT * FROM ' . static::$table . ' ORDER BY ' . $orderBy)->fetchAll();
     }
 
+    public static function paginate(int $limit, int $offset, string $orderBy = 'id DESC'): array
+    {
+        $stmt = static::db()->prepare('SELECT * FROM ' . static::$table . ' ORDER BY ' . $orderBy . ' LIMIT ' . max(1, $limit) . ' OFFSET ' . max(0, $offset));
+        $stmt->execute();
+        return $stmt->fetchAll();
+    }
+
+    public static function count(): int
+    {
+        return (int) static::db()->query('SELECT COUNT(*) FROM ' . static::$table)->fetchColumn();
+    }
+
     public static function delete(int $id): bool
     {
         $stmt = static::db()->prepare('DELETE FROM ' . static::$table . ' WHERE id = ?');

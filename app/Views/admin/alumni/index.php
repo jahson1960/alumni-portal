@@ -1,7 +1,11 @@
+<?php $tabs = admin_alumni_tabs(); require dirname(__DIR__, 2) . '/partials/admin_group_tabs.php'; ?>
+
 <div class="flex justify-between items-center mb-4">
-  <p class="text-sm text-slate-500"><?= count($alumni) ?> alumni account<?= count($alumni) === 1 ? '' : 's' ?></p>
+  <h2 class="text-sm font-bold text-primary-navy">Registered Alumni</h2>
   <a href="<?= e(url('admin/register-alumni')) ?>" class="btn-gold !px-4 !py-2 text-xs">+ Register Alumni</a>
 </div>
+
+<?php require dirname(__DIR__, 2) . '/partials/admin_pagination.php'; ?>
 
 <div class="card overflow-x-auto">
   <table class="table-base">

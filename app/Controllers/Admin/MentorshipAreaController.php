@@ -8,10 +8,12 @@ class MentorshipAreaController extends AdminController
 {
     public function index(): void
     {
+        $p = $this->paginate(MentorshipArea::count(), 30);
         $this->view('admin.mentorship_areas.index', [
             'title' => 'Mentorship Areas',
             'activeNav' => 'mentorship_areas',
-            'areas' => MentorshipArea::all('name ASC'),
+            'areas' => MentorshipArea::paginate($p['perPage'], $p['offset'], 'name ASC'),
+            ...$p,
         ]);
     }
 

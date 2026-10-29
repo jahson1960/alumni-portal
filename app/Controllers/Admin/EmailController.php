@@ -12,7 +12,6 @@ use App\Models\Setting;
 class EmailController extends AdminController
 {
     private const TABS = ['queue', 'settings', 'connection'];
-    private const PER_PAGE = 25;
 
     public function index(): void
     {
@@ -30,17 +29,10 @@ class EmailController extends AdminController
 
     private function queueTabData(): array
     {
-        $page = max(1, (int) $this->input('page', 1));
-        $total = EmailQueue::countAll();
-        $totalPages = max(1, (int) ceil($total / self::PER_PAGE));
-        $page = min($page, $totalPages);
-
+        $p = $this->paginate(EmailQueue::countAll(), 30);
         return [
-            'emails' => EmailQueue::paginated(self::PER_PAGE, ($page - 1) * self::PER_PAGE),
-            'page' => $page,
-            'totalPages' => $totalPages,
-            'totalCount' => $total,
-            'perPage' => self::PER_PAGE,
+            'emails' => EmailQueue::paginated($p['perPage'], $p['offset']),
+            ...$p,
         ];
     }
 

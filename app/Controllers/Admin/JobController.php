@@ -17,7 +17,8 @@ class JobController extends AdminController
 {
     public function index(): void
     {
-        $jobs = Job::all('posted_at DESC, created_at DESC');
+        $p = $this->paginate(Job::count(), 30);
+        $jobs = Job::paginate($p['perPage'], $p['offset'], 'posted_at DESC, created_at DESC');
 
         $this->view('admin.jobs.index', [
             'title' => 'Jobs',
@@ -25,15 +26,18 @@ class JobController extends AdminController
             'jobs' => $jobs,
             'pendingCount' => Job::countPendingApproval(),
             'applicantCounts' => JobApplication::countsForJobs(array_column($jobs, 'id')),
+            ...$p,
         ]);
     }
 
     public function pending(): void
     {
+        $p = $this->paginate(Job::countPendingApproval(), 30);
         $this->view('admin.jobs.pending', [
             'title' => 'Job Approval Queue',
             'activeNav' => 'jobs',
-            'jobs' => Job::pendingApproval(),
+            'jobs' => Job::pendingApproval($p['perPage'], $p['offset']),
+            ...$p,
         ]);
     }
 

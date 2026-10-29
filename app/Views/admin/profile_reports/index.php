@@ -1,5 +1,7 @@
 <p class="text-sm text-slate-500 mb-4">Profiles flagged by alumni via the "Report Profile" action on a profile page.</p>
 
+<?php require dirname(__DIR__, 2) . '/partials/admin_pagination.php'; ?>
+
 <div class="card overflow-x-auto">
   <table class="table-base">
     <thead>

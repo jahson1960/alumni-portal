@@ -46,4 +46,23 @@ class DonationConfirmation extends Model
              ORDER BY {$orderBy}"
         )->fetchAll();
     }
+
+    public static function paginateAll(int $limit, int $offset, string $orderBy = 'd.created_at DESC'): array
+    {
+        $stmt = static::db()->prepare(
+            "SELECT d.*, u.name AS user_name, u.email AS user_email, c.title AS campaign_title
+             FROM donation_confirmations d
+             JOIN users u ON u.id = d.user_id
+             JOIN campaigns c ON c.id = d.campaign_id
+             ORDER BY {$orderBy}
+             LIMIT " . max(1, $limit) . ' OFFSET ' . max(0, $offset)
+        );
+        $stmt->execute();
+        return $stmt->fetchAll();
+    }
+
+    public static function countAll(): int
+    {
+        return (int) static::db()->query('SELECT COUNT(*) FROM donation_confirmations')->fetchColumn();
+    }
 }

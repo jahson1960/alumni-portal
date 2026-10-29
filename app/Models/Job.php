@@ -228,14 +228,16 @@ class Job extends Model
     }
 
     /** Jobs awaiting admin review, oldest first, with poster name. */
-    public static function pendingApproval(): array
+    public static function pendingApproval(int $limit = 0, int $offset = 0): array
     {
-        return static::db()->query(
-            "SELECT j.*, u.name AS poster_name FROM jobs j
-             LEFT JOIN users u ON u.id = j.posted_by
-             WHERE j.approval_status = 'pending'
-             ORDER BY j.created_at ASC"
-        )->fetchAll();
+        $sql = "SELECT j.*, u.name AS poster_name FROM jobs j
+                LEFT JOIN users u ON u.id = j.posted_by
+                WHERE j.approval_status = 'pending'
+                ORDER BY j.created_at ASC";
+        if ($limit > 0) {
+            $sql .= ' LIMIT ' . $limit . ' OFFSET ' . max(0, $offset);
+        }
+        return static::db()->query($sql)->fetchAll();
     }
 
     public static function countPendingApproval(): int

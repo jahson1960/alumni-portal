@@ -52,6 +52,30 @@ class Article extends Model
         return static::db()->query(self::AUTHOR_JOIN . " WHERE a.status = 'pending' ORDER BY a.created_at ASC")->fetchAll();
     }
 
+    public static function paginatePending(int $limit, int $offset): array
+    {
+        $stmt = static::db()->prepare(self::AUTHOR_JOIN . " WHERE a.status = 'pending' ORDER BY a.created_at ASC LIMIT " . max(1, $limit) . ' OFFSET ' . max(0, $offset));
+        $stmt->execute();
+        return $stmt->fetchAll();
+    }
+
+    public static function countPending(): int
+    {
+        return (int) static::db()->query("SELECT COUNT(*) FROM articles WHERE status = 'pending'")->fetchColumn();
+    }
+
+    public static function paginatePublished(int $limit, int $offset): array
+    {
+        $stmt = static::db()->prepare(self::AUTHOR_JOIN . " WHERE a.status = 'published' ORDER BY a.published_at DESC LIMIT " . max(1, $limit) . ' OFFSET ' . max(0, $offset));
+        $stmt->execute();
+        return $stmt->fetchAll();
+    }
+
+    public static function countPublishedAll(): int
+    {
+        return (int) static::db()->query("SELECT COUNT(*) FROM articles WHERE status = 'published'")->fetchColumn();
+    }
+
     public static function byAuthor(int $userId): array
     {
         $stmt = static::db()->prepare('SELECT * FROM articles WHERE user_id = ? ORDER BY created_at DESC');
