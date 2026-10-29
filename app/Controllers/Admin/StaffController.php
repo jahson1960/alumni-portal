@@ -72,7 +72,7 @@ class StaffController extends AdminController
             'login'
         ));
 
-        $_SESSION['_created_staff'] = ['name' => $name, 'email' => $email, 'password' => $tempPassword, 'role' => self::ROLE_LABELS[$role]];
+        $_SESSION['_created_staff'] = ['name' => $name, 'email' => $email, 'role' => self::ROLE_LABELS[$role]];
         $this->redirect('admin/create-staff/success');
     }
 

@@ -1,12 +1,5 @@
 <a href="<?= e(url('admin/alumni')) ?>" class="text-xs text-slate-500 hover:text-gold mb-4 inline-block"><i class="fa-solid fa-arrow-left"></i> Back to Alumni</a>
 
-<?php if ($resetResult): ?>
-  <div class="card p-4 mb-4 !bg-emerald-50 !border-emerald-100">
-    <p class="text-sm font-semibold text-emerald-800 mb-1">Password reset for <?= e($resetResult['name']) ?></p>
-    <p class="text-xs text-emerald-700">A reset email has been queued, but here's the temporary password in case it doesn't arrive — share it securely: <code class="bg-white border border-emerald-200 rounded px-2 py-0.5 font-mono"><?= e($resetResult['password']) ?></code></p>
-  </div>
-<?php endif; ?>
-
 <div class="card p-6 max-w-2xl">
   <div class="flex items-center gap-4 mb-6">
     <?= avatar_html($alum, 'w-16 h-16') ?>

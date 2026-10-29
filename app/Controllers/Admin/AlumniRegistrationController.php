@@ -103,7 +103,7 @@ class AlumniRegistrationController extends Controller
             'login'
         ));
 
-        $_SESSION['_registered_alumni'] = ['name' => $name, 'email' => $email, 'password' => $tempPassword];
+        $_SESSION['_registered_alumni'] = ['name' => $name, 'email' => $email];
         $this->redirect('admin/register-alumni/success');
     }
 

@@ -27,16 +27,12 @@ class AlumniController extends AdminController
             $this->redirect('admin/alumni');
         }
 
-        $resetResult = $_SESSION['_reset_password_result'] ?? null;
-        unset($_SESSION['_reset_password_result']);
-
         $isActualAlumni = $alum['role'] === 'alumni';
 
         $this->view('admin.alumni.show', [
             'title' => $alum['name'],
             'activeNav' => 'alumni',
             'alum' => $alum,
-            'resetResult' => $resetResult,
             'allCategories' => Category::forType('job'),
             'selectedIds' => Category::idsForUser((int) $id),
             'allAdvisors' => $isActualAlumni ? Advisor::allAdvisors() : [],
@@ -125,7 +121,6 @@ class AlumniController extends AdminController
             'login'
         ));
 
-        $_SESSION['_reset_password_result'] = ['name' => $alum['name'], 'password' => $tempPassword];
         $this->flash('success', 'Password reset. A temporary password has been emailed to the alumnus.');
         $this->redirect("admin/alumni/{$id}");
     }
