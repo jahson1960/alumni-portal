@@ -21,7 +21,7 @@ return [
     // emails — unlike paths rendered in a browser, an email has no "current page" to resolve a
     // relative URL against. Leave null to fall back to the host of the request that queued the
     // email (fine for a single-domain site); set explicitly if that's ever not reliable, e.g.
-    // 'https://alumni.rbsnapps.com'.
+    // 'https://alumni.romebusinessschool.ng'.
     'app_url' => null,
     // SMTP credentials for outbound email (account registration, password resets, in-app
     // notifications). Leave host/username blank to leave mail features inert — queued emails
