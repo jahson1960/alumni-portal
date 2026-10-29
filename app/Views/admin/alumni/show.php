@@ -70,6 +70,40 @@
     </form>
   </div>
 
+  <?php if ($alum['role'] === 'alumni'): ?>
+  <div class="mt-6 pt-6 border-t border-slate-100">
+    <h3 class="section-title text-xs mb-3">Assigned Advisors</h3>
+    <?php if (empty($allAdvisors)): ?>
+      <p class="text-xs text-slate-400">No advisor accounts exist yet — create one from <a href="<?= e(url('admin/create-staff')) ?>" class="text-gold hover:underline">Create Staff Account</a>.</p>
+    <?php else: ?>
+      <form method="POST" action="<?= e(url('admin/alumni/' . $alum['id'] . '/advisors')) ?>" class="space-y-2">
+        <?= csrf_field() ?>
+        <div class="flex flex-wrap gap-3">
+          <?php foreach ($allAdvisors as $advisor): ?>
+            <label class="flex items-center gap-1.5 text-xs text-slate-600">
+              <input type="checkbox" name="advisor_ids[]" value="<?= e($advisor['id']) ?>" <?= in_array((int) $advisor['id'], $assignedAdvisorIds, true) ? 'checked' : '' ?>>
+              <?= e($advisor['name']) ?>
+            </label>
+          <?php endforeach; ?>
+        </div>
+        <button type="submit" class="btn-gold !px-4 !py-2 text-xs">Save Advisors</button>
+      </form>
+    <?php endif; ?>
+
+    <?php if ($advisorNotes): ?>
+      <div class="mt-4 space-y-3">
+        <h4 class="text-[0.65rem] font-bold text-slate-400 uppercase tracking-wide">Advisor Notes</h4>
+        <?php foreach ($advisorNotes as $note): ?>
+          <div class="bg-slate-50 border border-slate-100 rounded-lg p-3">
+            <p class="text-xs text-slate-600 whitespace-pre-line"><?= e($note['note']) ?></p>
+            <p class="text-[0.65rem] text-slate-400 mt-1"><?= e($note['advisor_name']) ?> &middot; <?= e(format_date($note['created_at'], 'M j, Y')) ?></p>
+          </div>
+        <?php endforeach; ?>
+      </div>
+    <?php endif; ?>
+  </div>
+  <?php endif; ?>
+
   <div class="mt-6 pt-6 border-t border-slate-100">
     <h3 class="section-title text-xs mb-3">Editor Access</h3>
     <p class="text-xs text-slate-500 mb-3">Editors can see any page restricted to "Editors & Admins" in Page Visibility settings. No admin-panel access is granted.</p>

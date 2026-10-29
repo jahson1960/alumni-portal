@@ -2,6 +2,8 @@
 
 namespace App\Controllers\Admin;
 
+use App\Models\Advisor;
+use App\Models\AdvisorNote;
 use App\Models\Category;
 use App\Models\EmailQueue;
 use App\Models\User;
@@ -20,13 +22,15 @@ class AlumniController extends AdminController
     public function show(string $id): void
     {
         $alum = User::find((int) $id);
-        if (!$alum || !in_array($alum['role'], ['alumni', 'editor', 'recruiter'], true)) {
+        if (!$alum || !in_array($alum['role'], ['alumni', 'editor', 'recruiter', 'advisor'], true)) {
             $this->flash('error', 'Alumni not found.');
             $this->redirect('admin/alumni');
         }
 
         $resetResult = $_SESSION['_reset_password_result'] ?? null;
         unset($_SESSION['_reset_password_result']);
+
+        $isActualAlumni = $alum['role'] === 'alumni';
 
         $this->view('admin.alumni.show', [
             'title' => $alum['name'],
@@ -35,6 +39,9 @@ class AlumniController extends AdminController
             'resetResult' => $resetResult,
             'allCategories' => Category::forType('job'),
             'selectedIds' => Category::idsForUser((int) $id),
+            'allAdvisors' => $isActualAlumni ? Advisor::allAdvisors() : [],
+            'assignedAdvisorIds' => $isActualAlumni ? Advisor::advisorIdsForAlumni((int) $id) : [],
+            'advisorNotes' => $isActualAlumni ? AdvisorNote::forAlumni((int) $id) : [],
         ]);
     }
 
@@ -42,7 +49,7 @@ class AlumniController extends AdminController
     {
         $this->requireCsrf();
         $alum = User::find((int) $id);
-        if (!$alum || !in_array($alum['role'], ['alumni', 'editor', 'recruiter'], true)) {
+        if (!$alum || !in_array($alum['role'], ['alumni', 'editor', 'recruiter', 'advisor'], true)) {
             $this->flash('error', 'Alumni not found.');
             $this->redirect('admin/alumni');
         }
@@ -55,6 +62,22 @@ class AlumniController extends AdminController
 
         Category::syncUserJobCategories((int) $id, $jobCategoryIds);
         $this->flash('success', 'Job categories updated.');
+        $this->redirect("admin/alumni/{$id}");
+    }
+
+    /** Admin-only: syncs which advisor(s) are assigned to an alumnus. */
+    public function updateAdvisors(string $id): void
+    {
+        $this->requireCsrf();
+        $alum = User::find((int) $id);
+        if (!$alum || $alum['role'] !== 'alumni') {
+            $this->flash('error', 'Alumni not found.');
+            $this->redirect('admin/alumni');
+        }
+
+        $advisorIds = array_map('intval', (array) $this->input('advisor_ids', []));
+        Advisor::syncAdvisorsForAlumni((int) $id, $advisorIds);
+        $this->flash('success', 'Assigned advisors updated.');
         $this->redirect("admin/alumni/{$id}");
     }
 
@@ -79,7 +102,7 @@ class AlumniController extends AdminController
     {
         $this->requireCsrf();
         $alum = User::find((int) $id);
-        if (!$alum || !in_array($alum['role'], ['alumni', 'editor', 'recruiter'], true)) {
+        if (!$alum || !in_array($alum['role'], ['alumni', 'editor', 'recruiter', 'advisor'], true)) {
             $this->flash('error', 'Alumni not found.');
             $this->redirect('admin/alumni');
         }

@@ -136,6 +136,9 @@ if ($authUser && $authUser['program']) {
                   <div>
                     <?= mega_col_heading('Connections') ?>
                     <div class="space-y-1">
+                      <?php if (\App\Core\Auth::isAdvisor()): ?>
+                        <?= mega_item(url('advisor/my-alumni'), 'fa-solid fa-user-tie', 'My Assigned Alumni', 'Alumni you are advising') ?>
+                      <?php endif; ?>
                       <?= mega_item(url('connections'), 'fa-solid fa-user-group', 'My Connections', 'People you are connected with') ?>
                       <?= mega_item(url('connections#requests'), 'fa-solid fa-user-plus', 'Connection Requests', 'Manage incoming and sent requests') ?>
                       <?= mega_item(url('connections#suggested'), 'fa-solid fa-star', 'Suggested Connections', 'Alumni you may want to connect with') ?>
@@ -936,7 +939,8 @@ if ($authUser && $authUser['program']) {
           ['href' => url('businesses'), 'icon' => 'fa-solid fa-store', 'label' => 'Alumni Businesses', 'desc' => 'Discover businesses run by alumni'],
         ])); endif; ?>
 
-        <?php if ($authUser && !\App\Core\Auth::isRecruiter()): $mobileAccordion('connections', 'connections', 'fa-solid fa-user-group', 'Connections', 'Grow your professional network.', [
+        <?php if ($authUser && !\App\Core\Auth::isRecruiter()): $mobileAccordion('connections', 'connections', 'fa-solid fa-user-group', 'Connections', 'Grow your professional network.', array_filter([
+          \App\Core\Auth::isAdvisor() ? ['href' => url('advisor/my-alumni'), 'icon' => 'fa-solid fa-user-tie', 'label' => 'My Assigned Alumni', 'desc' => 'Alumni you are advising'] : null,
           ['href' => url('connections'), 'icon' => 'fa-solid fa-user-group', 'label' => 'My Connections', 'desc' => 'Keep in touch with your connections'],
           ['href' => url('connections#requests'), 'icon' => 'fa-solid fa-user-plus', 'label' => 'Connection Requests', 'desc' => 'Manage incoming and outgoing requests'],
           ['href' => url('connections#suggested'), 'icon' => 'fa-solid fa-star', 'label' => 'Suggested Connections', 'desc' => 'Alumni you may want to connect with'],
@@ -945,7 +949,7 @@ if ($authUser && $authUser['program']) {
           ['href' => url('messages'), 'icon' => 'fa-solid fa-envelope', 'label' => 'Messages', 'desc' => 'Your private conversations'],
           ['href' => url('mentorship'), 'icon' => 'fa-solid fa-chalkboard-user', 'label' => 'Mentorship', 'desc' => 'Find or become a mentor'],
           ['href' => url('notifications'), 'icon' => 'fa-solid fa-bell', 'label' => 'Notifications', 'desc' => 'Your latest alerts and updates'],
-        ]); endif; ?>
+        ])); endif; ?>
 
         <?php
           $isAdmin = $authUser && $authUser['role'] === 'admin';

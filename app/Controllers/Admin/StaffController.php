@@ -6,14 +6,14 @@ use App\Models\EmailQueue;
 use App\Models\User;
 
 /**
- * Lets an admin create an Admin, Editor, or Recruiter account directly - no alumni roster
- * involved, unlike AlumniRegistrationController. Admin-only (granting roles is higher-trust
- * than registering an alumnus, which editors are also allowed to do).
+ * Lets an admin create an Admin, Editor, Recruiter, or Advisor account directly - no alumni
+ * roster involved, unlike AlumniRegistrationController. Admin-only (granting roles is
+ * higher-trust than registering an alumnus, which editors are also allowed to do).
  */
 class StaffController extends AdminController
 {
-    private const ROLES = ['admin', 'editor', 'recruiter'];
-    private const ROLE_LABELS = ['admin' => 'Admin', 'editor' => 'Editor', 'recruiter' => 'Recruiter'];
+    private const ROLES = ['admin', 'editor', 'recruiter', 'advisor'];
+    private const ROLE_LABELS = ['admin' => 'Admin', 'editor' => 'Editor', 'recruiter' => 'Recruiter', 'advisor' => 'Advisor'];
 
     public function create(): void
     {

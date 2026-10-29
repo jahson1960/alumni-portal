@@ -27,6 +27,7 @@
       <strong>Admin</strong> — full admin-panel access.
       <strong>Editor</strong> — can register alumni on the public site's behalf; no other admin access.
       <strong>Recruiter</strong> — a non-alumni account scoped to Jobs and Messages only (no Alumni Directory, Connections, Community Feed, or Mentorship).
+      <strong>Advisor</strong> — a non-alumni account you can assign to specific alumni; can view their profile, message them, and keep private advising notes, plus has the same alumni-social access as a regular alumnus.
     </p>
   </div>
 

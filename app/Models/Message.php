@@ -89,11 +89,12 @@ class Message extends Model
     }
 
     /**
-     * True if $a and $b are allowed to message each other: an accepted connection, or a
-     * recruiter/applicant relationship - either posted a job the other applied to, or one of
-     * them is an admin reaching someone who has genuinely applied to a job somewhere (admins
-     * manage every job's applicants, including jobs with no individual poster on record).
-     * Hiring conversations shouldn't require first sending and accepting a connection request.
+     * True if $a and $b are allowed to message each other: an accepted connection, a
+     * recruiter/applicant relationship (either posted a job the other applied to), an
+     * advisor messaging an alumnus they're assigned to (or vice versa), or one of them is an
+     * admin reaching someone who has genuinely applied to a job somewhere (admins manage every
+     * job's applicants, including jobs with no individual poster on record). Hiring and
+     * advising conversations shouldn't require first sending and accepting a connection request.
      */
     public static function canMessage(int $a, int $b): bool
     {
@@ -115,6 +116,14 @@ class Message extends Model
         $roles = static::db()->prepare('SELECT id, role FROM users WHERE id IN (?, ?)');
         $roles->execute([$a, $b]);
         $roleById = array_column($roles->fetchAll(), 'role', 'id');
+
+        if (($roleById[$a] ?? null) === 'advisor' && Advisor::isAssigned($a, $b)) {
+            return true;
+        }
+        if (($roleById[$b] ?? null) === 'advisor' && Advisor::isAssigned($b, $a)) {
+            return true;
+        }
+
         $adminId = null;
         $otherId = null;
         if (($roleById[$a] ?? null) === 'admin') {

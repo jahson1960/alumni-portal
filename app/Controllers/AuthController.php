@@ -117,6 +117,7 @@ class AuthController extends Controller
             $defaultDestination = match (true) {
                 Auth::isAdmin() => 'admin/dashboard',
                 Auth::isRecruiter() => 'jobs/mine',
+                Auth::isAdvisor() => 'advisor/my-alumni',
                 default => '/',
             };
             $destination = $intended ?? url($defaultDestination);

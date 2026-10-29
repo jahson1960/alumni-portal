@@ -18,7 +18,7 @@
 -- ---------------------------------------------------------------------
 CREATE TABLE users (
   id INT AUTO_INCREMENT PRIMARY KEY,
-  role ENUM('admin','editor','alumni','recruiter') NOT NULL DEFAULT 'alumni',
+  role ENUM('admin','editor','alumni','recruiter','advisor') NOT NULL DEFAULT 'alumni',
   name VARCHAR(150) NOT NULL,
   first_name VARCHAR(100) NULL,
   other_names VARCHAR(100) NULL,
@@ -1141,4 +1141,33 @@ CREATE TABLE profile_reports (
   KEY status_idx (status),
   CONSTRAINT fk_profile_reports_reporter FOREIGN KEY (reporter_id) REFERENCES users(id) ON DELETE CASCADE,
   CONSTRAINT fk_profile_reports_reported FOREIGN KEY (reported_user_id) REFERENCES users(id) ON DELETE CASCADE
+) ENGINE=InnoDB;
+
+-- ---------------------------------------------------------------------
+-- advisor_assignments  (admin-managed, many-to-many: which advisor(s) are
+-- responsible for which alumnus)
+-- ---------------------------------------------------------------------
+CREATE TABLE advisor_assignments (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  advisor_id INT NOT NULL,
+  alumni_id INT NOT NULL,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  UNIQUE KEY uniq_advisor_alumni (advisor_id, alumni_id),
+  CONSTRAINT fk_advisor_assignments_advisor FOREIGN KEY (advisor_id) REFERENCES users(id) ON DELETE CASCADE,
+  CONSTRAINT fk_advisor_assignments_alumni FOREIGN KEY (alumni_id) REFERENCES users(id) ON DELETE CASCADE
+) ENGINE=InnoDB;
+
+-- ---------------------------------------------------------------------
+-- advisor_notes  (private advising notes - each visible only to the advisor
+-- who wrote it and to admin; stores advisor_id directly so a note survives
+-- the assignment later being removed)
+-- ---------------------------------------------------------------------
+CREATE TABLE advisor_notes (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  advisor_id INT NOT NULL,
+  alumni_id INT NOT NULL,
+  note TEXT NOT NULL,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  CONSTRAINT fk_advisor_notes_advisor FOREIGN KEY (advisor_id) REFERENCES users(id) ON DELETE CASCADE,
+  CONSTRAINT fk_advisor_notes_alumni FOREIGN KEY (alumni_id) REFERENCES users(id) ON DELETE CASCADE
 ) ENGINE=InnoDB;

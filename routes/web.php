@@ -162,6 +162,11 @@ $router->post('/mentorship/{mentorId}/request', 'MentorshipController@request');
 $router->post('/mentorship/{id}/accept', 'MentorshipController@accept');
 $router->post('/mentorship/{id}/decline', 'MentorshipController@decline');
 
+// Advisor (self-service: viewing/messaging/noting the alumni assigned to this advisor)
+$router->get('/advisor/my-alumni', 'AdvisorController@index');
+$router->get('/advisor/my-alumni/{id}', 'AdvisorController@show');
+$router->post('/advisor/my-alumni/{id}/notes', 'AdvisorController@addNote');
+
 // Events
 $router->get('/events', 'EventController@index');
 $router->get('/events/mine', 'EventController@mine');
@@ -326,6 +331,7 @@ $router->post('/admin/alumni/{id}/unspotlight', 'Admin\\AlumniController@unspotl
 $router->post('/admin/alumni/{id}/role', 'Admin\\AlumniController@setRole');
 $router->post('/admin/alumni/{id}/reset-password', 'Admin\\AlumniController@resetPassword');
 $router->post('/admin/alumni/{id}/job-categories', 'Admin\\AlumniController@updateJobCategories');
+$router->post('/admin/alumni/{id}/advisors', 'Admin\\AlumniController@updateAdvisors');
 
 $router->get('/admin/alumni-roster', 'Admin\\AlumniRosterController@index');
 $router->get('/admin/alumni-roster/create', 'Admin\\AlumniRosterController@create');

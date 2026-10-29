@@ -63,6 +63,11 @@ class Auth
         return self::check() && ($_SESSION['role'] ?? '') === 'recruiter';
     }
 
+    public static function isAdvisor(): bool
+    {
+        return self::check() && ($_SESSION['role'] ?? '') === 'advisor';
+    }
+
     public static function user(): ?array
     {
         if (!self::check()) {
