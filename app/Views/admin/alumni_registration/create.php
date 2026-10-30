@@ -10,6 +10,7 @@
   <div>
     <label class="form-label" for="email">Email Address</label>
     <input type="email" id="email" name="email" class="form-input" value="<?= old('email') ?>" required>
+    <?php require dirname(dirname(__DIR__)) . '/partials/email_check.php'; ?>
   </div>
 
   <div>

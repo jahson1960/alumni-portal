@@ -10,6 +10,7 @@ $router->get('/', 'HomeController@index');
 $router->get('/register', 'AuthController@showRegister');
 $router->post('/register', 'AuthController@register');
 $router->get('/roster-lookup', 'RosterLookupController@lookup');
+$router->get('/admin/check-email', 'Admin\\EmailCheckController@check');
 $router->get('/login', 'AuthController@showLogin');
 $router->post('/login', 'AuthController@login');
 $router->post('/logout', 'AuthController@logout');
