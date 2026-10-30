@@ -80,6 +80,11 @@
   .form-textarea { @apply form-input; }
   .form-error { @apply text-xs text-red-600 mt-1; }
 
+  /* @tailwindcss/forms reserves padding-right on every <select> for its dropdown arrow, but
+     .form-input's own px-3 above resets padding uniformly and wipes that out again - every
+     select.form-input in the app needs it put back, or the arrow sits on top of the text. */
+  select.form-input { @apply pr-10; }
+
   .admin-nav-link { @apply flex items-center gap-3 px-4 py-2.5 rounded text-sm font-medium text-slate-300 hover:bg-white/10 hover:text-white transition-colors; }
   .admin-nav-link.active { @apply bg-gold text-white hover:bg-gold; }
 
