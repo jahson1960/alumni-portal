@@ -9,6 +9,22 @@ function url(string $path = ''): string
     return rtrim($base, '/') . '/' . $path;
 }
 
+/**
+ * True if $email's domain has any DNS record capable of receiving mail (MX, or A/AAAA as a
+ * fallback - some small domains route mail straight to their A record with no MX at all).
+ * Catches a syntactically valid but nonexistent domain (e.g. someone@ggndwq.com); it cannot
+ * confirm the specific mailbox exists - only sending mail to it can do that.
+ */
+function email_domain_has_mail_server(string $email): bool
+{
+    $parts = explode('@', $email);
+    $domain = trim((string) end($parts));
+    if ($domain === '') {
+        return false;
+    }
+    return checkdnsrr($domain, 'MX') || checkdnsrr($domain, 'A') || checkdnsrr($domain, 'AAAA');
+}
+
 function asset(string $path): string
 {
     return url('assets/' . ltrim($path, '/'));

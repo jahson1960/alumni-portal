@@ -53,16 +53,20 @@
       var mySeq = ++requestSeq;
       setStatus('Checking email…', false);
 
+      var statusMessages = {
+        invalid_format: 'Please enter a valid email address.',
+        unreachable_domain: "We couldn't find a mail server for that email's domain.",
+        taken: 'An account with that email already exists.',
+      };
+
       fetch(checkUrl + '?email=' + encodeURIComponent(email))
         .then(function (r) { return r.json(); })
         .then(function (data) {
           if (mySeq !== requestSeq) return; // a newer check already superseded this one
-          if (!data.valid) {
-            setStatus('Please enter a valid email address.', true);
-          } else if (!data.available) {
-            setStatus('An account with that email already exists.', true);
-          } else {
+          if (data.status === 'ok') {
             setStatus(null);
+          } else {
+            setStatus(statusMessages[data.status] || 'Please enter a valid email address.', true);
           }
         })
         .catch(function () {

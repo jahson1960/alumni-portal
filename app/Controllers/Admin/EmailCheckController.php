@@ -25,11 +25,19 @@ class EmailCheckController extends Controller
         }
 
         $email = trim((string) $this->input('email', ''));
-        $valid = (bool) filter_var($email, FILTER_VALIDATE_EMAIL);
 
-        echo json_encode([
-            'valid' => $valid,
-            'available' => $valid ? !User::emailExists($email) : null,
-        ]);
+        if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+            echo json_encode(['status' => 'invalid_format']);
+            return;
+        }
+        if (!email_domain_has_mail_server($email)) {
+            echo json_encode(['status' => 'unreachable_domain']);
+            return;
+        }
+        if (User::emailExists($email)) {
+            echo json_encode(['status' => 'taken']);
+            return;
+        }
+        echo json_encode(['status' => 'ok']);
     }
 }

@@ -49,6 +49,8 @@ class AlumniRegistrationController extends Controller
         $errors = [];
         if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
             $errors[] = 'A valid email address is required.';
+        } elseif (!email_domain_has_mail_server($email)) {
+            $errors[] = "We couldn't find a mail server for that email's domain.";
         } elseif (User::emailExists($email)) {
             $errors[] = 'An account with that email already exists.';
         }
