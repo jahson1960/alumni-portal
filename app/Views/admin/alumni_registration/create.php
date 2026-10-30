@@ -22,7 +22,7 @@
   <div>
     <label class="form-label">Job Categories <span class="text-red-500">*</span></label>
     <p class="text-xs text-slate-400 mb-2">Used to match this alumnus with relevant opportunities on "Jobs for Me". They can change this any time from their profile.</p>
-    <?php $selectedIds = []; $scrollable = true; ?>
+    <?php $selectedIds = []; $scrollable = true; $allowCreate = \App\Core\Auth::isAdmin(); ?>
     <?php require dirname(dirname(__DIR__)) . '/partials/job_category_picker.php'; ?>
   </div>
 

@@ -442,6 +442,22 @@ function format_date(?string $date, string $format = 'M j, Y'): string
     return $ts ? date($format, $ts) : '';
 }
 
+/**
+ * Markup for one chip in job_category_picker.php - pulled out as its own helper so a category
+ * created on the fly (see CategoryController::store()'s AJAX path) renders identically to one
+ * in the initial grid, instead of a second hand-maintained copy of this markup living in JS.
+ */
+function job_category_chip_html(array $cat, bool $checked = false): string
+{
+    $pc = palette_classes($cat['slug']);
+    $stateClasses = $checked ? 'border-gold bg-gold/5 text-gold' : 'border-slate-200 text-slate-600 hover:border-slate-300';
+    return '<label class="job-category-chip flex items-center gap-2.5 text-sm font-medium border rounded-lg px-3 py-2.5 cursor-pointer transition-colors ' . $stateClasses . '">'
+        . '<input type="checkbox" name="job_categories[]" value="' . (int) $cat['id'] . '" ' . ($checked ? 'checked' : '') . ' class="hidden job-category-checkbox">'
+        . '<span class="badge ' . e($pc['bg']) . ' ' . e($pc['text']) . ' !text-[0.6rem] !px-1.5 !py-0.5 flex-shrink-0">' . e(mb_strtoupper(mb_substr($cat['name'], 0, 2))) . '</span>'
+        . '<span class="truncate">' . e($cat['name']) . '</span>'
+        . '</label>';
+}
+
 function avatar_html(array $user, string $classes = 'w-9 h-9'): string
 {
     $name = $user['name'] ?? '?';

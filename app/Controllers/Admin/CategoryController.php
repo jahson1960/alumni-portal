@@ -41,20 +41,46 @@ class CategoryController extends AdminController
         $type = $this->input('type') === 'news' ? 'news' : 'job';
         $name = trim((string) $this->input('name', ''));
         $redirectTo = $type === 'news' ? 'admin/news-categories' : 'admin/job-categories';
+        $wantsJson = ($_SERVER['HTTP_X_REQUESTED_WITH'] ?? '') === 'XMLHttpRequest';
 
         if ($name === '') {
+            if ($wantsJson) {
+                $this->jsonError('Category name is required.');
+                return;
+            }
             $this->flash('error', 'Category name is required.');
             $this->redirect($redirectTo);
         }
 
         try {
-            Category::create($type, $name);
+            $id = Category::create($type, $name);
+            if ($wantsJson) {
+                $newCategory = Category::find($id);
+                header('Content-Type: application/json');
+                echo json_encode([
+                    'id' => $id,
+                    'name' => $newCategory['name'],
+                    'html' => job_category_chip_html($newCategory),
+                ]);
+                return;
+            }
             $this->flash('success', 'Category added.');
         } catch (\PDOException $e) {
+            if ($wantsJson) {
+                $this->jsonError('A category with that name already exists for this type.');
+                return;
+            }
             $this->flash('error', 'A category with that name already exists for this type.');
         }
 
         $this->redirect($redirectTo);
+    }
+
+    private function jsonError(string $message): void
+    {
+        http_response_code(422);
+        header('Content-Type: application/json');
+        echo json_encode(['error' => $message]);
     }
 
     public function edit(string $id): void
