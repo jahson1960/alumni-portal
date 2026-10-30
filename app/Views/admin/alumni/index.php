@@ -30,6 +30,10 @@
           <td class="text-slate-500"><?= e($alum['company']) ?></td>
           <td><span class="<?= $alum['status'] === 'active' ? 'badge-blue' : 'badge-gold' ?>"><?= e($alum['status']) ?></span></td>
           <td class="text-right whitespace-nowrap">
+            <form method="POST" action="<?= e(url('admin/alumni/' . $alum['id'] . '/reset-password')) ?>" class="inline" onsubmit="return confirm('Reset this alumnus&#39;s password? A new temporary password will be generated and emailed to them.');">
+              <?= csrf_field() ?>
+              <button type="submit" class="text-sky-600 hover:underline mr-3">Reset Password</button>
+            </form>
             <?php if ($alum['status'] === 'active'): ?>
               <form method="POST" action="<?= e(url('admin/alumni/' . $alum['id'] . '/suspend')) ?>" class="inline">
                 <?= csrf_field() ?>

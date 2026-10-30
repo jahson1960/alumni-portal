@@ -3,12 +3,15 @@
  * Shared job-category chip picker, used on both registration forms, Profile Edit, and the
  * admin alumni page. Expects $allCategories (array of category rows) and $selectedIds (int[])
  * already in scope from the including view. $maxSelect caps how many can be checked (default 5);
- * at least 1 is always required before the containing <form> can submit.
+ * at least 1 is always required before the containing <form> can submit. $scrollable caps the
+ * grid at ~4 rows with a scrollbar instead of growing the page with every category added -
+ * used on the registration forms, where this is the only thing on the page competing for space.
  */
 $maxSelect = $maxSelect ?? 5;
+$scrollable = $scrollable ?? false;
 ?>
 <div class="job-category-picker" data-max-select="<?= (int) $maxSelect ?>">
-  <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+  <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5 <?= $scrollable ? 'max-h-48 overflow-y-auto pr-1 mega-scroll' : '' ?>">
     <?php foreach ($allCategories as $cat): $checked = in_array((int) $cat['id'], $selectedIds, true); $pc = palette_classes($cat['slug']); ?>
       <label class="job-category-chip flex items-center gap-2.5 text-sm font-medium border rounded-lg px-3 py-2.5 cursor-pointer transition-colors <?= $checked ? 'border-gold bg-gold/5 text-gold' : 'border-slate-200 text-slate-600 hover:border-slate-300' ?>">
         <input type="checkbox" name="job_categories[]" value="<?= (int) $cat['id'] ?>" <?= $checked ? 'checked' : '' ?> class="hidden job-category-checkbox">

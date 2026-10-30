@@ -18,10 +18,8 @@
   <div>
     <label class="form-label">Job Categories <span class="text-red-500">*</span></label>
     <p class="text-xs text-slate-400 mb-2">Select the job categories you're interested in — we'll use this to show you matching opportunities on the Job Board. You can change this any time from your profile.</p>
-    <div class="max-h-64 overflow-y-auto border border-slate-100 rounded-lg p-3">
-      <?php $selectedIds = []; ?>
-      <?php require dirname(__DIR__) . '/partials/job_category_picker.php'; ?>
-    </div>
+    <?php $selectedIds = []; $scrollable = true; ?>
+    <?php require dirname(__DIR__) . '/partials/job_category_picker.php'; ?>
   </div>
   <div>
     <label class="form-label" for="password">Password</label>
