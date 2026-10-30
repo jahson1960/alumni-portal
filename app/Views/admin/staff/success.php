@@ -16,7 +16,7 @@
 
     <div class="flex items-center justify-center gap-3">
       <a href="<?= e(url('admin/create-staff')) ?>" class="btn-gold !px-5 !py-2.5 text-sm">Create Another</a>
-      <a href="<?= e(url('admin/alumni')) ?>" class="btn bg-white border border-slate-200 !text-slate-700 hover:bg-slate-50 !px-5 !py-2.5 text-sm">View Staff List</a>
+      <a href="<?= e(url('admin/staff')) ?>" class="btn bg-white border border-slate-200 !text-slate-700 hover:bg-slate-50 !px-5 !py-2.5 text-sm">View Staff List</a>
     </div>
   </div>
 </div>

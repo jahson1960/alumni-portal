@@ -24,12 +24,10 @@ class AlumniController extends AdminController
     public function show(string $id): void
     {
         $alum = User::find((int) $id);
-        if (!$alum || !in_array($alum['role'], ['alumni', 'editor', 'recruiter', 'advisor'], true)) {
+        if (!$alum || $alum['role'] !== 'alumni') {
             $this->flash('error', 'Alumni not found.');
             $this->redirect('admin/alumni');
         }
-
-        $isActualAlumni = $alum['role'] === 'alumni';
 
         $this->view('admin.alumni.show', [
             'title' => $alum['name'],
@@ -37,9 +35,9 @@ class AlumniController extends AdminController
             'alum' => $alum,
             'allCategories' => Category::forType('job'),
             'selectedIds' => Category::idsForUser((int) $id),
-            'allAdvisors' => $isActualAlumni ? Advisor::allAdvisors() : [],
-            'assignedAdvisorIds' => $isActualAlumni ? Advisor::advisorIdsForAlumni((int) $id) : [],
-            'advisorNotes' => $isActualAlumni ? AdvisorNote::forAlumni((int) $id) : [],
+            'allAdvisors' => Advisor::allAdvisors(),
+            'assignedAdvisorIds' => Advisor::advisorIdsForAlumni((int) $id),
+            'advisorNotes' => AdvisorNote::forAlumni((int) $id),
         ]);
     }
 
@@ -47,7 +45,7 @@ class AlumniController extends AdminController
     {
         $this->requireCsrf();
         $alum = User::find((int) $id);
-        if (!$alum || !in_array($alum['role'], ['alumni', 'editor', 'recruiter', 'advisor'], true)) {
+        if (!$alum || $alum['role'] !== 'alumni') {
             $this->flash('error', 'Alumni not found.');
             $this->redirect('admin/alumni');
         }
@@ -100,7 +98,7 @@ class AlumniController extends AdminController
     {
         $this->requireCsrf();
         $alum = User::find((int) $id);
-        if (!$alum || !in_array($alum['role'], ['alumni', 'editor', 'recruiter', 'advisor'], true)) {
+        if (!$alum || $alum['role'] !== 'alumni') {
             $this->flash('error', 'Alumni not found.');
             $this->redirect('admin/alumni');
         }

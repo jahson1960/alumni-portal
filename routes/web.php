@@ -351,7 +351,12 @@ $router->get('/admin/register-alumni', 'Admin\\AlumniRegistrationController@crea
 $router->post('/admin/register-alumni', 'Admin\\AlumniRegistrationController@store');
 $router->get('/admin/register-alumni/success', 'Admin\\AlumniRegistrationController@success');
 
-// Admin-only: create Admin/Editor/Recruiter accounts directly (no alumni roster).
+// Admin-only: create and manage Admin/Editor/Recruiter/Advisor accounts directly (no alumni roster).
+$router->get('/admin/staff', 'Admin\\StaffController@index');
+$router->post('/admin/staff/{id}/suspend', 'Admin\\StaffController@suspend');
+$router->post('/admin/staff/{id}/activate', 'Admin\\StaffController@activate');
+$router->post('/admin/staff/{id}/delete', 'Admin\\StaffController@destroy');
+$router->post('/admin/staff/{id}/reset-password', 'Admin\\StaffController@resetPassword');
 $router->get('/admin/create-staff', 'Admin\\StaffController@create');
 $router->post('/admin/create-staff', 'Admin\\StaffController@store');
 $router->get('/admin/create-staff/success', 'Admin\\StaffController@success');

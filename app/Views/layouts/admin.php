@@ -24,7 +24,7 @@ $navItems = [
     'benefits' => ['label' => 'Benefits', 'icon' => 'fa-gift', 'href' => url('admin/benefits')],
     'alumni' => ['label' => 'Alumni', 'icon' => 'fa-user-group', 'href' => url('admin/alumni'), 'matches' => ['alumni', 'alumni_roster', 'register_alumni']],
     'register_alumni' => ['label' => 'Register Alumni', 'icon' => 'fa-user-plus', 'href' => url('admin/register-alumni')],
-    'create_staff' => ['label' => 'Create Staff Account', 'icon' => 'fa-user-shield', 'href' => url('admin/create-staff')],
+    'staff' => ['label' => 'Staff', 'icon' => 'fa-user-shield', 'href' => url('admin/staff'), 'matches' => ['staff_list', 'create_staff']],
     'emails' => ['label' => 'Emails', 'icon' => 'fa-envelope', 'href' => url('admin/emails')],
     'profile_reports' => ['label' => 'Profile Reports', 'icon' => 'fa-flag', 'href' => url('admin/profile-reports')],
 ];

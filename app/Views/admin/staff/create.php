@@ -1,4 +1,6 @@
-<p class="text-sm text-slate-500 mb-6">Create an Admin, Editor, or Recruiter account directly — no alumni roster record needed. A temporary password is generated automatically and shown once after creation, so you can share it; the account holder can change it any time after logging in.</p>
+<?php $tabs = admin_staff_tabs(); require dirname(dirname(__DIR__)) . '/partials/admin_group_tabs.php'; ?>
+
+<p class="text-sm text-slate-500 mb-6">Create an Admin, Editor, Recruiter, or Advisor account directly — no alumni roster record needed. A temporary password is generated automatically and emailed to them; they can change it any time after logging in.</p>
 
 <?php require dirname(dirname(__DIR__)) . '/partials/errors.php'; ?>
 
@@ -33,7 +35,7 @@
 
   <div class="bg-sky-50 border border-sky-100 rounded-lg p-3 text-xs text-sky-800 flex items-start gap-2">
     <i class="fa-solid fa-circle-info mt-0.5"></i>
-    <p>A temporary password is generated automatically and shown once after creation, so you can share it with them. They can change it any time from their profile.</p>
+    <p>A temporary password is generated automatically and emailed to them. They can change it any time from their profile.</p>
   </div>
 
   <button type="submit" class="btn-gold">Create Account</button>

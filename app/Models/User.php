@@ -198,13 +198,13 @@ class User extends Model
 
     public static function allAlumniAdmin(): array
     {
-        return static::db()->query("SELECT * FROM users WHERE role IN ('alumni','editor','recruiter','advisor') ORDER BY created_at DESC")->fetchAll();
+        return static::db()->query("SELECT * FROM users WHERE role = 'alumni' ORDER BY created_at DESC")->fetchAll();
     }
 
     public static function paginateAlumniAdmin(int $limit, int $offset): array
     {
         $stmt = static::db()->prepare(
-            "SELECT * FROM users WHERE role IN ('alumni','editor','recruiter','advisor')
+            "SELECT * FROM users WHERE role = 'alumni'
              ORDER BY created_at DESC LIMIT " . max(1, $limit) . ' OFFSET ' . max(0, $offset)
         );
         $stmt->execute();
@@ -213,7 +213,23 @@ class User extends Model
 
     public static function countAlumniAdmin(): int
     {
-        return (int) static::db()->query("SELECT COUNT(*) FROM users WHERE role IN ('alumni','editor','recruiter','advisor')")->fetchColumn();
+        return (int) static::db()->query("SELECT COUNT(*) FROM users WHERE role = 'alumni'")->fetchColumn();
+    }
+
+    /** Admin/Editor/Recruiter/Advisor accounts, for Admin > Staff. */
+    public static function paginateStaff(int $limit, int $offset): array
+    {
+        $stmt = static::db()->prepare(
+            "SELECT * FROM users WHERE role IN ('admin','editor','recruiter','advisor')
+             ORDER BY role ASC, created_at DESC LIMIT " . max(1, $limit) . ' OFFSET ' . max(0, $offset)
+        );
+        $stmt->execute();
+        return $stmt->fetchAll();
+    }
+
+    public static function countStaff(): int
+    {
+        return (int) static::db()->query("SELECT COUNT(*) FROM users WHERE role IN ('admin','editor','recruiter','advisor')")->fetchColumn();
     }
 
     public static function adminIds(): array

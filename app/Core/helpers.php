@@ -981,3 +981,12 @@ function admin_news_tabs(): array
         ['key' => 'news_categories', 'label' => 'News Categories', 'icon' => 'fa-solid fa-tags', 'href' => url('admin/news-categories')],
     ];
 }
+
+/** Tab list for the Staff admin group (Admin/Editor/Recruiter/Advisor accounts - never alumni). */
+function admin_staff_tabs(): array
+{
+    return [
+        ['key' => 'staff_list', 'label' => 'Staff List', 'icon' => 'fa-solid fa-user-group', 'href' => url('admin/staff')],
+        ['key' => 'create_staff', 'label' => 'Create Staff', 'icon' => 'fa-solid fa-user-plus', 'href' => url('admin/create-staff')],
+    ];
+}
