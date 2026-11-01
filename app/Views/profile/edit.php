@@ -11,7 +11,7 @@ $tabLabels = [
     'job_categories' => ['label' => 'Job Categories', 'icon' => 'fa-solid fa-compass'],
     'interests' => ['label' => 'Interests', 'icon' => 'fa-regular fa-heart'],
     'contact' => ['label' => 'Contact & Location', 'icon' => 'fa-solid fa-location-dot'],
-    'links' => ['label' => 'Links & Socials', 'icon' => 'fa-solid fa-link'],
+    'links' => ['label' => 'CV, Links & Socials', 'icon' => 'fa-solid fa-link'],
     'privacy' => ['label' => 'Privacy Settings', 'icon' => 'fa-solid fa-shield-halved'],
 ];
 
@@ -302,7 +302,7 @@ $industryOptions = \App\Models\User::distinctFilterValues('industry');
         </div>
 
         <div class="profile-tab-panel hidden card p-6" data-tab="links">
-          <h3 class="text-base font-bold text-primary-navy mb-1">Links &amp; Socials</h3>
+          <h3 class="text-base font-bold text-primary-navy mb-1">CV, Links &amp; Socials</h3>
           <p class="text-xs text-slate-500 mb-5">Where alumni can find you online</p>
           <div class="mb-4">
             <label class="form-label" for="linkedin_url">LinkedIn URL</label>
