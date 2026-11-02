@@ -54,7 +54,7 @@ $labelEvery = $n > 0 ? max(1, (int) ceil($n / 6)) : 1;
   <h2 class="text-sm font-bold text-primary-navy">Analytics</h2>
   <div class="flex items-center gap-1">
     <?php foreach ($ranges as $key => $label): ?>
-      <a href="<?= e(url('admin/analytics') . admin_qs(['range' => $key])) ?>" class="px-3 py-1.5 rounded-lg text-xs font-semibold <?= $range === $key ? 'bg-gold text-white' : 'text-slate-600 hover:bg-slate-100' ?>"><?= e($label) ?></a>
+      <a href="<?= e(url('admin/analytics') . admin_qs(['range' => $key, 'page' => 1])) ?>" class="px-3 py-1.5 rounded-lg text-xs font-semibold <?= $range === $key ? 'bg-gold text-white' : 'text-slate-600 hover:bg-slate-100' ?>"><?= e($label) ?></a>
     <?php endforeach; ?>
   </div>
 </div>
@@ -208,11 +208,11 @@ $labelEvery = $n > 0 ? max(1, (int) ceil($n / 6)) : 1;
       </tr>
     </thead>
     <tbody>
-      <?php foreach ($topPages as $page): ?>
+      <?php foreach ($topPages as $topPage): ?>
         <tr>
-          <td class="font-medium text-primary-navy truncate max-w-[320px]"><?= e($page['path']) ?></td>
-          <td class="text-slate-600 tabular-nums"><?= e(number_format($page['views'])) ?></td>
-          <td class="text-slate-600 tabular-nums"><?= e(format_duration_seconds($page['avg_duration'])) ?></td>
+          <td class="font-medium text-primary-navy truncate max-w-[320px]"><?= e($topPage['path']) ?></td>
+          <td class="text-slate-600 tabular-nums"><?= e(number_format($topPage['views'])) ?></td>
+          <td class="text-slate-600 tabular-nums"><?= e(format_duration_seconds($topPage['avg_duration'])) ?></td>
         </tr>
       <?php endforeach; ?>
       <?php if (empty($topPages)): ?>
@@ -220,4 +220,43 @@ $labelEvery = $n > 0 ? max(1, (int) ceil($n / 6)) : 1;
       <?php endif; ?>
     </tbody>
   </table>
+</div>
+
+<div class="mt-6">
+  <h3 class="section-title text-xs mb-3">Recent Visits</h3>
+
+  <?php require dirname(__DIR__, 2) . '/partials/admin_pagination.php'; ?>
+
+  <div class="card overflow-x-auto">
+    <table class="table-base">
+      <thead>
+        <tr>
+          <th>Visitor</th>
+          <th>Page</th>
+          <th>Time</th>
+          <th>Time on Page</th>
+        </tr>
+      </thead>
+      <tbody>
+        <?php foreach ($visits as $visit): ?>
+          <tr>
+            <td>
+              <?php if ($visit['user_name']): ?>
+                <div class="font-medium text-primary-navy"><?= e($visit['user_name']) ?> <span class="badge bg-indigo-100 text-indigo-700 ml-1"><?= e(ucfirst($visit['user_role'])) ?></span></div>
+                <div class="text-xs text-slate-400"><?= e($visit['user_email']) ?></div>
+              <?php else: ?>
+                <span class="text-slate-400 italic">Non-registered user</span>
+              <?php endif; ?>
+            </td>
+            <td class="text-slate-600 truncate max-w-[280px]"><?= e($visit['path']) ?></td>
+            <td class="text-slate-500 text-xs whitespace-nowrap"><?= e(format_date($visit['created_at'], 'M j, Y g:ia')) ?></td>
+            <td class="text-slate-500 text-xs tabular-nums"><?= $visit['duration_seconds'] !== null ? e(format_duration_seconds((float) $visit['duration_seconds'])) : '—' ?></td>
+          </tr>
+        <?php endforeach; ?>
+        <?php if (empty($visits)): ?>
+          <tr><td colspan="4" class="text-center text-slate-400 py-6">No visits recorded for this range yet.</td></tr>
+        <?php endif; ?>
+      </tbody>
+    </table>
+  </div>
 </div>

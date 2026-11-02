@@ -89,6 +89,26 @@ class PageView extends Model
     }
 
     /**
+     * Individual visits, newest first, with the visitor's name/email/role joined in when the
+     * page view happened to be made by a logged-in user - null user fields mean a guest
+     * ("Non-registered user" in the view).
+     */
+    public static function paginatedVisits(string $since, int $limit, int $offset): array
+    {
+        $stmt = static::db()->prepare(
+            'SELECT pv.id, pv.path, pv.duration_seconds, pv.created_at,
+                    u.name AS user_name, u.email AS user_email, u.role AS user_role
+             FROM page_views pv
+             LEFT JOIN users u ON u.id = pv.user_id
+             WHERE pv.created_at >= ?
+             ORDER BY pv.created_at DESC
+             LIMIT ' . max(1, $limit) . ' OFFSET ' . max(0, $offset)
+        );
+        $stmt->execute([$since]);
+        return $stmt->fetchAll();
+    }
+
+    /**
      * Average session ("time on site") length in seconds, grouping each visitor's rows into
      * sessions split on a 30+ minute gap. Done in PHP rather than a window-function SQL query -
      * simplest and most portable across hosts, and fine performance-wise: this only runs once

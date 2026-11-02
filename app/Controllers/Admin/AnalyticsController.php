@@ -12,6 +12,7 @@ class AnalyticsController extends AdminController
     {
         $range = in_array($this->input('range'), self::RANGES, true) ? $this->input('range') : '7d';
         $since = $this->sinceFor($range);
+        $p = $this->paginate(PageView::countViews($since), 30);
 
         $this->view('admin.analytics.index', [
             'title' => 'Analytics',
@@ -23,6 +24,8 @@ class AnalyticsController extends AdminController
             'avgTimeOnSite' => PageView::averageSessionSeconds($since),
             'dailyCounts' => PageView::dailyCounts($since),
             'topPages' => PageView::topPages($since, 10),
+            'visits' => PageView::paginatedVisits($since, $p['perPage'], $p['offset']),
+            ...$p,
         ]);
     }
 
