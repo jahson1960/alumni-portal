@@ -1265,5 +1265,7 @@ if ($authUser && $authUser['program']) {
     </script>
   <?php endif; ?>
 
+  <?php require dirname(__DIR__) . '/partials/analytics_tracker.php'; ?>
+
 </body>
 </html>

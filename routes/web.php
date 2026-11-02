@@ -10,6 +10,8 @@ $router->get('/', 'HomeController@index');
 $router->get('/register', 'AuthController@showRegister');
 $router->post('/register', 'AuthController@register');
 $router->get('/roster-lookup', 'RosterLookupController@lookup');
+$router->post('/analytics/track', 'AnalyticsController@track');
+$router->post('/analytics/duration', 'AnalyticsController@duration');
 $router->get('/admin/check-email', 'Admin\\EmailCheckController@check');
 $router->get('/login', 'AuthController@showLogin');
 $router->post('/login', 'AuthController@login');
@@ -209,6 +211,7 @@ $router->post('/admin/emails/connection', 'Admin\\EmailController@updateConnecti
 $router->post('/admin/emails/{id}/retry', 'Admin\\EmailController@retry');
 // Old bookmarked URL - the queue tab is this page's default, so it lands in the same place.
 $router->get('/admin/email-queue', 'Admin\\EmailController@index');
+$router->get('/admin/analytics', 'Admin\\AnalyticsController@index');
 $router->get('/admin/profile-reports', 'Admin\\ProfileReportsController@index');
 $router->post('/admin/profile-reports/{id}/resolve', 'Admin\\ProfileReportsController@resolve');
 $router->post('/admin/profile-reports/{id}/dismiss', 'Admin\\ProfileReportsController@dismiss');

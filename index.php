@@ -24,6 +24,22 @@ if (isset($_SESSION['user_id'])) {
     \App\Models\User::touchActivity((int) $_SESSION['user_id']);
 }
 
+// A long-lived, anonymous per-browser id for self-hosted analytics - deliberately separate from
+// the PHP session id, which Auth::login()/logout() regenerate (session_regenerate_id) and would
+// otherwise split one real visit into two right at the login moment. Setting $_COOKIE directly
+// makes the new value usable for the rest of THIS request too, before the Set-Cookie header
+// reaches the browser.
+if (empty($_COOKIE['av_vid'])) {
+    $_COOKIE['av_vid'] = bin2hex(random_bytes(16));
+    setcookie('av_vid', $_COOKIE['av_vid'], [
+        'expires' => time() + 31536000,
+        'path' => '/',
+        'secure' => !empty($_SERVER['HTTPS']),
+        'httponly' => true,
+        'samesite' => 'Lax',
+    ]);
+}
+
 // Work out the base path so the app runs correctly whether it's hit at the
 // domain root (production) or under a subfolder (e.g. local XAMPP htdocs).
 $scriptDir = str_replace('\\', '/', dirname($_SERVER['SCRIPT_NAME']));

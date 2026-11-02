@@ -52,5 +52,6 @@ $authFontQuery = implode('&', array_map(fn ($f) => 'family=' . str_replace(' ', 
       });
     });
   </script>
+  <?php require dirname(__DIR__) . '/partials/analytics_tracker.php'; ?>
 </body>
 </html>

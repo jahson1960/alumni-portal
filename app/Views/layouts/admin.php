@@ -9,6 +9,7 @@ $adminUser = Auth::user();
 
 $navItems = [
     'dashboard' => ['label' => 'Dashboard', 'icon' => 'fa-gauge', 'href' => url('admin/dashboard')],
+    'analytics' => ['label' => 'Analytics', 'icon' => 'fa-chart-line', 'href' => url('admin/analytics')],
     'settings' => ['label' => 'Site Settings', 'icon' => 'fa-sliders', 'href' => url('admin/settings')],
     'page_visibility' => ['label' => 'Page Visibility', 'icon' => 'fa-eye', 'href' => url('admin/page-visibility')],
     'hero_slides' => ['label' => 'Hero Slides', 'icon' => 'fa-images', 'href' => url('admin/hero-slides')],
@@ -101,5 +102,6 @@ if (Auth::isEditor()) {
   </div>
 
   <script src="<?= e(asset('js/admin.js')) ?>"></script>
+  <?php require dirname(__DIR__) . '/partials/analytics_tracker.php'; ?>
 </body>
 </html>

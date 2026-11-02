@@ -949,6 +949,54 @@ function time_ago(?string $datetime): string
     return (int) floor($diff / 604800) . 'w ago';
 }
 
+/** 1284 -> "1,284"; 12900 -> "12.9K"; 4200000 -> "4.2M" - for a stat-tile/hero figure. */
+function format_compact_number(int|float $n): string
+{
+    $n = (float) $n;
+    if ($n < 1000) {
+        return number_format($n, 0);
+    }
+    if ($n < 1000000) {
+        return rtrim(rtrim(number_format($n / 1000, 1), '0'), '.') . 'K';
+    }
+    return rtrim(rtrim(number_format($n / 1000000, 1), '0'), '.') . 'M';
+}
+
+/** 45 -> "45s"; 83 -> "1m 23s"; 3671 -> "1h 1m" - for a duration stat tile. */
+function format_duration_seconds(float $seconds): string
+{
+    $seconds = (int) round($seconds);
+    if ($seconds < 60) {
+        return $seconds . 's';
+    }
+    if ($seconds < 3600) {
+        $m = intdiv($seconds, 60);
+        $s = $seconds % 60;
+        return $s > 0 ? "{$m}m {$s}s" : "{$m}m";
+    }
+    $h = intdiv($seconds, 3600);
+    $m = intdiv($seconds % 3600, 60);
+    return $m > 0 ? "{$h}h {$m}m" : "{$h}h";
+}
+
+/** Rounds a chart's data max up to a clean axis top (10, 20, 50, 100, 500, 1000, ...). */
+function chart_nice_max(int $max): int
+{
+    if ($max <= 0) {
+        return 10;
+    }
+    $step = match (true) {
+        $max <= 10 => 2,
+        $max <= 50 => 10,
+        $max <= 100 => 20,
+        $max <= 500 => 50,
+        $max <= 1000 => 100,
+        $max <= 5000 => 500,
+        default => 1000,
+    };
+    return (int) (ceil($max / $step) * $step);
+}
+
 /**
  * Builds a query string from the current request's $_GET merged with $overrides, for admin
  * table pagination links. $prefix (when a page paginates more than one independent table)

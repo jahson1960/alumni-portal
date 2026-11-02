@@ -1144,6 +1144,23 @@ CREATE TABLE profile_reports (
 ) ENGINE=InnoDB;
 
 -- ---------------------------------------------------------------------
+-- page_views  (self-hosted analytics: visitors, page views, time on page/site -
+-- tracked client-side, see app/Views/partials/analytics_tracker.php)
+-- ---------------------------------------------------------------------
+CREATE TABLE page_views (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  visitor_id VARCHAR(36) NOT NULL,
+  user_id INT NULL,
+  path VARCHAR(255) NOT NULL,
+  referrer VARCHAR(255) NULL,
+  duration_seconds INT NULL,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  CONSTRAINT fk_page_views_user FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE SET NULL,
+  INDEX idx_page_views_visitor (visitor_id),
+  INDEX idx_page_views_created (created_at)
+) ENGINE=InnoDB;
+
+-- ---------------------------------------------------------------------
 -- advisor_assignments  (admin-managed, many-to-many: which advisor(s) are
 -- responsible for which alumnus)
 -- ---------------------------------------------------------------------
