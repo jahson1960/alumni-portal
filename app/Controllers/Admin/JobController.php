@@ -153,7 +153,7 @@ class JobController extends AdminController
         $companyText = trim((string) $this->input('company_text_color', '#091a2e'));
         $isFeatured = $this->input('is_featured') ? 1 : 0;
         $status = $this->input('status', 'open') === 'closed' ? 'closed' : 'open';
-        $applyType = in_array($this->input('apply_type'), ['link', 'form'], true) ? $this->input('apply_type') : 'email';
+        $applyType = in_array($this->input('apply_type'), ['link', 'form', 'easy_apply'], true) ? $this->input('apply_type') : 'email';
         $applyValue = trim((string) $this->input('apply_value', ''));
         $applicationInstructions = trim((string) $this->input('application_instructions', ''));
         $applicationTemplateId = $this->input('application_template_id') !== null && $this->input('application_template_id') !== ''
@@ -172,6 +172,8 @@ class JobController extends AdminController
             if (!$applicationTemplateId || !ApplicationTemplate::findForUser($applicationTemplateId, (int) Auth::id())) {
                 $errors[] = 'Please choose an application template.';
             }
+        } elseif ($applyType === 'easy_apply') {
+            // No value or template needed - applicants apply straight from their profile.
         } elseif ($applyValue === '') {
             $errors[] = 'Please provide an application email or link.';
         } elseif ($applyType === 'email' && !filter_var($applyValue, FILTER_VALIDATE_EMAIL)) {

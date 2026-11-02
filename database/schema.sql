@@ -289,7 +289,7 @@ CREATE TABLE jobs (
   responsibilities MEDIUMTEXT NULL,
   requirements MEDIUMTEXT NULL,
   company_about MEDIUMTEXT NULL,
-  apply_type ENUM('link','email','form') NOT NULL DEFAULT 'email',
+  apply_type ENUM('link','email','form','easy_apply') NOT NULL DEFAULT 'email',
   apply_value VARCHAR(255) NULL,
   application_instructions TEXT NULL,
   application_template_id INT NULL COMMENT 'used when apply_type = form',

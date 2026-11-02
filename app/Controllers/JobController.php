@@ -394,6 +394,11 @@ class JobController extends Controller
             return;
         }
 
+        if ($job['apply_type'] === 'easy_apply') {
+            $this->recordEasyApply($job);
+            return;
+        }
+
         if (!Auth::check()) {
             $this->redirect('login?redirect=' . rawurlencode(url('jobs/' . $id . '/apply/continue')));
         }
@@ -425,6 +430,11 @@ class JobController extends Controller
             return;
         }
 
+        if ($job['apply_type'] === 'easy_apply') {
+            $this->recordEasyApply($job);
+            return;
+        }
+
         $this->recordAndApply($job);
     }
 
@@ -446,6 +456,47 @@ class JobController extends Controller
         }
 
         $this->redirect('jobs/' . $id . '?applied=1');
+    }
+
+    /**
+     * Applies an 'easy_apply'-method job: no template, no form - just a fixed snapshot of the
+     * candidate's own profile fields, same shape (and same via_quick_apply flag) as the
+     * template-driven "Quick Apply" path's responses, so the Applicants page's existing display
+     * logic (badge instead of "View Submitted Answers") handles it with no changes of its own.
+     */
+    private function recordEasyApply(array $job): void
+    {
+        $id = (int) $job['id'];
+        if (!Auth::check()) {
+            $this->redirect('login?redirect=' . rawurlencode(url('jobs/' . $id . '/apply/continue')));
+        }
+        if (Job::isClosed($job)) {
+            $this->flash('error', 'This job is no longer accepting applications.');
+            $this->redirect('jobs/' . $id);
+        }
+
+        $user = Auth::user();
+        $responses = [];
+        foreach (['name' => 'Full Name', 'email' => 'Email', 'phone' => 'Phone', 'linkedin_url' => 'LinkedIn', 'resume' => 'Resume'] as $field => $label) {
+            $value = $this->profileFieldValue($user, $field);
+            if ($value !== '' && $value !== null) {
+                $responses[] = ['label' => $label, 'type' => $field === 'resume' ? 'file' : 'text', 'value' => $value, 'section' => 'profile_info'];
+            }
+        }
+
+        JobApplication::submitForm((int) Auth::id(), $id, $responses, true);
+
+        if (!empty($job['posted_by'])) {
+            Notification::notify(
+                (int) $job['posted_by'],
+                'job_application',
+                $user['name'] . ' applied to your job post "' . $job['title'] . '".',
+                'jobs/' . $id . '/applicants'
+            );
+        }
+
+        $this->flash('success', 'Applied instantly using your profile info. The poster can review it from their Applicants list.');
+        $this->redirect('jobs/' . $id);
     }
 
     /** POST /jobs/{id}/quick-apply — one click, no form: applies using the candidate's profile info and resume. */
@@ -1060,7 +1111,7 @@ class JobController extends Controller
         $companyBg = valid_hex_color($this->input('company_bg_color'), '#f8fafc');
         $companyText = valid_hex_color($this->input('company_text_color'), '#091a2e');
         $categoryIds = array_slice(array_map('intval', (array) $this->input('categories', [])), 0, 3);
-        $applyType = in_array($this->input('apply_type'), ['link', 'form'], true) ? $this->input('apply_type') : 'email';
+        $applyType = in_array($this->input('apply_type'), ['link', 'form', 'easy_apply'], true) ? $this->input('apply_type') : 'email';
         $applyValue = trim((string) $this->input('apply_value', ''));
         $applicationInstructions = trim((string) $this->input('application_instructions', ''));
         $applicationTemplateId = $this->input('application_template_id') !== null && $this->input('application_template_id') !== ''
@@ -1080,6 +1131,8 @@ class JobController extends Controller
                 if (!$applicationTemplateId || !ApplicationTemplate::findForUser($applicationTemplateId, (int) Auth::id())) {
                     $errors[] = 'Please choose an application template.';
                 }
+            } elseif ($applyType === 'easy_apply') {
+                // No value or template needed - applicants apply straight from their profile.
             } elseif ($applyValue === '') {
                 $errors[] = 'Please provide an application email or link.';
             } elseif ($applyType === 'email' && !filter_var($applyValue, FILTER_VALIDATE_EMAIL)) {

@@ -258,6 +258,7 @@ $postingTips = [
               <option value="email" <?= ($job['apply_type'] ?? 'email') === 'email' ? 'selected' : '' ?>>Email (revealed on click)</option>
               <option value="link" <?= ($job['apply_type'] ?? '') === 'link' ? 'selected' : '' ?>>External Link</option>
               <option value="form" <?= ($job['apply_type'] ?? '') === 'form' ? 'selected' : '' ?>>In-App Form</option>
+              <option value="easy_apply" <?= ($job['apply_type'] ?? '') === 'easy_apply' ? 'selected' : '' ?>>Easy Apply (Profile Info)</option>
             </select>
           </div>
           <div id="apply_value_field">
@@ -587,7 +588,8 @@ $postingTips = [
 
     function sync() {
       var isForm = applyType.value === 'form';
-      valueField.classList.toggle('hidden', isForm);
+      var isEasyApply = applyType.value === 'easy_apply';
+      valueField.classList.toggle('hidden', isForm || isEasyApply);
       templateField.classList.toggle('hidden', !isForm);
     }
 
