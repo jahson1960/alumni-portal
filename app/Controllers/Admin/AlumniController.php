@@ -109,13 +109,13 @@ class AlumniController extends AdminController
             'must_change_password' => 1,
         ]);
 
-        EmailQueue::enqueue($alum['email'], $alum['name'], 'Your Alumni Portal Password Has Been Reset', render_email(
+        EmailQueue::enqueue($alum['email'], $alum['name'], 'Your ' . portal_name() . ' Password Has Been Reset', render_email(
             'Password Reset',
             credential_email_body(
                 $alum['first_name'] ?: $alum['name'],
                 $alum['email'],
                 $tempPassword,
-                'An administrator has reset your password on the Rome Business School Nigeria Alumni Portal.'
+                'An administrator has reset your password on the Rome Business School Nigeria ' . portal_name() . '.'
             ),
             'Log In Now',
             'login'

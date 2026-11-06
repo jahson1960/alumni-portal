@@ -81,9 +81,9 @@ class StaffController extends AdminController
             'status' => 'active',
         ]);
 
-        EmailQueue::enqueue($email, $name, 'Your Rome Business School Nigeria Alumni Portal Account', render_email(
-            'Your Alumni Portal Account',
-            credential_email_body($firstName, $email, $tempPassword, 'An account has been created for you on the Rome Business School Nigeria Alumni Portal as a ' . self::ROLE_LABELS[$role] . '.'),
+        EmailQueue::enqueue($email, $name, 'Your Rome Business School Nigeria ' . portal_name() . ' Account', render_email(
+            'Your ' . portal_name() . ' Account',
+            credential_email_body($firstName, $email, $tempPassword, 'An account has been created for you on the Rome Business School Nigeria ' . portal_name() . ' as a ' . self::ROLE_LABELS[$role] . '.'),
             'Log In Now',
             'login'
         ));
@@ -149,13 +149,13 @@ class StaffController extends AdminController
             'must_change_password' => 1,
         ]);
 
-        EmailQueue::enqueue($staff['email'], $staff['name'], 'Your Alumni Portal Password Has Been Reset', render_email(
+        EmailQueue::enqueue($staff['email'], $staff['name'], 'Your ' . portal_name() . ' Password Has Been Reset', render_email(
             'Password Reset',
             credential_email_body(
                 $staff['first_name'] ?: $staff['name'],
                 $staff['email'],
                 $tempPassword,
-                'An administrator has reset your password on the Rome Business School Nigeria Alumni Portal.'
+                'An administrator has reset your password on the Rome Business School Nigeria ' . portal_name() . '.'
             ),
             'Log In Now',
             'login'

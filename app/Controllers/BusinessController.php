@@ -60,7 +60,7 @@ class BusinessController extends Controller
     {
         $this->requireCsrf();
         if (!Auth::check()) {
-            $this->redirect('login');
+            $this->redirectToLogin();
         }
 
         SavedBusiness::toggle((int) Auth::id(), (int) $id);

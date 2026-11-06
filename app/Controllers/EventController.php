@@ -89,7 +89,7 @@ class EventController extends Controller
         foreach ($data['events'] as $event) {
             $previews[$event['id']] = [
                 'attendees' => EventRsvp::attendeesPreview((int) $event['id']),
-                'count' => EventRsvp::count((int) $event['id']),
+                'count' => EventRsvp::countFor((int) $event['id']),
             ];
         }
         $data['attendeePreviews'] = $previews;
@@ -101,7 +101,7 @@ class EventController extends Controller
     {
         $this->requireCsrf();
         if (!Auth::check()) {
-            $this->redirect('login');
+            $this->redirectToLogin();
         }
         SavedEvent::toggle((int) Auth::id(), (int) $id);
         $this->redirectBack('events');
@@ -123,7 +123,7 @@ class EventController extends Controller
     public function mine(): void
     {
         if (!Auth::check()) {
-            $this->redirect('login');
+            $this->redirectToLogin();
         }
 
         $userId = (int) Auth::id();
@@ -188,7 +188,7 @@ class EventController extends Controller
     {
         $this->requireCsrf();
         if (!Auth::check()) {
-            $this->redirect('login');
+            $this->redirectToLogin();
         }
 
         EventRsvp::toggle((int) $id, (int) Auth::id());

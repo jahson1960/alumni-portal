@@ -12,6 +12,12 @@ class AdminAuthController extends Controller
         if (Auth::isAdmin()) {
             $this->redirect('admin/dashboard');
         }
+        $redirect = sanitize_redirect_target($this->input('redirect'));
+        if ($redirect !== null) {
+            $_SESSION['_intended_url'] = $redirect;
+        } else {
+            unset($_SESSION['_intended_url']);
+        }
         $this->view('admin.auth.login', ['title' => 'Admin Login'], 'auth');
     }
 
@@ -23,11 +29,16 @@ class AdminAuthController extends Controller
         $password = (string) $this->input('password', '');
 
         if (Auth::attempt($email, $password) && Auth::isAdmin()) {
+            $intended = sanitize_redirect_target($_SESSION['_intended_url'] ?? null);
+            unset($_SESSION['_intended_url']);
+            $destination = $intended ?? url('admin/dashboard');
+
             if (!empty(Auth::user()['must_change_password'])) {
-                $_SESSION['_post_password_change_redirect'] = url('admin/dashboard');
+                $_SESSION['_post_password_change_redirect'] = $destination;
                 $this->redirect('change-password');
             }
-            $this->redirect('admin/dashboard');
+            header('Location: ' . $destination);
+            exit;
         }
 
         Auth::logout();

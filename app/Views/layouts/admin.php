@@ -61,7 +61,7 @@ if (Auth::isEditor()) {
   <aside class="w-64 bg-primary-navy text-white flex-shrink-0 min-h-screen flex flex-col">
     <div class="px-5 py-5 border-b border-white/10">
       <div class="font-extrabold text-sm tracking-wide">ROME BUSINESS SCHOOL</div>
-      <div class="text-[0.65rem] text-gold italic">Alumni Portal &middot; Admin</div>
+      <div class="text-[0.65rem] text-gold italic"><?= e(portal_name()) ?> &middot; Admin</div>
     </div>
     <nav class="flex-1 px-3 py-4 space-y-1">
       <?php foreach ($navItems as $key => $item): ?>

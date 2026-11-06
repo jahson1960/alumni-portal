@@ -194,7 +194,7 @@ class DirectoryController extends Controller
     {
         $this->requireCsrf();
         if (!Auth::check()) {
-            $this->redirect('login');
+            $this->redirectToLogin();
         }
 
         $saved = SavedAlumni::toggle((int) Auth::id(), (int) $id);
@@ -261,7 +261,7 @@ class DirectoryController extends Controller
     public function mutualConnections(string $id): void
     {
         if (!Auth::check()) {
-            $this->redirect('login');
+            $this->redirectToLogin();
         }
         $viewerId = (int) Auth::id();
         $profile = User::publicProfile((int) $id, Auth::isAdmin() || $viewerId === (int) $id, true);

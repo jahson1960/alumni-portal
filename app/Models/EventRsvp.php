@@ -51,7 +51,7 @@ class EventRsvp extends Model
         return $stmt->fetchAll();
     }
 
-    public static function count(int $eventId): int
+    public static function countFor(int $eventId): int
     {
         $stmt = static::db()->prepare('SELECT COUNT(*) FROM event_rsvps WHERE event_id = ?');
         $stmt->execute([$eventId]);

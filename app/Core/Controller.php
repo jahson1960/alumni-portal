@@ -167,12 +167,27 @@ abstract class Controller
             return;
         }
         if ($viewer === null && \App\Models\PageVisibility::audienceOf($pageKey) === 'alumni') {
-            $current = sanitize_redirect_target($_SERVER['REQUEST_URI'] ?? null);
-            $this->redirect('login' . ($current !== null ? '?redirect=' . rawurlencode($current) : ''));
+            $this->redirectToLogin();
         }
         http_response_code(404);
         (new \App\Controllers\ErrorController())->notFound();
         exit;
+    }
+
+    /**
+     * Redirects a guest to the login page, remembering the current GET request's full URL (path
+     * + query string) so AuthController::login() / Admin\AdminAuthController::login() can send
+     * them back here after a successful sign-in instead of dropping them on the default
+     * destination. Only captured for GET requests — a blocked POST action (e.g. toggling a save,
+     * submitting a form) isn't safe to silently replay after login, so those just land on the
+     * plain login page and the visitor repeats the click themselves.
+     */
+    protected function redirectToLogin(string $loginPath = 'login'): void
+    {
+        $current = ($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'GET'
+            ? sanitize_redirect_target($_SERVER['REQUEST_URI'] ?? null)
+            : null;
+        $this->redirect($loginPath . ($current !== null ? '?redirect=' . rawurlencode($current) : ''));
     }
 
     protected function flash(string $key, string $message): void

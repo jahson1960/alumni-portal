@@ -16,7 +16,7 @@ class ChangePasswordController extends Controller
     public function __construct()
     {
         if (!Auth::check()) {
-            $this->redirect('login');
+            $this->redirectToLogin();
         }
     }
 

@@ -56,7 +56,7 @@ class NewsController extends Controller
     {
         $this->requireCsrf();
         if (!Auth::check()) {
-            $this->redirect('login');
+            $this->redirectToLogin();
         }
 
         SavedNewsPost::toggle((int) Auth::id(), (int) $id);

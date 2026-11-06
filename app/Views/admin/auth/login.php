@@ -1,5 +1,5 @@
 <h1 class="text-xl font-extrabold text-primary-navy mb-1">Admin Login</h1>
-<p class="text-sm text-slate-500 mb-6">Sign in to manage the Alumni Portal.</p>
+<p class="text-sm text-slate-500 mb-6">Sign in to manage the <?= e(portal_name()) ?>.</p>
 
 <?php require dirname(dirname(__DIR__)) . '/partials/errors.php'; ?>
 

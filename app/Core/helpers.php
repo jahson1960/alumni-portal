@@ -45,6 +45,16 @@ function term_singular_lc(): string
     return mb_strtolower(term_singular());
 }
 
+/** The portal's own brand name (e.g. "Alumni Portal", or "Career Service Portal" once renamed). */
+function portal_name(): string
+{
+    static $value = null;
+    if ($value === null) {
+        $value = trim(\App\Models\Setting::get('portal_name', 'Alumni Portal')) ?: 'Alumni Portal';
+    }
+    return $value;
+}
+
 /**
  * True if $email's domain has any DNS record capable of receiving mail (MX, or A/AAAA as a
  * fallback - some small domains route mail straight to their A record with no MX at all).

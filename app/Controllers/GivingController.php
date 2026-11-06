@@ -43,7 +43,7 @@ class GivingController extends Controller
     {
         $this->requireCsrf();
         if (!Auth::check()) {
-            $this->redirect('login');
+            $this->redirectToLogin();
         }
 
         $campaign = Campaign::find((int) $id);

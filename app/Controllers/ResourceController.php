@@ -28,7 +28,7 @@ class ResourceController extends Controller
             $tab = $fallback;
         }
         if ($tab === 'resume-review' && !Auth::check()) {
-            $this->redirect('login');
+            $this->redirectToLogin();
         }
 
         $data = ['title' => 'Career Resources', 'activeNav' => 'resources', 'tab' => $tab];
@@ -67,7 +67,7 @@ class ResourceController extends Controller
     {
         $this->requireCsrf();
         if (!Auth::check()) {
-            $this->redirect('login');
+            $this->redirectToLogin();
         }
         SavedResource::toggle((int) Auth::id(), (int) $id);
         $this->redirectBack('resources');

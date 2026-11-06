@@ -20,7 +20,7 @@ class AlumniRegistrationController extends Controller
     public function __construct()
     {
         if (!Auth::check()) {
-            $this->redirect('login');
+            $this->redirectToLogin();
         }
         if (!Auth::isAdmin() && !Auth::isEditor()) {
             http_response_code(404);
@@ -98,9 +98,9 @@ class AlumniRegistrationController extends Controller
         AlumniRoster::markClaimed((int) $rosterEntry['id'], $id);
         Category::syncUserJobCategories($id, $jobCategoryIds);
 
-        EmailQueue::enqueue($email, $name, 'Your Rome Business School Nigeria Alumni Portal Account', render_email(
-            'Your Alumni Portal Account',
-            credential_email_body($firstName, $email, $tempPassword, 'An account has been created for you on the Rome Business School Nigeria Alumni Portal.'),
+        EmailQueue::enqueue($email, $name, 'Your Rome Business School Nigeria ' . portal_name() . ' Account', render_email(
+            'Your ' . portal_name() . ' Account',
+            credential_email_body($firstName, $email, $tempPassword, 'An account has been created for you on the Rome Business School Nigeria ' . portal_name() . '.'),
             'Log In Now',
             'login'
         ));

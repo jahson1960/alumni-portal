@@ -61,7 +61,7 @@ class JobController extends Controller
             $tab = $fallback;
         }
         if (in_array($tab, ['saved', 'alerts'], true) && !Auth::check()) {
-            $this->redirect('login');
+            $this->redirectToLogin();
         }
 
         $data = ['title' => 'Careers', 'activeNav' => 'jobs', 'tab' => $tab];
@@ -365,7 +365,7 @@ class JobController extends Controller
     public function saved(): void
     {
         if (!Auth::check()) {
-            $this->redirect('login');
+            $this->redirectToLogin();
         }
         $this->redirect('jobs?tab=saved');
     }
@@ -1057,7 +1057,7 @@ class JobController extends Controller
     {
         $this->requireCsrf();
         if (!Auth::check()) {
-            $this->redirect('login');
+            $this->redirectToLogin();
         }
 
         SavedJob::toggle((int) Auth::id(), (int) $id);

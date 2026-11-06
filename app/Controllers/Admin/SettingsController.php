@@ -8,7 +8,7 @@ use App\Models\Setting;
 class SettingsController extends AdminController
 {
     private const KEYS = [
-        'site_name',
+        'site_name', 'portal_name',
         'member_term_singular', 'member_term_plural',
         'cta_subtitle', 'cta_title',
         'metric_alumni', 'metric_countries', 'metric_jobs', 'metric_connections', 'metric_events',

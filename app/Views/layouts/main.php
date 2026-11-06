@@ -91,7 +91,7 @@ if ($authUser && $authUser['program']) {
           <img src="<?= e(Setting::get('site_logo', asset('uploads/branding/rbs-logo.png'))) ?>" alt="<?= e(Setting::get('site_name', 'Rome Business School Nigeria')) ?> Logo" class="w-9 h-9 object-contain flex-shrink-0">
           <div class="leading-tight min-w-0">
             <div class="text-[var(--header-text)] font-extrabold text-[0.65rem] lg:text-sm tracking-wide uppercase lg:truncate max-w-[130px] lg:max-w-[300px]"><?= e(Setting::get('site_name', 'Rome Business School Nigeria')) ?></div>
-            <div class="text-gold text-[0.6rem] lg:text-[0.62rem] font-bold tracking-[0.15em] uppercase">Alumni Portal</div>
+            <div class="text-gold text-[0.6rem] lg:text-[0.62rem] font-bold tracking-[0.15em] uppercase"><?= e(portal_name()) ?></div>
           </div>
         </a>
 
@@ -887,7 +887,7 @@ if ($authUser && $authUser['program']) {
           <img src="<?= e(Setting::get('site_logo', asset('uploads/branding/rbs-logo.png'))) ?>" alt="" class="w-8 h-8 object-contain rounded flex-shrink-0 bg-white p-0.5">
           <span class="min-w-0">
             <span class="block text-sm font-extrabold tracking-wide uppercase truncate"><?= e(Setting::get('site_name', 'Rome Business School Nigeria')) ?></span>
-            <span class="block text-[0.65rem] text-gold font-bold tracking-wide uppercase">Alumni Portal</span>
+            <span class="block text-[0.65rem] text-gold font-bold tracking-wide uppercase"><?= e(portal_name()) ?></span>
           </span>
         </a>
         <button type="button" id="mobile-menu-close" class="text-[var(--menu-item-text)] text-xl cursor-pointer flex-shrink-0 px-1"><i class="fa-solid fa-xmark"></i></button>

@@ -11,8 +11,7 @@ abstract class AdminController extends Controller
     {
         if (!Auth::isAdmin() || !Auth::user()) {
             Auth::logout();
-            header('Location: ' . url('admin/login'));
-            exit;
+            $this->redirectToLogin('admin/login');
         }
     }
 
