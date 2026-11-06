@@ -55,6 +55,17 @@ function portal_name(): string
     return $value;
 }
 
+/** The registration page's heading — admin-set verbatim text, or "Join the {Plural Term} Network" if unset. */
+function register_heading(): string
+{
+    static $value = null;
+    if ($value === null) {
+        $custom = trim(\App\Models\Setting::get('register_heading', ''));
+        $value = $custom !== '' ? $custom : 'Join the ' . term_plural() . ' Network';
+    }
+    return $value;
+}
+
 /**
  * True if $email's domain has any DNS record capable of receiving mail (MX, or A/AAAA as a
  * fallback - some small domains route mail straight to their A record with no MX at all).

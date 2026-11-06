@@ -63,6 +63,11 @@
         <p class="text-xs text-slate-400 mt-1">E.g. "Students" &mdash; used in phrases like "Register Alumni", "Alumni Network".</p>
       </div>
     </div>
+    <div class="mt-4 pt-4 border-t border-slate-100">
+      <label class="form-label" for="register_heading">Registration Page Heading</label>
+      <input type="text" id="register_heading" name="register_heading" class="form-input" placeholder="Join the <?= e(term_plural()) ?> Network" value="<?= e($settings['register_heading'] ?? '') ?>">
+      <p class="text-xs text-slate-400 mt-1">Shown at the top of the sign-up page. Leave blank to use "Join the <?= e(term_plural()) ?> Network" automatically (based on the Plural Term above).</p>
+    </div>
   </div>
 
   <?php $themeMode = ($settings['theme_mode'] ?? 'unified') === 'custom' ? 'custom' : 'unified'; ?>

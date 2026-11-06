@@ -1,4 +1,4 @@
-<h1 class="text-xl font-extrabold text-primary-navy mb-1">Join the <?= e(term_plural()) ?> Network</h1>
+<h1 class="text-xl font-extrabold text-primary-navy mb-1"><?= e(register_heading()) ?></h1>
 <p class="text-sm text-slate-500 mb-6">Create your account to connect with fellow RBSN <?= e(term_plural_lc()) ?>.</p>
 
 <?php require dirname(__DIR__) . '/partials/errors.php'; ?>

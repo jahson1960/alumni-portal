@@ -91,10 +91,21 @@ if (Auth::isEditor()) {
     <main class="p-6">
       <?php $flashSuccess = flash_get('success'); $flashError = flash_get('error'); ?>
       <?php if ($flashSuccess): ?>
-        <div class="bg-green-50 border border-green-200 text-green-800 text-sm rounded px-4 py-3 mb-4"><?= e($flashSuccess) ?></div>
+        <div class="bg-green-50 border border-green-200 text-green-800 text-sm rounded px-4 py-3 mb-4 js-flash"><?= e($flashSuccess) ?></div>
       <?php endif; ?>
       <?php if ($flashError): ?>
-        <div class="bg-red-50 border border-red-200 text-red-800 text-sm rounded px-4 py-3 mb-4"><?= e($flashError) ?></div>
+        <div class="bg-red-50 border border-red-200 text-red-800 text-sm rounded px-4 py-3 mb-4 js-flash"><?= e($flashError) ?></div>
+      <?php endif; ?>
+      <?php if ($flashSuccess || $flashError): ?>
+        <script>
+          document.querySelectorAll('.js-flash').forEach(function (el) {
+            setTimeout(function () {
+              el.style.transition = 'opacity 0.4s ease';
+              el.style.opacity = '0';
+              setTimeout(function () { el.remove(); }, 400);
+            }, 4000);
+          });
+        </script>
       <?php endif; ?>
 
       <?= $content ?>
