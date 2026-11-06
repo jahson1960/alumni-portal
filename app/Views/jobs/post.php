@@ -189,35 +189,10 @@ $postingTips = [
         </div>
       </div>
 
-      <!-- Step 2: Categories -->
+      <!-- Step 2: Job Description -->
       <div class="form-step hidden lg:block card p-6 mb-6" data-step="2">
         <div class="flex items-start gap-3 mb-4">
           <span class="w-6 h-6 rounded-full bg-primary-navy text-white text-xs font-bold flex items-center justify-center flex-shrink-0 mt-0.5">2</span>
-          <div>
-            <h3 class="text-sm font-bold text-primary-navy">Categories</h3>
-            <p class="text-xs text-slate-500 mt-0.5">Select up to 3 categories that best describe this role.</p>
-          </div>
-        </div>
-
-        <div class="grid grid-cols-2 md:grid-cols-3 gap-3 max-h-64 overflow-y-auto pr-1 mega-scroll" id="category-chips">
-          <?php foreach ($allCategories as $cat): $checked = in_array($cat['id'], $selectedCategoryIds, true); ?>
-            <label class="category-chip flex items-center gap-2.5 text-sm font-medium border rounded-lg px-3 py-2.5 cursor-pointer <?= $checked ? 'border-gold bg-gold/5 text-gold' : 'border-slate-200 text-slate-600 hover:border-slate-300' ?>">
-              <input type="checkbox" name="categories[]" value="<?= $cat['id'] ?>" <?= $checked ? 'checked' : '' ?> class="hidden category-checkbox">
-              <i class="bi <?= e($categoryIcons[$cat['slug']] ?? 'bi-briefcase') ?>"></i>
-              <?= e($cat['name']) ?>
-            </label>
-          <?php endforeach; ?>
-          <?php if (empty($allCategories)): ?>
-            <p class="text-xs text-slate-400 col-span-full">No job categories have been set up yet.</p>
-          <?php endif; ?>
-        </div>
-        <p id="category-limit-note" class="hidden text-xs text-amber-600 mt-2">You can select up to 3 categories.</p>
-      </div>
-
-      <!-- Step 3: Job Description -->
-      <div class="form-step hidden lg:block card p-6 mb-6" data-step="3">
-        <div class="flex items-start gap-3 mb-4">
-          <span class="w-6 h-6 rounded-full bg-primary-navy text-white text-xs font-bold flex items-center justify-center flex-shrink-0 mt-0.5">3</span>
           <div>
             <h3 class="text-sm font-bold text-primary-navy">Job Description</h3>
             <p class="text-xs text-slate-500 mt-0.5">Provide a clear overview of the role and responsibilities.</p>
@@ -239,6 +214,31 @@ $postingTips = [
           <div data-rich-editor="requirements"></div>
           <textarea id="requirements" name="requirements" class="hidden"><?= e($job['requirements'] ?? '') ?></textarea>
         </div>
+      </div>
+
+      <!-- Step 3: Categories -->
+      <div class="form-step hidden lg:block card p-6 mb-6" data-step="3">
+        <div class="flex items-start gap-3 mb-4">
+          <span class="w-6 h-6 rounded-full bg-primary-navy text-white text-xs font-bold flex items-center justify-center flex-shrink-0 mt-0.5">3</span>
+          <div>
+            <h3 class="text-sm font-bold text-primary-navy">Categories</h3>
+            <p class="text-xs text-slate-500 mt-0.5">Select up to 3 categories that best describe this role.</p>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-2 md:grid-cols-3 gap-3 max-h-64 overflow-y-auto pr-1 mega-scroll" id="category-chips">
+          <?php foreach ($allCategories as $cat): $checked = in_array($cat['id'], $selectedCategoryIds, true); ?>
+            <label class="category-chip flex items-center gap-2.5 text-sm font-medium border rounded-lg px-3 py-2.5 cursor-pointer <?= $checked ? 'border-gold bg-gold/5 text-gold' : 'border-slate-200 text-slate-600 hover:border-slate-300' ?>">
+              <input type="checkbox" name="categories[]" value="<?= $cat['id'] ?>" <?= $checked ? 'checked' : '' ?> class="hidden category-checkbox">
+              <i class="bi <?= e($categoryIcons[$cat['slug']] ?? 'bi-briefcase') ?>"></i>
+              <?= e($cat['name']) ?>
+            </label>
+          <?php endforeach; ?>
+          <?php if (empty($allCategories)): ?>
+            <p class="text-xs text-slate-400 col-span-full">No job categories have been set up yet.</p>
+          <?php endif; ?>
+        </div>
+        <p id="category-limit-note" class="hidden text-xs text-amber-600 mt-2">You can select up to 3 categories.</p>
       </div>
 
       <!-- Step 4: How to Apply -->
