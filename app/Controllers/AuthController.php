@@ -133,7 +133,8 @@ class AuthController extends Controller
 
         $_SESSION['_errors'] = ['Incorrect email or password, or the account has been suspended.'];
         $this->old(['email' => $email]);
-        $this->redirect('login');
+        $intended = sanitize_redirect_target($_SESSION['_intended_url'] ?? null);
+        $this->redirect('login' . ($intended !== null ? '?redirect=' . rawurlencode($intended) : ''));
     }
 
     public function logout(): void

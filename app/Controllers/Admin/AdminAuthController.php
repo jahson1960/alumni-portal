@@ -44,7 +44,8 @@ class AdminAuthController extends Controller
         Auth::logout();
         $_SESSION['_errors'] = ['Incorrect admin email or password.'];
         $this->old(['email' => $email]);
-        $this->redirect('admin/login');
+        $intended = sanitize_redirect_target($_SESSION['_intended_url'] ?? null);
+        $this->redirect('admin/login' . ($intended !== null ? '?redirect=' . rawurlencode($intended) : ''));
     }
 
     public function logout(): void
