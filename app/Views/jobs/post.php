@@ -199,7 +199,7 @@ $postingTips = [
           </div>
         </div>
 
-        <div class="grid grid-cols-2 md:grid-cols-3 gap-3" id="category-chips">
+        <div class="grid grid-cols-2 md:grid-cols-3 gap-3 max-h-64 overflow-y-auto pr-1 mega-scroll" id="category-chips">
           <?php foreach ($allCategories as $cat): $checked = in_array($cat['id'], $selectedCategoryIds, true); ?>
             <label class="category-chip flex items-center gap-2.5 text-sm font-medium border rounded-lg px-3 py-2.5 cursor-pointer <?= $checked ? 'border-gold bg-gold/5 text-gold' : 'border-slate-200 text-slate-600 hover:border-slate-300' ?>">
               <input type="checkbox" name="categories[]" value="<?= $cat['id'] ?>" <?= $checked ? 'checked' : '' ?> class="hidden category-checkbox">
