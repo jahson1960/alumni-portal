@@ -266,7 +266,7 @@ if ($authUser && $authUser['program']) {
                     <div>
                       <?= mega_col_heading('Network') ?>
                       <div class="space-y-1">
-                        <?= mega_item(login_url_with_redirect(url('jobs/post')), 'fa-solid fa-square-plus', 'Post a Job', 'Share opportunities with our ' . term_plural_lc()) ?>
+                        <?= mega_item(url('jobs/post'), 'fa-solid fa-square-plus', 'Post a Job', 'Share opportunities with our ' . term_plural_lc()) ?>
                         <?= mega_item(url('jobs') . '?tab=companies', 'fa-solid fa-building', 'Companies Hiring', 'Explore companies hiring our ' . term_plural_lc()) ?>
                       </div>
                     </div>
