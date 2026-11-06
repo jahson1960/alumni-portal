@@ -27,7 +27,7 @@
     <div class="card p-4 mb-6 flex flex-wrap items-center gap-3 !bg-indigo-50 !border-indigo-100">
       <div class="w-9 h-9 rounded-lg bg-indigo-100 text-indigo-600 flex items-center justify-center flex-shrink-0"><i class="fa-solid fa-hand-holding-heart"></i></div>
       <p class="text-xs text-slate-600 flex-1 min-w-[160px]">Have expertise to share? Log in to become a mentor.</p>
-      <a href="<?= e(url('login')) ?>" class="btn !bg-indigo-600 !text-white hover:!bg-indigo-700 !px-4 !py-2 text-xs whitespace-nowrap">Log In &rarr;</a>
+      <a href="<?= e(login_url_with_redirect()) ?>" class="btn !bg-indigo-600 !text-white hover:!bg-indigo-700 !px-4 !py-2 text-xs whitespace-nowrap">Log In &rarr;</a>
     </div>
   <?php endif; ?>
 

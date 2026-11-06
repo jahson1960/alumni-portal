@@ -14,8 +14,7 @@ class ResumeReviewController extends Controller
     {
         if (!Auth::check() || !Auth::user()) {
             Auth::logout();
-            header('Location: ' . url('login'));
-            exit;
+            $this->redirectToLogin();
         }
     }
 

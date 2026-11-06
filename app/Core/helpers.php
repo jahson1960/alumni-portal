@@ -678,6 +678,16 @@ function link_visibility_key(string $pageKey, string $title): string
  * incoming ?redirect= value and when re-emitting it as a Location header, so a tampered
  * redirect= can never send a visitor off-site.
  */
+/**
+ * A login link that returns the visitor to $to after signing in, or to the current page if $to
+ * is omitted - for "Log in to do X" prompts rendered on a page a guest is already viewing.
+ */
+function login_url_with_redirect(?string $to = null): string
+{
+    $target = sanitize_redirect_target($to ?? ($_SERVER['REQUEST_URI'] ?? null));
+    return url('login') . ($target !== null ? '?redirect=' . rawurlencode($target) : '');
+}
+
 function sanitize_redirect_target(?string $target): ?string
 {
     if ($target === null) {

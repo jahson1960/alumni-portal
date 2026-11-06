@@ -266,7 +266,7 @@ if ($authUser && $authUser['program']) {
                     <div>
                       <?= mega_col_heading('Network') ?>
                       <div class="space-y-1">
-                        <?= mega_item(url('login'), 'fa-solid fa-square-plus', 'Post a Job', 'Share opportunities with our ' . term_plural_lc()) ?>
+                        <?= mega_item(login_url_with_redirect(url('jobs/post')), 'fa-solid fa-square-plus', 'Post a Job', 'Share opportunities with our ' . term_plural_lc()) ?>
                         <?= mega_item(url('jobs') . '?tab=companies', 'fa-solid fa-building', 'Companies Hiring', 'Explore companies hiring our ' . term_plural_lc()) ?>
                       </div>
                     </div>
@@ -830,7 +830,7 @@ if ($authUser && $authUser['program']) {
               </div>
             </div>
           <?php else: ?>
-            <a href="<?= e(url('login')) ?>" class="text-xs font-semibold text-[var(--header-text)] hover:text-gold uppercase hidden sm:inline">Login</a>
+            <a href="<?= e(login_url_with_redirect()) ?>" class="text-xs font-semibold text-[var(--header-text)] hover:text-gold uppercase hidden sm:inline">Login</a>
             <a href="<?= e(url('register')) ?>" class="btn-gold !px-4 !py-2 text-xs hidden sm:inline-block">Join Now</a>
           <?php endif; ?>
           <button type="button" id="mobile-menu-open" class="lg:hidden text-[var(--header-text)] text-xl cursor-pointer">
@@ -911,7 +911,7 @@ if ($authUser && $authUser['program']) {
         </a>
         <div class="border-t border-white/10"></div>
         <?php if (!$authUser): ?>
-          <a href="<?= e(url('login')) ?>" class="flex items-center gap-3 py-3">
+          <a href="<?= e(login_url_with_redirect()) ?>" class="flex items-center gap-3 py-3">
             <i class="fa-solid fa-right-to-bracket text-[var(--menu-item-text)] opacity-70 w-5 text-center flex-shrink-0"></i>
             <span class="text-sm font-semibold text-[var(--menu-item-text)] opacity-90">Login</span>
           </a>

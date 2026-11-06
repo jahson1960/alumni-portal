@@ -140,7 +140,7 @@
               <button type="submit" class="btn bg-emerald-600 !text-white hover:bg-emerald-700 !px-4 !py-2 text-xs flex items-center gap-2"><i class="fa-solid fa-check"></i> I've Made This Donation</button>
             </form>
           <?php else: ?>
-            <a href="<?= e(url('login')) ?>" class="btn bg-slate-200 !text-slate-700 hover:bg-slate-300 !px-4 !py-2 text-xs inline-flex items-center gap-2">Log in to Mark as Given</a>
+            <a href="<?= e(login_url_with_redirect()) ?>" class="btn bg-slate-200 !text-slate-700 hover:bg-slate-300 !px-4 !py-2 text-xs inline-flex items-center gap-2">Log in to Mark as Given</a>
           <?php endif; ?>
         </div>
       </div>

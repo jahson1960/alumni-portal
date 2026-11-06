@@ -6,7 +6,7 @@
     <h3 class="text-base font-bold text-primary-navy mb-1.5">Jobs picked for you</h3>
     <p class="text-sm text-slate-500 mb-5">Log in to see opportunities matched to the job categories you're interested in.</p>
     <div class="flex items-center justify-center gap-3">
-      <a href="<?= e(url('login')) ?>" class="btn-gold !px-5 !py-2.5 text-sm">Log In</a>
+      <a href="<?= e(login_url_with_redirect(url('jobs') . '?tab=forme')) ?>" class="btn-gold !px-5 !py-2.5 text-sm">Log In</a>
       <a href="<?= e(url('register')) ?>" class="btn bg-white border border-slate-200 !text-slate-700 hover:bg-slate-50 !px-5 !py-2.5 text-sm">Create Account</a>
     </div>
   </div>

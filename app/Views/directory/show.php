@@ -49,7 +49,7 @@ $heroHeight = (int) \App\Models\Setting::get('profile_hero_height', '200');
         <?php if (!$isSelf): ?>
           <div class="flex flex-wrap items-center gap-2 mt-4">
             <?php if (!$viewerId): ?>
-              <a href="<?= e(url('login')) ?>" class="btn-gold !px-4 !py-2 text-xs"><i class="fa-solid fa-user-plus"></i> Log in to Connect</a>
+              <a href="<?= e(login_url_with_redirect()) ?>" class="btn-gold !px-4 !py-2 text-xs"><i class="fa-solid fa-user-plus"></i> Log in to Connect</a>
             <?php elseif ($connectionStatus === null): ?>
               <form method="POST" action="<?= e(url('connections/' . $profile['id'] . '/request')) ?>">
                 <?= csrf_field() ?>
