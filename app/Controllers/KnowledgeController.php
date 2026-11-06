@@ -21,7 +21,7 @@ class KnowledgeController extends Controller
         $search = trim((string) $this->input('q', ''));
 
         $this->view('knowledge.index', [
-            'title' => 'Alumni Insights',
+            'title' => term_plural() . ' Insights',
             'activeNav' => 'knowledge',
             'articles' => Article::published($category, $search !== '' ? $search : null),
             'activeCategory' => $category,

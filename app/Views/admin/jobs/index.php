@@ -38,7 +38,7 @@
           </td>
           <td><?= e($job['company']) ?></td>
           <td class="text-slate-500"><?= e($job['location']) ?></td>
-          <td class="text-slate-500"><?= !empty($job['posted_by']) ? 'Alumni' : 'Admin' ?></td>
+          <td class="text-slate-500"><?= !empty($job['posted_by']) ? term_plural() : 'Admin' ?></td>
           <td class="text-slate-500 whitespace-nowrap"><?= !empty($job['posted_at']) ? e(format_date($job['posted_at'])) : '<span class="text-slate-300">Not yet</span>' ?></td>
           <td class="whitespace-nowrap">
             <span class="<?= $job['status'] === 'open' ? 'badge-blue' : 'badge-gold' ?>"><?= e($job['status']) ?></span>

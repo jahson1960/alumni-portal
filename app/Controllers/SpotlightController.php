@@ -13,7 +13,7 @@ class SpotlightController extends Controller
         $this->requireVisibility('spotlight');
 
         $this->view('spotlight.index', [
-            'title' => 'Alumni Spotlight',
+            'title' => term_plural() . ' Spotlight',
             'activeNav' => 'spotlight',
             'alumni' => User::spotlighted(),
             'nominateEmail' => Setting::get('spotlight_nominate_email', 'alumni@rbsn.example.com'),

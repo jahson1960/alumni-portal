@@ -4,7 +4,7 @@
   <div class="card p-6 mb-6">
     <h1 class="text-xl font-extrabold text-primary-navy mb-1"><?= e($program) ?> <?= e($year) ?></h1>
     <div class="flex flex-wrap gap-6 mt-3 text-sm">
-      <div><span class="text-lg font-extrabold text-primary-navy"><?= (int) $stats['members'] ?></span> <span class="text-xs text-slate-500">Alumni</span></div>
+      <div><span class="text-lg font-extrabold text-primary-navy"><?= (int) $stats['members'] ?></span> <span class="text-xs text-slate-500"><?= e(term_plural()) ?></span></div>
       <div><span class="text-lg font-extrabold text-primary-navy"><?= (int) $stats['countries'] ?></span> <span class="text-xs text-slate-500">Countries</span></div>
       <div><span class="text-lg font-extrabold text-primary-navy"><?= (int) $stats['companies'] ?></span> <span class="text-xs text-slate-500">Companies</span></div>
     </div>

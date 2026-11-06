@@ -18,7 +18,7 @@ $qs = function (array $overrides) use ($view, $format, $q, $display) {
   <div class="flex flex-wrap items-start justify-between gap-4 mb-6">
     <div>
       <h1 class="text-2xl font-extrabold text-primary-navy">Upcoming Events</h1>
-      <p class="text-sm text-slate-500 mt-1">Connect, learn and grow with fellow alumni through our curated events and experiences.</p>
+      <p class="text-sm text-slate-500 mt-1">Connect, learn and grow with fellow <?= e(term_plural_lc()) ?> through our curated events and experiences.</p>
     </div>
     <?php if (\App\Core\Auth::isAdmin()): ?>
       <a href="<?= e(url('admin/events/create')) ?>" class="btn-gold !px-4 !py-2.5 text-sm flex items-center gap-2 flex-shrink-0"><i class="fa-solid fa-plus"></i> Create Event</a>

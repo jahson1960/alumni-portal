@@ -1,5 +1,5 @@
 <div class="max-w-2xl">
-  <p class="text-sm text-slate-500 mb-4">These are the areas alumni can pick from when they become a mentor, on the "Become a Mentor" page and their profile.</p>
+  <p class="text-sm text-slate-500 mb-4">These are the areas <?= e(term_plural_lc()) ?> can pick from when they become a mentor, on the "Become a Mentor" page and their profile.</p>
 
   <div class="card p-4 mb-4">
     <form method="POST" action="<?= e(url('admin/mentorship-areas')) ?>" class="flex gap-2">

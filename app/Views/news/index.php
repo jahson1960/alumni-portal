@@ -23,14 +23,14 @@ $gridPosts = $featuredPost ? array_filter($posts, fn ($p) => (int) $p['id'] !== 
 
   <div class="flex flex-wrap items-start justify-between gap-4 mb-2">
     <div>
-      <p class="text-xs font-bold text-gold uppercase tracking-wide mb-1">Alumni Network</p>
+      <p class="text-xs font-bold text-gold uppercase tracking-wide mb-1"><?= e(term_plural()) ?> Network</p>
       <h1 class="text-2xl md:text-3xl font-extrabold text-primary-navy">News &amp; Updates</h1>
-      <p class="text-sm text-slate-500 mt-1.5 max-w-xl">Stay informed with the latest news, stories and achievements from our global alumni community.</p>
+      <p class="text-sm text-slate-500 mt-1.5 max-w-xl">Stay informed with the latest news, stories and achievements from our global <?= e(term_plural_lc()) ?> community.</p>
     </div>
     <div class="hidden sm:flex items-center gap-2 text-xs text-slate-400 pt-1">
       <a href="<?= e(url('/')) ?>" class="hover:text-gold flex items-center gap-1.5"><i class="fa-solid fa-house"></i> Home</a>
       <i class="fa-solid fa-chevron-right text-[0.6rem]"></i>
-      <span>Alumni Network</span>
+      <span><?= e(term_plural()) ?> Network</span>
       <i class="fa-solid fa-chevron-right text-[0.6rem]"></i>
       <span class="text-primary-navy font-semibold">News &amp; Blog</span>
     </div>

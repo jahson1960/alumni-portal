@@ -1,5 +1,5 @@
 <?php $isEdit = $row !== null; ?>
-<a href="<?= e(url('admin/alumni-roster')) ?>" class="text-xs text-slate-500 hover:text-gold mb-4 inline-block"><i class="fa-solid fa-arrow-left"></i> Back to Alumni Roster</a>
+<a href="<?= e(url('admin/alumni-roster')) ?>" class="text-xs text-slate-500 hover:text-gold mb-4 inline-block"><i class="fa-solid fa-arrow-left"></i> Back to <?= e(term_plural()) ?> Roster</a>
 
 <?php require dirname(dirname(__DIR__)) . '/partials/errors.php'; ?>
 
@@ -14,7 +14,7 @@
   <div>
     <label class="form-label" for="full_name">Full Name</label>
     <input type="text" id="full_name" name="full_name" class="form-input" value="<?= e($row['full_name'] ?? '') ?>" required>
-    <p class="text-xs text-slate-400 mt-1">Used as-is to create the alumnus's account — they won't be asked to enter it again at sign-up.</p>
+    <p class="text-xs text-slate-400 mt-1">Used as-is to create the <?= e(term_singular_lc()) ?>'s account — they won't be asked to enter it again at sign-up.</p>
   </div>
 
   <div class="grid grid-cols-2 gap-4">

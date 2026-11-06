@@ -1,6 +1,6 @@
 <?php $tabs = admin_staff_tabs(); require dirname(dirname(__DIR__)) . '/partials/admin_group_tabs.php'; ?>
 
-<p class="text-sm text-slate-500 mb-6">Create an Admin, Editor, Recruiter, or Advisor account directly — no alumni roster record needed. A temporary password is generated automatically and emailed to them; they can change it any time after logging in.</p>
+<p class="text-sm text-slate-500 mb-6">Create an Admin, Editor, Recruiter, or Advisor account directly — no <?= e(term_plural_lc()) ?> roster record needed. A temporary password is generated automatically and emailed to them; they can change it any time after logging in.</p>
 
 <?php require dirname(dirname(__DIR__)) . '/partials/errors.php'; ?>
 
@@ -28,9 +28,9 @@
     </select>
     <p class="text-xs text-slate-400 mt-1">
       <strong>Admin</strong> — full admin-panel access.
-      <strong>Editor</strong> — can register alumni on the public site's behalf; no other admin access.
-      <strong>Recruiter</strong> — a non-alumni account scoped to Jobs and Messages only (no Alumni Directory, Connections, Community Feed, or Mentorship).
-      <strong>Advisor</strong> — a non-alumni account you can assign to specific alumni; can view their profile, message them, and keep private advising notes, plus has the same alumni-social access as a regular alumnus.
+      <strong>Editor</strong> — can register <?= e(term_plural_lc()) ?> on the public site's behalf; no other admin access.
+      <strong>Recruiter</strong> — a non-<?= e(term_plural_lc()) ?> account scoped to Jobs and Messages only (no <?= e(term_plural()) ?> Directory, Connections, Community Feed, or Mentorship).
+      <strong>Advisor</strong> — a non-<?= e(term_plural_lc()) ?> account you can assign to specific <?= e(term_plural_lc()) ?>; can view their profile, message them, and keep private advising notes, plus has the same <?= e(term_plural_lc()) ?>-social access as a regular <?= e(term_singular_lc()) ?>.
     </p>
   </div>
 

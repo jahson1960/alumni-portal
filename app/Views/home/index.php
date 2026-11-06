@@ -150,8 +150,8 @@ $heroBtnVClasses = hero_btn_v_classes(
     <a href="<?= e(url('directory')) ?>" class="card p-4 md:p-5 flex flex-col md:flex-row items-center text-center md:text-left gap-2 md:gap-4 hover:-translate-y-0.5 hover:shadow-md transition-all">
       <div class="w-11 h-11 rounded-lg bg-slate-100 text-primary-navy flex items-center justify-center text-xl flex-shrink-0"><i class="fa-solid fa-user-group"></i></div>
       <div class="flex-1 min-w-0">
-        <h4 class="text-sm font-bold text-primary-navy">Alumni Directory</h4>
-        <p class="text-xs text-slate-500">Connect with alumni like you</p>
+        <h4 class="text-sm font-bold text-primary-navy"><?= e(term_plural()) ?> Directory</h4>
+        <p class="text-xs text-slate-500">Connect with <?= e(term_plural_lc()) ?> like you</p>
       </div>
       <i class="fa-solid fa-chevron-right text-slate-400 text-xs hidden md:block"></i>
     </a>
@@ -159,7 +159,7 @@ $heroBtnVClasses = hero_btn_v_classes(
       <div class="w-11 h-11 rounded-lg bg-slate-100 text-primary-navy flex items-center justify-center text-xl flex-shrink-0"><i class="fa-regular fa-comment-dots"></i></div>
       <div class="flex-1 min-w-0">
         <h4 class="text-sm font-bold text-primary-navy">Community Feed</h4>
-        <p class="text-xs text-slate-500">See updates and posts from alumni</p>
+        <p class="text-xs text-slate-500">See updates and posts from <?= e(term_plural_lc()) ?></p>
       </div>
       <i class="fa-solid fa-chevron-right text-slate-400 text-xs hidden md:block"></i>
     </a>

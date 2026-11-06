@@ -53,7 +53,7 @@
         .then(function (data) {
           result.classList.remove('hidden');
           if (!data.found) {
-            showError('No alumni roster record was found for this matric number. Contact the alumni office if you believe this is an error.');
+            showError('No ' + <?= json_encode(term_plural_lc()) ?> + ' roster record was found for this matric number. Contact the ' + <?= json_encode(term_plural_lc()) ?> + ' office if you believe this is an error.');
           } else if (data.claimed) {
             showError('An account has already been created for this matric number.');
           } else {

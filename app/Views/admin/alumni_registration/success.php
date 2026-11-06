@@ -3,7 +3,7 @@
     <div class="w-16 h-16 mx-auto rounded-full bg-emerald-50 text-emerald-600 ring-8 ring-emerald-50/50 flex items-center justify-center text-2xl mb-5">
       <i class="fa-solid fa-circle-check"></i>
     </div>
-    <h2 class="text-xl font-extrabold text-primary-navy mb-2">Alumni account created</h2>
+    <h2 class="text-xl font-extrabold text-primary-navy mb-2"><?= e(term_plural()) ?> account created</h2>
     <p class="text-sm text-slate-500 leading-relaxed mb-6">
       <span class="font-semibold text-primary-navy"><?= e($result['name']) ?></span> can now sign in. Login credentials have been emailed to
       <span class="font-semibold text-primary-navy"><?= e($result['email']) ?></span>.
@@ -16,7 +16,7 @@
 
     <div class="flex items-center justify-center gap-3">
       <a href="<?= e(url('admin/register-alumni')) ?>" class="btn-gold !px-5 !py-2.5 text-sm">Register Another</a>
-      <a href="<?= e(url('admin/alumni')) ?>" class="btn bg-white border border-slate-200 !text-slate-700 hover:bg-slate-50 !px-5 !py-2.5 text-sm">View Alumni List</a>
+      <a href="<?= e(url('admin/alumni')) ?>" class="btn bg-white border border-slate-200 !text-slate-700 hover:bg-slate-50 !px-5 !py-2.5 text-sm">View <?= e(term_plural()) ?> List</a>
     </div>
   </div>
 </div>

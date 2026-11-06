@@ -16,7 +16,7 @@ class AuthController extends Controller
             $this->redirect('/');
         }
         $this->view('auth.register', [
-            'title' => 'Create Your Alumni Account',
+            'title' => 'Create Your ' . term_plural() . ' Account',
             'allCategories' => Category::forType('job'),
         ], 'auth');
     }
@@ -49,7 +49,7 @@ class AuthController extends Controller
         } else {
             $rosterEntry = AlumniRoster::findByMatric($matricNumber);
             if (!$rosterEntry) {
-                $errors[] = 'We could not find that matric number in our alumni records. Please contact support if you believe this is an error.';
+                $errors[] = 'We could not find that matric number in our ' . term_plural_lc() . ' records. Please contact support if you believe this is an error.';
             } elseif ($rosterEntry['claimed_by_user_id']) {
                 $errors[] = 'An account has already been created for this matric number.';
             }
@@ -86,7 +86,7 @@ class AuthController extends Controller
 
         $user = User::find($id);
         Auth::login($user);
-        $this->flash('success', 'Welcome to the RBSN Alumni Network! Complete your profile to get the most out of it.');
+        $this->flash('success', 'Welcome to the RBSN ' . term_plural() . ' Network! Complete your profile to get the most out of it.');
         $this->redirect('profile/edit');
     }
 

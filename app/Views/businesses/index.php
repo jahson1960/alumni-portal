@@ -13,8 +13,8 @@ $activeCategory = $filters['category'] ?? null;
     <div class="flex items-center gap-4">
       <div class="w-12 h-12 rounded-xl bg-gold/10 text-gold flex items-center justify-center text-xl flex-shrink-0"><i class="fa-solid fa-briefcase"></i></div>
       <div>
-        <h1 class="text-2xl font-extrabold text-primary-navy">Alumni Businesses</h1>
-        <p class="text-sm text-slate-500">Discover businesses founded or led by our talented alumni.</p>
+        <h1 class="text-2xl font-extrabold text-primary-navy"><?= e(term_plural()) ?> Businesses</h1>
+        <p class="text-sm text-slate-500">Discover businesses founded or led by our talented <?= e(term_plural_lc()) ?>.</p>
       </div>
     </div>
     <?php if ($authUser): ?>

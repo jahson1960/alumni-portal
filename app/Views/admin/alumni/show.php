@@ -1,4 +1,4 @@
-<a href="<?= e(url('admin/alumni')) ?>" class="text-xs text-slate-500 hover:text-gold mb-4 inline-block"><i class="fa-solid fa-arrow-left"></i> Back to Alumni</a>
+<a href="<?= e(url('admin/alumni')) ?>" class="text-xs text-slate-500 hover:text-gold mb-4 inline-block"><i class="fa-solid fa-arrow-left"></i> Back to <?= e(term_plural()) ?></a>
 
 <div class="card p-6 max-w-2xl">
   <div class="flex items-center gap-4 mb-6">
@@ -25,7 +25,7 @@
   </dl>
 
   <div class="mt-6 pt-6 border-t border-slate-100">
-    <h3 class="section-title text-xs mb-3">Alumni Spotlight</h3>
+    <h3 class="section-title text-xs mb-3"><?= e(term_plural()) ?> Spotlight</h3>
     <?php if (!empty($alum['is_spotlighted'])): ?>
       <p class="text-sm text-slate-600 mb-3 whitespace-pre-line"><?= e($alum['spotlight_note'] ?: '(no note)') ?></p>
       <form method="POST" action="<?= e(url('admin/alumni/' . $alum['id'] . '/unspotlight')) ?>">
@@ -111,7 +111,7 @@
   </div>
 
   <div class="flex gap-3 mt-6 pt-6 border-t border-slate-100">
-    <form method="POST" action="<?= e(url('admin/alumni/' . $alum['id'] . '/reset-password')) ?>" onsubmit="return confirm('Reset this alumnus\'s password? A new temporary password will be generated and emailed to them.');">
+    <form method="POST" action="<?= e(url('admin/alumni/' . $alum['id'] . '/reset-password')) ?>" onsubmit="return confirm(<?= e(json_encode('Reset this ' . term_singular_lc() . "'s password? A new temporary password will be generated and emailed to them.")) ?>);">
       <?= csrf_field() ?>
       <button type="submit" class="btn bg-sky-100 text-sky-700 hover:bg-sky-200">Reset Password</button>
     </form>
@@ -126,7 +126,7 @@
         <button type="submit" class="btn bg-green-100 text-green-700 hover:bg-green-200">Activate Account</button>
       </form>
     <?php endif; ?>
-    <form method="POST" action="<?= e(url('admin/alumni/' . $alum['id'] . '/delete')) ?>" onsubmit="return confirm('Delete this alumni account? This cannot be undone.');">
+    <form method="POST" action="<?= e(url('admin/alumni/' . $alum['id'] . '/delete')) ?>" onsubmit="return confirm(<?= e(json_encode('Delete this ' . term_singular_lc() . ' account? This cannot be undone.')) ?>);">
       <?= csrf_field() ?>
       <button type="submit" class="btn bg-red-100 text-red-700 hover:bg-red-200">Delete Account</button>
     </form>

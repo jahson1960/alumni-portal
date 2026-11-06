@@ -4,7 +4,7 @@
   <div class="flex flex-wrap items-start justify-between gap-4 mb-6">
     <div>
       <h1 class="text-2xl font-extrabold text-primary-navy">Find a Mentor</h1>
-      <p class="text-sm text-slate-500 mt-1">Connect with experienced alumni who can guide and support your growth.</p>
+      <p class="text-sm text-slate-500 mt-1">Connect with experienced <?= e(term_plural_lc()) ?> who can guide and support your growth.</p>
     </div>
     <?php if ($viewer): ?>
       <a href="<?= e(url('mentorship/requests')) ?>" class="text-xs font-semibold text-gold hover:underline flex items-center gap-1">My Requests <i class="bi bi-arrow-right"></i></a>

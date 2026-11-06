@@ -35,7 +35,7 @@ class MessageController extends Controller
         $partner = User::find($partnerId);
 
         if (!$partner || $partnerId === $viewerId || !Message::canMessage($viewerId, $partnerId)) {
-            $this->flash('error', "You can only message alumni you're connected with, or recruiters/applicants from a job posting.");
+            $this->flash('error', "You can only message " . term_plural_lc() . " you're connected with, or recruiters/applicants from a job posting.");
             $this->redirect('messages');
         }
 
@@ -71,7 +71,7 @@ class MessageController extends Controller
         $partnerId = (int) $userId;
 
         if (!Message::canMessage($viewerId, $partnerId)) {
-            $this->flash('error', "You can only message alumni you're connected with, or recruiters/applicants from a job posting.");
+            $this->flash('error', "You can only message " . term_plural_lc() . " you're connected with, or recruiters/applicants from a job posting.");
             $this->redirect('messages');
         }
 

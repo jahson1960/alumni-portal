@@ -21,7 +21,7 @@ class AdvisorController extends Controller
     public function index(): void
     {
         $this->view('advisor.my_alumni.index', [
-            'title' => 'My Assigned Alumni',
+            'title' => 'My Assigned ' . term_plural(),
             'activeNav' => 'advisor_my_alumni',
             'alumni' => Advisor::alumniForAdvisor((int) Auth::id()),
         ]);

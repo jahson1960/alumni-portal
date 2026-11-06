@@ -5,7 +5,7 @@
     <form method="POST" action="<?= e(url('admin/categories')) ?>" class="flex gap-2">
       <?= csrf_field() ?>
       <input type="hidden" name="type" value="news">
-      <input type="text" name="name" placeholder="e.g. Alumni Stories" class="form-input flex-1" required>
+      <input type="text" name="name" placeholder="e.g. <?= e(term_plural()) ?> Stories" class="form-input flex-1" required>
       <button type="submit" class="btn-gold !px-4 !py-2 text-xs whitespace-nowrap">+ Add</button>
     </form>
   </div>

@@ -21,7 +21,7 @@ $industryOptions = \App\Models\User::distinctFilterValues('industry');
   <div class="flex flex-wrap items-start justify-between gap-4 mb-6">
     <div>
       <h1 class="text-xl font-extrabold text-primary-navy">Edit Profile</h1>
-      <p class="text-sm text-slate-500">Keep your profile updated. Your information helps alumni connect with you.</p>
+      <p class="text-sm text-slate-500">Keep your profile updated. Your information helps <?= e(term_plural_lc()) ?> connect with you.</p>
     </div>
     <div class="flex items-center gap-2">
       <a href="<?= e(url('alumni/' . $user['id'])) ?>" class="btn bg-slate-100 text-slate-600 hover:bg-slate-200 !px-4 !py-2 text-xs"><i class="fa-regular fa-eye"></i> Preview Profile</a>
@@ -204,7 +204,7 @@ $industryOptions = \App\Models\User::distinctFilterValues('industry');
             </div>
             <div>
               <h3 class="text-base font-bold text-primary-navy">Contact &amp; Location</h3>
-              <p class="text-xs text-slate-500">Let alumni and fellow professionals know how and where to reach you.</p>
+              <p class="text-xs text-slate-500">Let <?= e(term_plural_lc()) ?> and fellow professionals know how and where to reach you.</p>
             </div>
           </div>
 
@@ -228,7 +228,7 @@ $industryOptions = \App\Models\User::distinctFilterValues('industry');
                   <i class="fa-solid fa-envelope absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-sm"></i>
                   <input type="email" id="email_display" class="form-input !pl-9 bg-slate-50 text-slate-500 cursor-not-allowed" value="<?= e($user['email']) ?>" disabled>
                 </div>
-                <p class="text-xs text-slate-400 mt-1">This will be visible to other alumni (if you allow).</p>
+                <p class="text-xs text-slate-400 mt-1">This will be visible to other <?= e(term_plural_lc()) ?> (if you allow).</p>
               </div>
 
               <div class="mb-5">
@@ -246,7 +246,7 @@ $industryOptions = \App\Models\User::distinctFilterValues('industry');
                   <div class="w-10 h-6 bg-slate-200 rounded-full peer peer-checked:bg-[var(--menu-accent-600)] transition-colors after:content-[''] after:absolute after:top-0.5 after:left-0.5 after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:after:translate-x-4"></div>
                 </label>
                 <div>
-                  <p class="text-sm font-semibold text-slate-700">Show my contact details to other alumni</p>
+                  <p class="text-sm font-semibold text-slate-700">Show my contact details to other <?= e(term_plural_lc()) ?></p>
                   <p class="text-xs text-slate-400">You can change this anytime in your privacy settings.</p>
                 </div>
               </div>
@@ -303,7 +303,7 @@ $industryOptions = \App\Models\User::distinctFilterValues('industry');
 
         <div class="profile-tab-panel hidden card p-6" data-tab="links">
           <h3 class="text-base font-bold text-primary-navy mb-1">CV, Links &amp; Socials</h3>
-          <p class="text-xs text-slate-500 mb-5">Where alumni can find you online</p>
+          <p class="text-xs text-slate-500 mb-5">Where <?= e(term_plural_lc()) ?> can find you online</p>
           <div class="mb-4">
             <label class="form-label" for="linkedin_url">LinkedIn URL</label>
             <input type="url" id="linkedin_url" name="linkedin_url" class="form-input" value="<?= e($user['linkedin_url']) ?>">
@@ -338,12 +338,12 @@ $industryOptions = \App\Models\User::distinctFilterValues('industry');
             <label class="form-label" for="profile_visibility">Who can see my profile</label>
             <select id="profile_visibility" name="profile_visibility" class="form-input max-w-xs">
               <option value="public" <?= $user['profile_visibility'] === 'public' ? 'selected' : '' ?>>Everyone (Public)</option>
-              <option value="alumni" <?= $user['profile_visibility'] === 'alumni' ? 'selected' : '' ?>>Logged-in Alumni Only</option>
+              <option value="alumni" <?= $user['profile_visibility'] === 'alumni' ? 'selected' : '' ?>>Logged-in <?= e(term_plural()) ?> Only</option>
               <option value="private" <?= $user['profile_visibility'] === 'private' ? 'selected' : '' ?>>Only Me (Hidden from Directory)</option>
             </select>
           </div>
 
-          <p class="text-xs text-slate-500 mb-6">Whether your email and phone number are visible to other alumni is controlled by the "Show my contact details" switch on the <a href="#contact" class="jump-tab text-gold hover:underline" data-tab="contact">Contact &amp; Location</a> tab.</p>
+          <p class="text-xs text-slate-500 mb-6">Whether your email and phone number are visible to other <?= e(term_plural_lc()) ?> is controlled by the "Show my contact details" switch on the <a href="#contact" class="jump-tab text-gold hover:underline" data-tab="contact">Contact &amp; Location</a> tab.</p>
 
           <h4 class="text-xs font-extrabold text-primary-navy uppercase tracking-wide mb-3 border-t border-slate-100 pt-4">Mentorship</h4>
           <label class="flex items-center gap-2 text-sm text-slate-700 mb-3">
@@ -534,7 +534,7 @@ $industryOptions = \App\Models\User::distinctFilterValues('industry');
               stroke-dasharray="<?= round($circumference, 2) ?>" stroke-dashoffset="<?= round($offset, 2) ?>"></circle>
             <text x="40" y="40" transform="rotate(90 40 40)" text-anchor="middle" dominant-baseline="central" class="fill-primary-navy" style="font-size:16px;font-weight:800;"><?= $completion['percent'] ?>%</text>
           </svg>
-          <p class="text-xs text-slate-500 leading-relaxed"><?= $completion['percent'] >= 100 ? 'Your profile is complete!' : 'Almost there! Complete your profile to get better visibility in the alumni network.' ?></p>
+          <p class="text-xs text-slate-500 leading-relaxed"><?= $completion['percent'] >= 100 ? 'Your profile is complete!' : 'Almost there! Complete your profile to get better visibility in the <?= e(term_plural_lc()) ?> network.' ?></p>
         </div>
         <div class="w-full bg-slate-100 rounded-full h-1.5 mb-4">
           <div class="bg-emerald-500 h-1.5 rounded-full" style="width: <?= $completion['percent'] ?>%"></div>

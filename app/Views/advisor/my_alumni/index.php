@@ -1,8 +1,8 @@
 <div class="max-w-[1280px] mx-auto px-4 md:px-8 py-8">
   <div class="section-header">
-    <h1 class="section-title text-base">My Assigned Alumni</h1>
+    <h1 class="section-title text-base">My Assigned <?= e(term_plural()) ?></h1>
   </div>
-  <p class="text-sm text-slate-500 mb-6"><?= count($alumni) ?> alumni assigned to you.</p>
+  <p class="text-sm text-slate-500 mb-6"><?= count($alumni) ?> <?= e(term_plural_lc()) ?> assigned to you.</p>
 
   <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
     <?php foreach ($alumni as $alum): ?>
@@ -18,7 +18,7 @@
       </a>
     <?php endforeach; ?>
     <?php if (empty($alumni)): ?>
-      <p class="text-sm text-slate-400 col-span-full">No alumni have been assigned to you yet.</p>
+      <p class="text-sm text-slate-400 col-span-full">No <?= e(term_plural_lc()) ?> have been assigned to you yet.</p>
     <?php endif; ?>
   </div>
 </div>

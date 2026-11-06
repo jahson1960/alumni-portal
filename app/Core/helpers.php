@@ -10,6 +10,42 @@ function url(string $path = ''): string
 }
 
 /**
+ * The word the site uses for its members, admin-configurable (Admin > Settings >
+ * Terminology) so this app can serve an alumni network, a student body, or anything
+ * else without a code change. Defaults match the app's original wording. Display text
+ * only - routes, roles and table names stay "alumni" regardless of this setting.
+ */
+function term_plural(): string
+{
+    static $value = null;
+    if ($value === null) {
+        $value = trim(\App\Models\Setting::get('member_term_plural', 'Alumni')) ?: 'Alumni';
+    }
+    return $value;
+}
+
+function term_singular(): string
+{
+    static $value = null;
+    if ($value === null) {
+        $value = trim(\App\Models\Setting::get('member_term_singular', 'Alumnus')) ?: 'Alumnus';
+    }
+    return $value;
+}
+
+/** Lowercase plural term, for mid-sentence use (e.g. "fellow " . term_plural_lc()). */
+function term_plural_lc(): string
+{
+    return mb_strtolower(term_plural());
+}
+
+/** Lowercase singular term, for mid-sentence use (e.g. "this " . term_singular_lc()). */
+function term_singular_lc(): string
+{
+    return mb_strtolower(term_singular());
+}
+
+/**
  * True if $email's domain has any DNS record capable of receiving mail (MX, or A/AAAA as a
  * fallback - some small domains route mail straight to their A record with no MX at all).
  * Catches a syntactically valid but nonexistent domain (e.g. someone@ggndwq.com); it cannot
@@ -1034,9 +1070,9 @@ function admin_giving_tabs(): array
 function admin_alumni_tabs(): array
 {
     $tabs = [
-        ['key' => 'alumni', 'label' => 'Registered Alumni', 'icon' => 'fa-solid fa-user-group', 'href' => url('admin/alumni')],
-        ['key' => 'alumni_roster', 'label' => 'Alumni Roster', 'icon' => 'fa-solid fa-id-card', 'href' => url('admin/alumni-roster')],
-        ['key' => 'register_alumni', 'label' => 'Register Alumni', 'icon' => 'fa-solid fa-user-plus', 'href' => url('admin/register-alumni')],
+        ['key' => 'alumni', 'label' => 'Registered ' . term_plural(), 'icon' => 'fa-solid fa-user-group', 'href' => url('admin/alumni')],
+        ['key' => 'alumni_roster', 'label' => term_plural() . ' Roster', 'icon' => 'fa-solid fa-id-card', 'href' => url('admin/alumni-roster')],
+        ['key' => 'register_alumni', 'label' => 'Register ' . term_plural(), 'icon' => 'fa-solid fa-user-plus', 'href' => url('admin/register-alumni')],
     ];
     if (\App\Core\Auth::isEditor()) {
         return array_values(array_filter($tabs, fn ($t) => $t['key'] === 'register_alumni'));

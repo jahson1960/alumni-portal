@@ -14,7 +14,7 @@ class AlumniController extends AdminController
     {
         $p = $this->paginate(User::countAlumniAdmin(), 30);
         $this->view('admin.alumni.index', [
-            'title' => 'Registered Alumni',
+            'title' => 'Registered ' . term_plural(),
             'activeNav' => 'alumni',
             'alumni' => User::paginateAlumniAdmin($p['perPage'], $p['offset']),
             ...$p,
@@ -25,7 +25,7 @@ class AlumniController extends AdminController
     {
         $alum = User::find((int) $id);
         if (!$alum || $alum['role'] !== 'alumni') {
-            $this->flash('error', 'Alumni not found.');
+            $this->flash('error', term_plural() . ' not found.');
             $this->redirect('admin/alumni');
         }
 
@@ -46,7 +46,7 @@ class AlumniController extends AdminController
         $this->requireCsrf();
         $alum = User::find((int) $id);
         if (!$alum || $alum['role'] !== 'alumni') {
-            $this->flash('error', 'Alumni not found.');
+            $this->flash('error', term_plural() . ' not found.');
             $this->redirect('admin/alumni');
         }
 
@@ -67,7 +67,7 @@ class AlumniController extends AdminController
         $this->requireCsrf();
         $alum = User::find((int) $id);
         if (!$alum || $alum['role'] !== 'alumni') {
-            $this->flash('error', 'Alumni not found.');
+            $this->flash('error', term_plural() . ' not found.');
             $this->redirect('admin/alumni');
         }
 
@@ -81,7 +81,7 @@ class AlumniController extends AdminController
     {
         $this->requireCsrf();
         User::update((int) $id, ['status' => 'suspended']);
-        $this->flash('success', 'Alumni account suspended.');
+        $this->flash('success', term_plural() . ' account suspended.');
         $this->redirect('admin/alumni');
     }
 
@@ -89,7 +89,7 @@ class AlumniController extends AdminController
     {
         $this->requireCsrf();
         User::update((int) $id, ['status' => 'active']);
-        $this->flash('success', 'Alumni account activated.');
+        $this->flash('success', term_plural() . ' account activated.');
         $this->redirect('admin/alumni');
     }
 
@@ -99,7 +99,7 @@ class AlumniController extends AdminController
         $this->requireCsrf();
         $alum = User::find((int) $id);
         if (!$alum || $alum['role'] !== 'alumni') {
-            $this->flash('error', 'Alumni not found.');
+            $this->flash('error', term_plural() . ' not found.');
             $this->redirect('admin/alumni');
         }
 
@@ -121,7 +121,7 @@ class AlumniController extends AdminController
             'login'
         ));
 
-        $this->flash('success', 'Password reset. A temporary password has been emailed to the alumnus.');
+        $this->flash('success', 'Password reset. A temporary password has been emailed to the ' . term_singular_lc() . '.');
         $this->redirect("admin/alumni/{$id}");
     }
 
@@ -129,7 +129,7 @@ class AlumniController extends AdminController
     {
         $this->requireCsrf();
         User::delete((int) $id);
-        $this->flash('success', 'Alumni account deleted.');
+        $this->flash('success', term_plural() . ' account deleted.');
         $this->redirect('admin/alumni');
     }
 
@@ -140,7 +140,7 @@ class AlumniController extends AdminController
             'is_spotlighted' => 1,
             'spotlight_note' => trim((string) $this->input('spotlight_note', '')) ?: null,
         ]);
-        $this->flash('success', 'Alumni added to Spotlight.');
+        $this->flash('success', term_plural() . ' added to Spotlight.');
         $this->redirect("admin/alumni/{$id}");
     }
 
@@ -148,7 +148,7 @@ class AlumniController extends AdminController
     {
         $this->requireCsrf();
         User::update((int) $id, ['is_spotlighted' => 0]);
-        $this->flash('success', 'Alumni removed from Spotlight.');
+        $this->flash('success', term_plural() . ' removed from Spotlight.');
         $this->redirect("admin/alumni/{$id}");
     }
 
@@ -160,7 +160,7 @@ class AlumniController extends AdminController
         if ($alum && in_array($alum['role'], ['alumni', 'editor'], true)) {
             $newRole = $alum['role'] === 'editor' ? 'alumni' : 'editor';
             User::update((int) $id, ['role' => $newRole]);
-            $this->flash('success', $newRole === 'editor' ? 'Alumni is now an editor.' : 'Editor access removed.');
+            $this->flash('success', $newRole === 'editor' ? (term_plural() . ' is now an editor.') : 'Editor access removed.');
         }
         $this->redirect("admin/alumni/{$id}");
     }

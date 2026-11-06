@@ -9,6 +9,7 @@ class SettingsController extends AdminController
 {
     private const KEYS = [
         'site_name',
+        'member_term_singular', 'member_term_plural',
         'cta_subtitle', 'cta_title',
         'metric_alumni', 'metric_countries', 'metric_jobs', 'metric_connections', 'metric_events',
         'metric_scholarships', 'metric_mentors_engaged', 'metric_projects_funded',

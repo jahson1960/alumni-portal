@@ -2,7 +2,7 @@
   <a href="<?= e($backUrl) ?>" class="text-xs text-slate-500 hover:text-gold mb-4 inline-block"><i class="fa-solid fa-arrow-left"></i> <?= e($backLabel) ?></a>
 
   <h1 class="text-xl font-extrabold text-primary-navy mb-1">Mutual Connections</h1>
-  <p class="text-sm text-slate-500 mb-6">Alumni you and <?= e($profile['name']) ?> are both connected with (<?= count($mutuals) ?>).</p>
+  <p class="text-sm text-slate-500 mb-6"><?= e(term_plural()) ?> you and <?= e($profile['name']) ?> are both connected with (<?= count($mutuals) ?>).</p>
 
   <?php if ($mutuals): ?>
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">

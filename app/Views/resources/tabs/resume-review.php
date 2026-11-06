@@ -90,7 +90,7 @@ $isMentor = isset($pendingQueue, $myClaims);
           <div class="w-9 h-9 rounded-full bg-indigo-100 text-indigo-600 flex items-center justify-center flex-shrink-0"><i class="fa-solid fa-user-check"></i></div>
           <div>
             <p class="text-sm font-bold text-primary-navy">2. Expert Review</p>
-            <p class="text-xs text-slate-500 mt-0.5">Our alumni mentors will review and provide feedback.</p>
+            <p class="text-xs text-slate-500 mt-0.5">Our <?= e(term_plural_lc()) ?> mentors will review and provide feedback.</p>
           </div>
         </div>
         <div class="flex items-start gap-3">
@@ -118,7 +118,7 @@ $isMentor = isset($pendingQueue, $myClaims);
                 <button type="button" id="resume-review-modal-close" class="text-slate-400 hover:text-slate-600"><i class="fa-solid fa-xmark text-lg"></i></button>
               </div>
               <div class="p-5 overflow-y-auto">
-                <p class="text-sm text-slate-600 mb-4">Select what you'd like our alumni mentors to review. It'll be shared with whoever claims your request.</p>
+                <p class="text-sm text-slate-600 mb-4">Select what you'd like our <?= e(term_plural_lc()) ?> mentors to review. It'll be shared with whoever claims your request.</p>
 
                 <?php $bothPresent = $resumeFileUrl && $resumeLinkUrl; ?>
 

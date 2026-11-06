@@ -38,7 +38,7 @@
     </div>
 
     <div>
-      <h3 class="section-title text-xs mb-3">Alumni Here (<?= count($alumniHere) ?>)</h3>
+      <h3 class="section-title text-xs mb-3"><?= e(term_plural()) ?> Here (<?= count($alumniHere) ?>)</h3>
       <div class="space-y-3">
         <?php foreach ($alumniHere as $person): ?>
           <a href="<?= e(url('alumni/' . $person['id'])) ?>" class="card p-4 flex items-center gap-3">
@@ -50,7 +50,7 @@
           </a>
         <?php endforeach; ?>
         <?php if (empty($alumniHere)): ?>
-          <p class="text-sm text-slate-400">No alumni listed at this company yet.</p>
+          <p class="text-sm text-slate-400">No <?= e(term_plural_lc()) ?> listed at this company yet.</p>
         <?php endif; ?>
       </div>
     </div>

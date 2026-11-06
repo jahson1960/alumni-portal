@@ -1,7 +1,7 @@
 <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 mb-8">
   <div class="card p-5">
     <div class="text-2xl font-extrabold text-primary-navy"><?= e($counts['alumni']) ?></div>
-    <div class="text-xs text-slate-500 mt-1">Active Alumni</div>
+    <div class="text-xs text-slate-500 mt-1">Active <?= e(term_plural()) ?></div>
   </div>
   <div class="card p-5">
     <div class="text-2xl font-extrabold text-primary-navy"><?= e($counts['jobs']) ?></div>
@@ -33,7 +33,7 @@
   </div>
 
   <div class="card p-6">
-    <h3 class="section-title text-xs mb-4">Recently Joined Alumni</h3>
+    <h3 class="section-title text-xs mb-4">Recently Joined <?= e(term_plural()) ?></h3>
     <div class="space-y-3">
       <?php foreach ($recentAlumni as $alum): ?>
         <a href="<?= e(url('admin/alumni/' . $alum['id'])) ?>" class="flex items-center gap-3">
@@ -45,7 +45,7 @@
         </a>
       <?php endforeach; ?>
       <?php if (empty($recentAlumni)): ?>
-        <p class="text-xs text-slate-400">No alumni yet.</p>
+        <p class="text-xs text-slate-400">No <?= e(term_plural_lc()) ?> yet.</p>
       <?php endif; ?>
     </div>
   </div>

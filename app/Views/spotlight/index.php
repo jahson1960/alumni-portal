@@ -5,16 +5,16 @@
     <!-- Sidebar -->
     <aside class="space-y-6 lg:sticky lg:top-[calc(var(--header-height)+1rem)] lg:max-h-[calc(100vh-var(--header-height)-2rem)] lg:overflow-y-auto">
       <div>
-        <h1 class="text-2xl font-extrabold text-primary-navy">Alumni Spotlight</h1>
+        <h1 class="text-2xl font-extrabold text-primary-navy"><?= e(term_plural()) ?> Spotlight</h1>
         <div class="w-10 h-1 bg-gold rounded-full my-2"></div>
-        <p class="text-sm text-slate-500">Celebrating the achievements, leadership and impact of our outstanding alumni.</p>
+        <p class="text-sm text-slate-500">Celebrating the achievements, leadership and impact of our outstanding <?= e(term_plural_lc()) ?>.</p>
       </div>
 
-      <a href="mailto:<?= e($nominateEmail) ?>?subject=<?= rawurlencode('Alumni Spotlight Nomination') ?>" class="btn bg-white border border-gold !text-gold hover:bg-gold hover:!text-white !px-4 !py-2.5 text-xs w-full flex items-center justify-center gap-2"><i class="bi bi-star"></i> Nominate an Alumni</a>
+      <a href="mailto:<?= e($nominateEmail) ?>?subject=<?= rawurlencode(term_plural() . ' Spotlight Nomination') ?>" class="btn bg-white border border-gold !text-gold hover:bg-gold hover:!text-white !px-4 !py-2.5 text-xs w-full flex items-center justify-center gap-2"><i class="bi bi-star"></i> Nominate an <?= e(term_plural()) ?></a>
 
       <div class="card p-4 !bg-sky-50 !border-sky-100">
         <p class="text-2xl text-sky-300 leading-none mb-1">&ldquo;</p>
-        <p class="text-sm text-slate-600 italic">Our alumni inspire, lead and create lasting change across industries.</p>
+        <p class="text-sm text-slate-600 italic">Our <?= e(term_plural_lc()) ?> inspire, lead and create lasting change across industries.</p>
       </div>
     </aside>
 
@@ -26,7 +26,7 @@
           <div class="min-w-0">
             <div class="flex items-center gap-1.5">
               <a href="<?= e(url('alumni/' . $person['id'])) ?>" class="text-base font-bold text-primary-navy hover:text-gold"><?= e($person['name']) ?></a>
-              <i class="bi bi-patch-check-fill text-gold text-sm" title="Spotlighted Alumni"></i>
+              <i class="bi bi-patch-check-fill text-gold text-sm" title="Spotlighted <?= e(term_plural()) ?>"></i>
             </div>
             <p class="text-xs text-slate-500 mt-0.5"><?= e($person['headline'] ?: '') ?><?= $person['company'] ? ' &middot; ' . e($person['company']) : '' ?></p>
 
@@ -50,7 +50,7 @@
         </div>
       <?php endforeach; ?>
       <?php if (empty($alumni)): ?>
-        <p class="text-sm text-slate-400 col-span-full">No alumni are currently spotlighted.</p>
+        <p class="text-sm text-slate-400 col-span-full">No <?= e(term_plural_lc()) ?> are currently spotlighted.</p>
       <?php endif; ?>
     </div>
   </div>

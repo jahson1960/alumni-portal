@@ -11,7 +11,7 @@ class AlumniRosterController extends AdminController
     {
         $p = $this->paginate(AlumniRoster::count(), 30);
         $this->view('admin.alumni_roster.index', [
-            'title' => 'Alumni Roster',
+            'title' => term_plural() . ' Roster',
             'activeNav' => 'alumni_roster',
             'rows' => AlumniRoster::paginate($p['perPage'], $p['offset'], 'created_at DESC'),
             ...$p,
@@ -81,7 +81,7 @@ class AlumniRosterController extends AdminController
             $errors[] = 'A matric number is required.';
         }
         if ($fullName === '') {
-            $errors[] = 'Full name is required — it is used as-is to create the alumnus\'s account.';
+            $errors[] = 'Full name is required — it is used as-is to create the ' . term_singular_lc() . "'s account.";
         }
         if ($graduationYear === '' || !ctype_digit($graduationYear)) {
             $errors[] = 'A valid graduation year is required.';

@@ -32,7 +32,7 @@
       <div class="w-10 h-10 rounded-lg bg-amber-100 text-gold flex items-center justify-center flex-shrink-0"><i class="fa-regular fa-calendar"></i></div>
       <div>
         <p class="text-sm font-bold text-primary-navy">Can't find an event?</p>
-        <p class="text-xs text-slate-500">Explore all upcoming events and opportunities to connect with the alumni community.</p>
+        <p class="text-xs text-slate-500">Explore all upcoming events and opportunities to connect with the <?= e(term_plural_lc()) ?> community.</p>
       </div>
     </div>
     <a href="<?= e(url('events')) ?>" class="btn-gold !px-5 !py-2.5 text-sm flex items-center gap-2 flex-shrink-0">Browse All Events <i class="fa-solid fa-arrow-right"></i></a>

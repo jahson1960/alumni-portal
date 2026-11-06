@@ -17,7 +17,7 @@
           <td>
             <select name="audience[<?= e($page['page_key']) ?>]" class="form-input max-w-xs">
               <option value="public" <?= $page['audience'] === 'public' ? 'selected' : '' ?>>Public (everyone, including visitors)</option>
-              <option value="alumni" <?= $page['audience'] === 'alumni' ? 'selected' : '' ?>>Logged-in Alumni Only</option>
+              <option value="alumni" <?= $page['audience'] === 'alumni' ? 'selected' : '' ?>>Logged-in <?= e(term_plural()) ?> Only</option>
               <option value="editor" <?= $page['audience'] === 'editor' ? 'selected' : '' ?>>Editors & Admins Only</option>
               <option value="admin" <?= $page['audience'] === 'admin' ? 'selected' : '' ?>>Admin Only (hidden from everyone else)</option>
             </select>
@@ -61,12 +61,12 @@
     <p class="text-xs text-slate-400 mb-4">Hide one specific menu link without affecting others that lead to the same page — e.g. hide "Create a Poll" while keeping "Start a Discussion" (both currently point to the Community Feed). Mark a link "Requires login" to keep it visible to visitors who aren't logged in — clicking it sends them to Login first, then straight on to the page once they've signed in.</p>
     <?php
       $linkPageLabels = [
-          'directory' => 'Alumni Network — Directory', 'connections' => 'Alumni Network — Connections',
-          'feed' => 'Alumni Network — Engage', 'messages' => 'Messages', 'mentorship' => 'Mentorship',
-          'businesses' => 'Alumni Businesses', 'jobs' => 'Careers', 'events' => 'Events',
+          'directory' => term_plural() . ' Network — Directory', 'connections' => term_plural() . ' Network — Connections',
+          'feed' => term_plural() . ' Network — Engage', 'messages' => 'Messages', 'mentorship' => 'Mentorship',
+          'businesses' => term_plural() . ' Businesses', 'jobs' => 'Careers', 'events' => 'Events',
           'events_mine' => 'My Events', 'knowledge' => 'Knowledge Hub', 'resources' => 'Career Resources',
           'benefits' => 'Benefits', 'give' => 'Give Back', 'news' => 'News & Blog',
-          'spotlight' => 'Alumni Spotlight', 'map' => 'Alumni Map', 'other' => 'Admin & Miscellaneous',
+          'spotlight' => term_plural() . ' Spotlight', 'map' => term_plural() . ' Map', 'other' => 'Admin & Miscellaneous',
       ];
     ?>
     <div class="space-y-2">

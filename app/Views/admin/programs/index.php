@@ -1,5 +1,5 @@
 <div class="max-w-2xl">
-  <p class="text-sm text-slate-500 mb-4">These are the academic programs alumni can pick from when they register.</p>
+  <p class="text-sm text-slate-500 mb-4">These are the academic programs <?= e(term_plural_lc()) ?> can pick from when they register.</p>
 
   <div class="card p-4 mb-4">
     <form method="POST" action="<?= e(url('admin/programs')) ?>" class="flex gap-2">

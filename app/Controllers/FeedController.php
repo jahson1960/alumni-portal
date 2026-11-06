@@ -69,7 +69,7 @@ class FeedController extends Controller
         }
 
         $this->view('feed.index', [
-            'title' => 'Alumni Feed',
+            'title' => term_plural() . ' Feed',
             'activeNav' => 'feed',
             'posts' => $this->decoratePosts($posts),
             'postTypes' => self::POST_TYPES,

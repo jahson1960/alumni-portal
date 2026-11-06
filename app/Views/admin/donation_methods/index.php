@@ -3,7 +3,7 @@
 <div class="flex justify-between items-center mb-4">
   <div>
     <h2 class="text-sm font-bold text-primary-navy">Donation Methods</h2>
-    <p class="text-xs text-slate-400">Shown to every alumnus who clicks "Give to this Campaign" on the Give Back page, for any campaign.</p>
+    <p class="text-xs text-slate-400">Shown to every <?= e(term_singular_lc()) ?> who clicks "Give to this Campaign" on the Give Back page, for any campaign.</p>
   </div>
   <a href="<?= e(url('admin/donation-methods/create')) ?>" class="btn-gold !px-4 !py-2 text-xs flex-shrink-0">+ New Method</a>
 </div>

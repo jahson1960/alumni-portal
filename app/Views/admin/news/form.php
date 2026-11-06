@@ -47,7 +47,7 @@
 
   <div>
     <label class="form-label" for="tags">Tags</label>
-    <input type="text" id="tags" name="tags" class="form-input" placeholder="Comma-separated, e.g. Alumni Network, Mentorship, Leadership" value="<?= e($post['tags'] ?? '') ?>">
+    <input type="text" id="tags" name="tags" class="form-input" placeholder="Comma-separated, e.g. <?= e(term_plural()) ?> Network, Mentorship, Leadership" value="<?= e($post['tags'] ?? '') ?>">
   </div>
 
   <div>

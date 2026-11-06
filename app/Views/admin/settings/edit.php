@@ -43,6 +43,23 @@
     </div>
   </div>
 
+  <div class="card p-6">
+    <h3 class="section-title text-xs mb-1">Terminology</h3>
+    <p class="text-xs text-slate-400 mb-4">What this site calls its members. Used throughout the menus, buttons, and pages wherever the site refers to them (e.g. "Alumni Network", "Register Alumni"). Display text only &mdash; it does not change any URL, role, or stored data.</p>
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+      <div>
+        <label class="form-label" for="member_term_singular">Singular Term</label>
+        <input type="text" id="member_term_singular" name="member_term_singular" class="form-input" placeholder="Alumnus" value="<?= e($settings['member_term_singular'] ?? 'Alumnus') ?>">
+        <p class="text-xs text-slate-400 mt-1">E.g. "Student" &mdash; used in phrases like "this alumnus".</p>
+      </div>
+      <div>
+        <label class="form-label" for="member_term_plural">Plural Term</label>
+        <input type="text" id="member_term_plural" name="member_term_plural" class="form-input" placeholder="Alumni" value="<?= e($settings['member_term_plural'] ?? 'Alumni') ?>">
+        <p class="text-xs text-slate-400 mt-1">E.g. "Students" &mdash; used in phrases like "Register Alumni", "Alumni Network".</p>
+      </div>
+    </div>
+  </div>
+
   <?php $themeMode = ($settings['theme_mode'] ?? 'unified') === 'custom' ? 'custom' : 'unified'; ?>
   <div class="card p-6">
     <h3 class="section-title text-xs mb-1">Theme Colors</h3>

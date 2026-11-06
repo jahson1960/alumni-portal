@@ -15,7 +15,7 @@ class MapController extends Controller
         $country = $country !== null && $country !== '' ? (string) $country : null;
 
         $this->view('map.index', [
-            'title' => 'Our Alumni Around the World',
+            'title' => 'Our ' . term_plural() . ' Around the World',
             'activeNav' => 'map',
             'countryCounts' => User::countByCountry(),
             'selectedCountry' => $country,

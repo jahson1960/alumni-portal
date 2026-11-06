@@ -35,7 +35,7 @@ $heroHeight = (int) \App\Models\Setting::get('profile_hero_height', '200');
       <div class="min-w-0">
         <div class="flex items-center gap-2 flex-wrap">
           <h1 class="text-xl font-extrabold text-primary-navy"><?= e($profile['name']) ?></h1>
-          <i class="fa-solid fa-circle-check text-sky-500 text-sm" title="Verified Alumni"></i>
+          <i class="fa-solid fa-circle-check text-sky-500 text-sm" title="Verified <?= e(term_plural()) ?>"></i>
           <span class="text-[0.68rem] font-semibold"><?= online_status_html($profile['last_active_at'] ?? null, (int) $profile['id']) ?></span>
         </div>
         <?php if ($profile['headline']): ?><p class="text-sm text-slate-600"><?= e($profile['headline']) ?></p><?php endif; ?>
@@ -98,7 +98,7 @@ $heroHeight = (int) \App\Models\Setting::get('profile_hero_height', '200');
                 <button type="button" class="profile-kebab-btn btn bg-white border border-slate-200 text-slate-500 hover:bg-slate-50 !px-3 !py-2 text-xs" title="More options"><i class="fa-solid fa-ellipsis-vertical"></i></button>
                 <div class="profile-kebab-menu hidden absolute left-0 top-full mt-1 z-20 bg-white border border-slate-200 rounded-lg shadow-lg w-48 py-1">
                   <button type="button" id="copy-profile-link" class="w-full flex items-center gap-2 text-left px-3 py-2 text-xs text-slate-700 hover:bg-slate-50"><i class="fa-solid fa-link w-4"></i> Copy Profile Link</button>
-                  <form method="POST" action="<?= e(url('connections/' . $profile['id'] . '/block')) ?>" onsubmit="return confirm('Block this alumnus? They won\'t be able to contact you or send a connection request again.');">
+                  <form method="POST" action="<?= e(url('connections/' . $profile['id'] . '/block')) ?>" onsubmit="return confirm(<?= e(json_encode('Block this ' . term_singular_lc() . '? They won\'t be able to contact you or send a connection request again.')) ?>);">
                     <?= csrf_field() ?>
                     <button type="submit" class="w-full flex items-center gap-2 text-left px-3 py-2 text-xs text-red-600 hover:bg-red-50"><i class="fa-solid fa-ban w-4"></i> Block</button>
                   </form>
@@ -401,7 +401,7 @@ $heroHeight = (int) \App\Models\Setting::get('profile_hero_height', '200');
             </div>
           <?php endif; ?>
           <?php if (!$isOwnerOrAdmin && !$profile['show_email'] && !(($profile['show_phone']) && $profile['phone']) && !location_display($profile) && !$profile['linkedin_url']): ?>
-            <p class="text-slate-400">This alumnus hasn't shared contact details.</p>
+            <p class="text-slate-400">This <?= e(term_singular_lc()) ?> hasn't shared contact details.</p>
           <?php endif; ?>
         </div>
       </div>

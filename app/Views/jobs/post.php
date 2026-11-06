@@ -22,7 +22,7 @@ $postingTips = [
   <a href="<?= e(url('jobs')) ?>" class="text-xs text-slate-500 hover:text-gold mb-4 inline-block"><i class="fa-solid fa-arrow-left"></i> Back to Careers</a>
 
   <h1 class="text-2xl font-extrabold text-primary-navy"><?= $isEdit ? 'Edit Job Post' : 'Post a Job' ?></h1>
-  <p class="text-sm text-slate-500 mt-1 mb-6">Share an opportunity with our alumni community and find the right talent.</p>
+  <p class="text-sm text-slate-500 mt-1 mb-6">Share an opportunity with our <?= e(term_plural_lc()) ?> community and find the right talent.</p>
 
   <!-- Mobile step progress -->
   <div class="lg:hidden flex items-center mb-6" id="step-progress">

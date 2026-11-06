@@ -7,7 +7,7 @@ $primaryCategory = $categories[0] ?? null;
   <div class="flex items-center gap-2 text-xs text-slate-400 mb-5 flex-wrap">
     <a href="<?= e(url('/')) ?>" class="hover:text-gold flex items-center gap-1.5"><i class="fa-solid fa-house"></i> Home</a>
     <i class="fa-solid fa-chevron-right text-[0.6rem]"></i>
-    <span>Alumni Network</span>
+    <span><?= e(term_plural()) ?> Network</span>
     <i class="fa-solid fa-chevron-right text-[0.6rem]"></i>
     <a href="<?= e(url('news')) ?>" class="hover:text-gold">News &amp; Blog</a>
     <i class="fa-solid fa-chevron-right text-[0.6rem]"></i>

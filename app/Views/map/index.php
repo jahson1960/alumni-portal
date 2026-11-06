@@ -1,6 +1,6 @@
 <div class="max-w-[1280px] mx-auto px-4 md:px-8 py-8">
   <div class="section-header">
-    <h1 class="section-title text-base">Our Alumni Around the World</h1>
+    <h1 class="section-title text-base">Our <?= e(term_plural()) ?> Around the World</h1>
   </div>
 
   <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
@@ -38,7 +38,7 @@
         <?php endif; ?>
       </div>
       <?php if ($selectedCountry): ?>
-        <a href="<?= e(url('directory?country=' . urlencode($selectedCountry))) ?>" class="section-link mt-3 inline-block">View all alumni in <?= e($selectedCountry) ?> &rarr;</a>
+        <a href="<?= e(url('directory?country=' . urlencode($selectedCountry))) ?>" class="section-link mt-3 inline-block">View all <?= e(term_plural_lc()) ?> in <?= e($selectedCountry) ?> &rarr;</a>
       <?php endif; ?>
     </div>
   </div>

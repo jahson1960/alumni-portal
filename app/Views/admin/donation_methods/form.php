@@ -41,7 +41,7 @@
 
   <label class="flex items-center gap-2">
     <input type="checkbox" id="is_active" name="is_active" value="1" <?= !isset($method) || !empty($method['is_active']) ? 'checked' : '' ?> class="rounded border-slate-300 text-gold focus:ring-gold">
-    <span class="text-sm text-slate-700">Active (shown to alumni)</span>
+    <span class="text-sm text-slate-700">Active (shown to <?= e(term_plural_lc()) ?>)</span>
   </label>
 
   <button type="submit" class="btn-gold"><?= $isEdit ? 'Save Changes' : 'Create Donation Method' ?></button>

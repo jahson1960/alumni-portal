@@ -7,7 +7,7 @@
     <aside class="space-y-6 lg:sticky lg:top-[calc(var(--header-height)+1rem)]">
       <div>
         <h1 class="text-2xl font-extrabold text-primary-navy">Community Feed</h1>
-        <p class="text-sm text-slate-500 mt-1">Connect, share, and learn from our global alumni community.</p>
+        <p class="text-sm text-slate-500 mt-1">Connect, share, and learn from our global <?= e(term_plural_lc()) ?> community.</p>
       </div>
 
       <button type="button" id="scroll-to-composer" class="btn-gold !py-2.5 text-sm w-full flex items-center justify-center gap-2"><i class="bi bi-pencil-square"></i> Share an Update</button>
@@ -36,12 +36,12 @@
             <i class="bi bi-shield-check text-sky-500"></i>
             <h3 class="text-xs font-bold text-primary-navy">Community Guidelines</h3>
           </div>
-          <p class="text-xs text-slate-500 mb-2">Be respectful, supportive and helpful to fellow alumni.</p>
+          <p class="text-xs text-slate-500 mb-2">Be respectful, supportive and helpful to fellow <?= e(term_plural_lc()) ?>.</p>
           <button type="button" id="guidelines-toggle" class="text-xs font-semibold text-sky-700 hover:underline flex items-center gap-1">View guidelines <i class="bi bi-arrow-right"></i></button>
           <div id="guidelines-full" class="hidden text-xs text-slate-500 mt-3 pt-3 border-t border-sky-100 space-y-1.5">
-            <p>&bull; Keep posts relevant to alumni life, careers, and the RBSN community.</p>
+            <p>&bull; Keep posts relevant to <?= e(term_plural_lc()) ?> life, careers, and the RBSN community.</p>
             <p>&bull; No spam, harassment, or discriminatory content.</p>
-            <p>&bull; Respect the privacy of fellow alumni &mdash; don't share others' details without consent.</p>
+            <p>&bull; Respect the privacy of fellow <?= e(term_plural_lc()) ?> &mdash; don't share others' details without consent.</p>
             <p>&bull; Job posts and business promotion belong in Careers &amp; Businesses, not the feed.</p>
           </div>
         </div>
@@ -56,7 +56,7 @@
             <div class="w-11 h-11 rounded-lg bg-gold/10 text-gold flex items-center justify-center flex-shrink-0 text-lg"><i class="bi bi-pencil-square"></i></div>
             <div>
               <h2 class="text-base font-bold text-primary-navy">Start a Discussion</h2>
-              <p class="text-xs text-slate-500">Share updates, celebrate wins, ask questions or start a conversation with the alumni community.</p>
+              <p class="text-xs text-slate-500">Share updates, celebrate wins, ask questions or start a conversation with the <?= e(term_plural_lc()) ?> community.</p>
             </div>
           </div>
           <div class="relative flex-shrink-0">

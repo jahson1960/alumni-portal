@@ -219,7 +219,7 @@ $statusTabs = [
         <h3 class="text-sm font-bold text-primary-navy mb-2">Upgrade to Premium Hiring</h3>
         <ul class="space-y-1.5 mb-3">
           <li class="flex items-center gap-2 text-xs text-slate-600"><i class="fa-solid fa-circle-check text-emerald-500"></i> Featured job placement</li>
-          <li class="flex items-center gap-2 text-xs text-slate-600"><i class="fa-solid fa-circle-check text-emerald-500"></i> Highlighted to top alumni</li>
+          <li class="flex items-center gap-2 text-xs text-slate-600"><i class="fa-solid fa-circle-check text-emerald-500"></i> Highlighted to top <?= e(term_plural_lc()) ?></li>
           <li class="flex items-center gap-2 text-xs text-slate-600"><i class="fa-solid fa-circle-check text-emerald-500"></i> Priority review</li>
           <li class="flex items-center gap-2 text-xs text-slate-600"><i class="fa-solid fa-circle-check text-emerald-500"></i> Candidate recommendations</li>
         </ul>

@@ -2,7 +2,7 @@
 
 <div class="flex justify-between items-center mb-4">
   <div>
-    <h2 class="text-sm font-bold text-primary-navy">Alumni Roster</h2>
+    <h2 class="text-sm font-bold text-primary-navy"><?= e(term_plural()) ?> Roster</h2>
     <p class="text-xs text-slate-400">A matric number must match a row here before someone can register — their name, program, cohort and graduation year are pulled from that row automatically. Each row can only be claimed by one account.</p>
   </div>
   <a href="<?= e(url('admin/alumni-roster/create')) ?>" class="btn-gold !px-4 !py-2 text-xs flex-shrink-0">+ New Entry</a>

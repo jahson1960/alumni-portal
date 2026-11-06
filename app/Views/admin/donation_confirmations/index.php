@@ -2,14 +2,14 @@
 
 <div class="mb-4">
   <h2 class="text-sm font-bold text-primary-navy">Donation Confirmations</h2>
-  <p class="text-xs text-slate-400">Self-reported by alumni after transferring funds. No payment is processed here — use these to reconcile and update each campaign's raised amount from Giving Campaigns.</p>
+  <p class="text-xs text-slate-400">Self-reported by <?= e(term_plural_lc()) ?> after transferring funds. No payment is processed here — use these to reconcile and update each campaign's raised amount from Giving Campaigns.</p>
 </div>
 
 <?php require dirname(__DIR__, 2) . '/partials/admin_pagination.php'; ?>
 
 <div class="card overflow-x-auto">
   <table class="table-base">
-    <thead><tr><th>Alumnus</th><th>Campaign</th><th>Date</th></tr></thead>
+    <thead><tr><th><?= e(term_singular()) ?></th><th>Campaign</th><th>Date</th></tr></thead>
     <tbody>
       <?php foreach ($confirmations as $row): ?>
         <tr>

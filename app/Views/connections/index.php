@@ -11,7 +11,7 @@ $cohortText = function (array $person): string {
       <h1 id="connections-title" class="text-2xl font-extrabold text-primary-navy uppercase">My Connections</h1>
       <p id="connections-subtitle" class="text-sm text-slate-500">Stay connected. Grow together.</p>
     </div>
-    <a href="<?= e(url('directory')) ?>" class="btn bg-white border border-gold !text-gold hover:bg-gold hover:!text-white !px-4 !py-2.5 text-xs whitespace-nowrap"><i class="bi bi-people"></i> Find Alumni</a>
+    <a href="<?= e(url('directory')) ?>" class="btn bg-white border border-gold !text-gold hover:bg-gold hover:!text-white !px-4 !py-2.5 text-xs whitespace-nowrap"><i class="bi bi-people"></i> Find <?= e(term_plural()) ?></a>
   </div>
 
   <div class="sticky top-[var(--header-height)] z-30 bg-slate-50 py-3 mb-3">
@@ -98,7 +98,7 @@ $cohortText = function (array $person): string {
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 items-start">
       <div class="card p-5">
         <h3 id="incoming-heading" class="text-xs font-bold text-primary-navy uppercase tracking-wide mb-1">Incoming Requests (<?= count($incoming) ?>)</h3>
-        <p class="text-xs text-slate-400 mb-4">Alumni who want to connect with you</p>
+        <p class="text-xs text-slate-400 mb-4"><?= e(term_plural()) ?> who want to connect with you</p>
         <div id="incoming-list" class="space-y-4">
           <?php foreach ($incoming as $person):
             $search = mb_strtolower($person['name'] . ' ' . $person['company'] . ' ' . $person['headline']);
@@ -416,8 +416,8 @@ $cohortText = function (array $person): string {
     var titles = {
       connections: ['My Connections', 'Stay connected. Grow together.'],
       requests: ['Connection Requests', 'Manage and respond to your connection requests.'],
-      suggested: ['Suggested Connections', 'Alumni you may want to connect with.'],
-      following: ['Following', 'Alumni whose activity you follow.']
+      suggested: ['Suggested Connections', <?= json_encode(term_plural() . ' you may want to connect with.') ?>],
+      following: ['Following', <?= json_encode(term_plural() . ' whose activity you follow.') ?>]
     };
     var panels = document.querySelectorAll('.conn-tab-panel');
     var tabLinks = document.querySelectorAll('.conn-tab-link');

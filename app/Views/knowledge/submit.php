@@ -13,8 +13,8 @@ $knowledgeBannerHeight = (int) \App\Models\Setting::get('knowledge_banner_height
         <div class="w-14 h-14 rounded-full bg-amber-100 text-gold flex items-center justify-center text-xl mb-4"><i class="fa-solid fa-pen-to-square"></i></div>
         <p class="text-xs font-extrabold text-gold uppercase tracking-wide mb-1.5">Share Your Expertise</p>
         <h1 class="text-2xl md:text-3xl font-extrabold text-primary-navy mb-3">Submit an Article</h1>
-        <p class="text-sm text-slate-600">Share your insights, experiences and expertise with the RBS alumni community.</p>
-        <p class="text-sm text-slate-600">Your article can inspire, inform and create value for fellow alumni around the world.</p>
+        <p class="text-sm text-slate-600">Share your insights, experiences and expertise with the RBS <?= e(term_plural_lc()) ?> community.</p>
+        <p class="text-sm text-slate-600">Your article can inspire, inform and create value for fellow <?= e(term_plural_lc()) ?> around the world.</p>
       </div>
     </div>
   <?php else: ?>
@@ -22,8 +22,8 @@ $knowledgeBannerHeight = (int) \App\Models\Setting::get('knowledge_banner_height
       <div class="w-14 h-14 rounded-full bg-amber-100 text-gold flex items-center justify-center text-xl flex-shrink-0"><i class="fa-solid fa-pen-to-square"></i></div>
       <div>
         <h1 class="text-xl md:text-2xl font-extrabold text-primary-navy">Submit an Article</h1>
-        <p class="text-sm text-slate-500 mt-1">Share your insights, experiences and expertise with the RBS alumni community.</p>
-        <p class="text-sm text-slate-500">Your article can inspire, inform and create value for fellow alumni around the world.</p>
+        <p class="text-sm text-slate-500 mt-1">Share your insights, experiences and expertise with the RBS <?= e(term_plural_lc()) ?> community.</p>
+        <p class="text-sm text-slate-500">Your article can inspire, inform and create value for fellow <?= e(term_plural_lc()) ?> around the world.</p>
       </div>
     </div>
   <?php endif; ?>
@@ -105,7 +105,7 @@ $knowledgeBannerHeight = (int) \App\Models\Setting::get('knowledge_banner_height
           <ul class="space-y-3">
             <li class="flex items-start gap-2.5">
               <i class="fa-solid fa-circle-check text-gold mt-0.5"></i>
-              <span class="text-xs text-slate-600">Keep your article relevant to the RBS community (e.g. career, leadership, industry insights, alumni stories).</span>
+              <span class="text-xs text-slate-600">Keep your article relevant to the RBS community (e.g. career, leadership, industry insights, <?= e(term_plural_lc()) ?> stories).</span>
             </li>
             <li class="flex items-start gap-2.5">
               <i class="fa-solid fa-circle-check text-gold mt-0.5"></i>
@@ -117,7 +117,7 @@ $knowledgeBannerHeight = (int) \App\Models\Setting::get('knowledge_banner_height
             </li>
             <li class="flex items-start gap-2.5">
               <i class="fa-solid fa-circle-check text-gold mt-0.5"></i>
-              <span class="text-xs text-slate-600">Your article will be reviewed by the alumni team before publishing.</span>
+              <span class="text-xs text-slate-600">Your article will be reviewed by the <?= e(term_plural_lc()) ?> team before publishing.</span>
             </li>
           </ul>
         </div>
@@ -129,7 +129,7 @@ $knowledgeBannerHeight = (int) \App\Models\Setting::get('knowledge_banner_height
           </div>
           <p class="text-xs font-semibold text-slate-500 mb-2">Your story can:</p>
           <ul class="space-y-2">
-            <li class="flex items-center gap-2 text-xs text-slate-600"><i class="fa-solid fa-check text-sky-600"></i> Inspire fellow alumni</li>
+            <li class="flex items-center gap-2 text-xs text-slate-600"><i class="fa-solid fa-check text-sky-600"></i> Inspire fellow <?= e(term_plural_lc()) ?></li>
             <li class="flex items-center gap-2 text-xs text-slate-600"><i class="fa-solid fa-check text-sky-600"></i> Build your professional brand</li>
             <li class="flex items-center gap-2 text-xs text-slate-600"><i class="fa-solid fa-check text-sky-600"></i> Create valuable networking opportunities</li>
             <li class="flex items-center gap-2 text-xs text-slate-600"><i class="fa-solid fa-check text-sky-600"></i> Give back to the RBS community</li>
@@ -141,8 +141,8 @@ $knowledgeBannerHeight = (int) \App\Models\Setting::get('knowledge_banner_height
             <div class="w-10 h-10 rounded-full bg-amber-100 text-gold flex items-center justify-center flex-shrink-0"><i class="fa-regular fa-envelope"></i></div>
             <h3 class="text-sm font-bold text-primary-navy">Need Help?</h3>
           </div>
-          <p class="text-xs text-slate-600 mb-4">For any support or questions, contact the alumni team at <a href="mailto:<?= e(\App\Models\Setting::get('giving_contact_email', 'alumni@rbs.edu.ng')) ?>" class="text-gold hover:underline"><?= e(\App\Models\Setting::get('giving_contact_email', 'alumni@rbs.edu.ng')) ?></a>.</p>
-          <a href="mailto:<?= e(\App\Models\Setting::get('giving_contact_email', 'alumni@rbs.edu.ng')) ?>" class="btn-gold !px-4 !py-2.5 text-xs w-full flex items-center justify-center gap-2"><i class="fa-regular fa-envelope"></i> Contact Alumni Team</a>
+          <p class="text-xs text-slate-600 mb-4">For any support or questions, contact the <?= e(term_plural_lc()) ?> team at <a href="mailto:<?= e(\App\Models\Setting::get('giving_contact_email', 'alumni@rbs.edu.ng')) ?>" class="text-gold hover:underline"><?= e(\App\Models\Setting::get('giving_contact_email', 'alumni@rbs.edu.ng')) ?></a>.</p>
+          <a href="mailto:<?= e(\App\Models\Setting::get('giving_contact_email', 'alumni@rbs.edu.ng')) ?>" class="btn-gold !px-4 !py-2.5 text-xs w-full flex items-center justify-center gap-2"><i class="fa-regular fa-envelope"></i> Contact <?= e(term_plural()) ?> Team</a>
         </div>
       </div>
     </div>

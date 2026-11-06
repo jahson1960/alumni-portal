@@ -8,8 +8,8 @@ $existingAreas = array_values(array_filter(array_map('trim', explode(',', (strin
     <div>
       <h1 class="text-3xl md:text-4xl font-extrabold text-primary-navy">Become a Mentor</h1>
       <div class="w-12 h-1 bg-gold rounded-full my-3"></div>
-      <p class="text-base font-semibold text-slate-700">Share your knowledge. Empower fellow alumni.</p>
-      <p class="text-sm text-slate-500 mt-2 max-w-md">Join our mentor community and help fellow alumni navigate their careers, grow their skills, and achieve their goals.</p>
+      <p class="text-base font-semibold text-slate-700">Share your knowledge. Empower fellow <?= e(term_plural_lc()) ?>.</p>
+      <p class="text-sm text-slate-500 mt-2 max-w-md">Join our mentor community and help fellow <?= e(term_plural_lc()) ?> navigate their careers, grow their skills, and achieve their goals.</p>
     </div>
     <div class="hidden lg:block">
       <svg viewBox="0 0 360 220" class="w-full h-auto">
@@ -55,7 +55,7 @@ $existingAreas = array_values(array_filter(array_map('trim', explode(',', (strin
           <span class="flex items-start gap-3">
             <input type="checkbox" name="is_mentor" value="1" <?= !empty($user['is_mentor']) || empty($user['mentorship_areas']) ? 'checked' : '' ?> class="mt-0.5 w-5 h-5 rounded border-slate-300 text-indigo-600 focus:ring-indigo-500 flex-shrink-0">
             <span>
-              <span class="block text-sm font-semibold text-primary-navy">I'm available to mentor fellow alumni</span>
+              <span class="block text-sm font-semibold text-primary-navy">I'm available to mentor fellow <?= e(term_plural_lc()) ?></span>
               <span class="block text-xs text-slate-500 mt-0.5">Your profile will be visible in the mentor directory once enabled.</span>
             </span>
           </span>
@@ -96,8 +96,8 @@ $existingAreas = array_values(array_filter(array_map('trim', explode(',', (strin
           <div class="rounded-lg bg-indigo-50 border border-indigo-100 p-4 flex items-start gap-3">
             <div class="w-9 h-9 rounded-lg bg-indigo-100 text-indigo-600 flex items-center justify-center flex-shrink-0"><i class="fa-regular fa-eye"></i></div>
             <div>
-              <p class="text-sm font-bold text-indigo-700">Visible to Alumni</p>
-              <p class="text-xs text-slate-500 mt-1">Your profile will appear in the mentor directory and can be discovered by alumni.</p>
+              <p class="text-sm font-bold text-indigo-700">Visible to <?= e(term_plural()) ?></p>
+              <p class="text-xs text-slate-500 mt-1">Your profile will appear in the mentor directory and can be discovered by <?= e(term_plural_lc()) ?>.</p>
             </div>
           </div>
           <div class="rounded-lg bg-emerald-50 border border-emerald-100 p-4 flex items-start gap-3">
@@ -134,7 +134,7 @@ $existingAreas = array_values(array_filter(array_map('trim', explode(',', (strin
             <div class="w-10 h-10 rounded-full bg-amber-100 text-amber-600 flex items-center justify-center flex-shrink-0"><i class="fa-solid fa-people-group"></i></div>
             <div>
               <p class="text-sm font-bold text-primary-navy">Make an Impact</p>
-              <p class="text-xs text-slate-500 mt-0.5">Help alumni gain clarity, confidence and achieve their career goals.</p>
+              <p class="text-xs text-slate-500 mt-0.5">Help <?= e(term_plural_lc()) ?> gain clarity, confidence and achieve their career goals.</p>
             </div>
           </div>
           <div class="flex items-start gap-3">

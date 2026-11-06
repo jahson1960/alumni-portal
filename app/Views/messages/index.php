@@ -71,8 +71,8 @@ $groupByDay = function (array $messages): array {
         <?php if ($archived): ?>
           <p class="text-sm text-slate-400 text-center px-4 py-6">No archived conversations. Archiving a conversation isn't available yet.</p>
         <?php else: ?>
-          <p id="conversations-empty" class="text-sm text-slate-400 text-center px-4 py-6 <?= empty($conversations) ? '' : 'hidden' ?>">No conversations yet. Message alumni from your <a href="<?= e(url('connections')) ?>" class="text-gold hover:underline">Connections</a> list.</p>
-          <p id="requests-tab-empty" class="hidden text-sm text-slate-400 text-center px-4 py-6">Message requests will appear here. You can only message alumni you're connected with.</p>
+          <p id="conversations-empty" class="text-sm text-slate-400 text-center px-4 py-6 <?= empty($conversations) ? '' : 'hidden' ?>">No conversations yet. Message <?= e(term_plural_lc()) ?> from your <a href="<?= e(url('connections')) ?>" class="text-gold hover:underline">Connections</a> list.</p>
+          <p id="requests-tab-empty" class="hidden text-sm text-slate-400 text-center px-4 py-6">Message requests will appear here. You can only message <?= e(term_plural_lc()) ?> you're connected with.</p>
         <?php endif; ?>
       </div>
 

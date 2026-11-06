@@ -1,7 +1,7 @@
 <?php
 $practiceTools = [
     ['icon' => 'bi-patch-question', 'color' => 'bg-emerald-100 text-emerald-600', 'title' => 'Common Interview Questions', 'desc' => 'Browse frequently asked questions by industry and role.', 'href' => url('resources') . '?' . http_build_query(['tab' => 'interview-prep']) . '#resource-list'],
-    ['icon' => 'bi-bookmark-star', 'color' => 'bg-sky-100 text-sky-600', 'title' => 'Mock Interview', 'desc' => 'Practice with alumni mentors and get real-time feedback.', 'href' => url('mentorship')],
+    ['icon' => 'bi-bookmark-star', 'color' => 'bg-sky-100 text-sky-600', 'title' => 'Mock Interview', 'desc' => 'Practice with ' . term_plural_lc() . ' mentors and get real-time feedback.', 'href' => url('mentorship')],
     ['icon' => 'bi-camera-video', 'color' => 'bg-amber-100 text-amber-600', 'title' => 'Video Tips', 'desc' => 'Watch expert tips to ace your interviews.', 'href' => url('resources') . '?' . http_build_query(['tab' => 'interview-prep', 'type' => 'Video']) . '#resource-list'],
 ];
 ?>

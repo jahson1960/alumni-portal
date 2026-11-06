@@ -1,5 +1,5 @@
 <div class="max-w-[900px] mx-auto px-4 md:px-8 py-8">
-  <a href="<?= e(url('advisor/my-alumni')) ?>" class="text-xs text-slate-500 hover:text-gold mb-4 inline-block"><i class="fa-solid fa-arrow-left"></i> Back to My Assigned Alumni</a>
+  <a href="<?= e(url('advisor/my-alumni')) ?>" class="text-xs text-slate-500 hover:text-gold mb-4 inline-block"><i class="fa-solid fa-arrow-left"></i> Back to My Assigned <?= e(term_plural()) ?></a>
 
   <div class="card p-6 mb-6">
     <div class="flex items-center justify-between gap-4 flex-wrap">

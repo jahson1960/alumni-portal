@@ -147,7 +147,7 @@ class DirectoryController extends Controller
         }
 
         $this->view('directory.index', [
-            'title' => 'Alumni Directory',
+            'title' => term_plural() . ' Directory',
             'activeNav' => 'directory',
             'alumni' => $alumni,
             'groups' => $groups,
@@ -240,7 +240,7 @@ class DirectoryController extends Controller
         }
 
         $this->view('directory.show', [
-            'title' => $profile['name'] . ' - Alumni Profile',
+            'title' => $profile['name'] . ' - ' . term_plural() . ' Profile',
             'activeNav' => 'directory',
             'profile' => $profile,
             'isOwnerOrAdmin' => $isOwnerOrAdmin,

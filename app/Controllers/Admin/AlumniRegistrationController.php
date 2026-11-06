@@ -32,7 +32,7 @@ class AlumniRegistrationController extends Controller
     public function create(): void
     {
         $this->view('admin.alumni_registration.create', [
-            'title' => 'Register Alumni',
+            'title' => 'Register ' . term_plural(),
             'activeNav' => 'register_alumni',
             'allCategories' => Category::forType('job'),
         ], 'admin');
@@ -61,7 +61,7 @@ class AlumniRegistrationController extends Controller
         } else {
             $rosterEntry = AlumniRoster::findByMatric($matricNumber);
             if (!$rosterEntry) {
-                $errors[] = 'No alumni roster record was found for that matric number.';
+                $errors[] = 'No ' . term_plural_lc() . ' roster record was found for that matric number.';
             } elseif ($rosterEntry['claimed_by_user_id']) {
                 $errors[] = 'An account has already been created for this matric number.';
             }
@@ -118,7 +118,7 @@ class AlumniRegistrationController extends Controller
         }
 
         $this->view('admin.alumni_registration.success', [
-            'title' => 'Alumni Registered',
+            'title' => term_plural() . ' Registered',
             'activeNav' => 'register_alumni',
             'result' => $result,
         ], 'admin');

@@ -103,7 +103,7 @@ if ($authUser && $authUser['program']) {
           <?php if (\App\Models\PageVisibility::shouldShowInNav('directory', $authUser) && !\App\Core\Auth::isRecruiter()): ?>
           <div class="relative group h-full" data-mega-group>
             <button class="top-pill h-full <?= $isNetworkActive ? 'active' : '' ?>">
-              <i class="bi bi-people"></i><span>Alumni Network</span>
+              <i class="bi bi-people"></i><span><?= e(term_plural()) ?> Network</span>
             </button>
 
             <div class="fixed left-0 right-0 top-[var(--header-height)] hidden z-[60]" data-mega-panel>
@@ -113,8 +113,8 @@ if ($authUser && $authUser['program']) {
 
                   <div class="pr-6 md:border-r border-slate-100">
                     <div class="w-11 h-11 rounded-lg bg-[var(--menu-accent-50)] text-[var(--menu-accent-600)] flex items-center justify-center text-lg mb-3"><i class="fa-solid fa-user-group"></i></div>
-                    <h3 class="text-sm font-extrabold text-primary-navy mb-1">Alumni Network</h3>
-                    <p class="text-xs text-slate-500 mb-3 leading-relaxed">Connect, collaborate and engage with fellow alumni around the world.</p>
+                    <h3 class="text-sm font-extrabold text-primary-navy mb-1"><?= e(term_plural()) ?> Network</h3>
+                    <p class="text-xs text-slate-500 mb-3 leading-relaxed">Connect, collaborate and engage with fellow <?= e(term_plural_lc()) ?> around the world.</p>
                     <?php if ($authUser): ?>
                       <a href="<?= e(url('profile/edit')) ?>" class="text-xs font-semibold text-gold hover:underline">View my profile &rarr;</a>
                     <?php else: ?>
@@ -125,11 +125,11 @@ if ($authUser && $authUser['program']) {
                   <div>
                     <?= mega_col_heading('Directory') ?>
                     <div class="space-y-1">
-                      <?= mega_item(url('directory'), 'fa-solid fa-magnifying-glass', 'Search Alumni', 'Find and connect with fellow alumni') ?>
-                      <?= mega_item(url('directory?view=saved'), 'fa-solid fa-bookmark', 'Saved Alumni', 'Profiles you have bookmarked') ?>
-                      <?= mega_item(url('directory?view=country'), 'fa-solid fa-earth-africa', 'Alumni Map', 'Explore where alumni are located worldwide') ?>
-                      <?= mega_item(url('directory?view=cohort'), 'fa-solid fa-graduation-cap', 'Find by Cohort', 'Browse alumni by program and class year') ?>
-                      <?= mega_item(url('businesses'), 'fa-solid fa-store', 'Alumni Businesses', 'Discover businesses owned by alumni') ?>
+                      <?= mega_item(url('directory'), 'fa-solid fa-magnifying-glass', 'Search ' . term_plural(), 'Find and connect with fellow ' . term_plural_lc()) ?>
+                      <?= mega_item(url('directory?view=saved'), 'fa-solid fa-bookmark', 'Saved ' . term_plural(), 'Profiles you have bookmarked') ?>
+                      <?= mega_item(url('directory?view=country'), 'fa-solid fa-earth-africa', term_plural() . ' Map', 'Explore where ' . term_plural_lc() . ' are located worldwide') ?>
+                      <?= mega_item(url('directory?view=cohort'), 'fa-solid fa-graduation-cap', 'Find by Cohort', 'Browse ' . term_plural_lc() . ' by program and class year') ?>
+                      <?= mega_item(url('businesses'), 'fa-solid fa-store', term_plural() . ' Businesses', 'Discover businesses owned by ' . term_plural_lc()) ?>
                     </div>
                   </div>
 
@@ -137,19 +137,19 @@ if ($authUser && $authUser['program']) {
                     <?= mega_col_heading('Connections') ?>
                     <div class="space-y-1">
                       <?php if (\App\Core\Auth::isAdvisor()): ?>
-                        <?= mega_item(url('advisor/my-alumni'), 'fa-solid fa-user-tie', 'My Assigned Alumni', 'Alumni you are advising') ?>
+                        <?= mega_item(url('advisor/my-alumni'), 'fa-solid fa-user-tie', 'My Assigned ' . term_plural(), term_plural() . ' you are advising') ?>
                       <?php endif; ?>
                       <?= mega_item(url('connections'), 'fa-solid fa-user-group', 'My Connections', 'People you are connected with') ?>
                       <?= mega_item(url('connections#requests'), 'fa-solid fa-user-plus', 'Connection Requests', 'Manage incoming and sent requests') ?>
-                      <?= mega_item(url('connections#suggested'), 'fa-solid fa-star', 'Suggested Connections', 'Alumni you may want to connect with') ?>
-                      <?= mega_item(url('connections#following'), 'fa-solid fa-eye', 'Following', 'Alumni you are following') ?>
+                      <?= mega_item(url('connections#suggested'), 'fa-solid fa-star', 'Suggested Connections', term_plural() . ' you may want to connect with') ?>
+                      <?= mega_item(url('connections#following'), 'fa-solid fa-eye', 'Following', term_plural() . ' you are following') ?>
                     </div>
                   </div>
 
                   <div>
                     <?= mega_col_heading('Engage') ?>
                     <div class="space-y-1">
-                      <?= mega_item(url('feed'), 'fa-solid fa-rss', 'Community Feed', 'Share updates and see what alumni are posting') ?>
+                      <?= mega_item(url('feed'), 'fa-solid fa-rss', 'Community Feed', 'Share updates and see what ' . term_plural_lc() . ' are posting') ?>
                       <?= mega_item(url('messages'), 'fa-solid fa-envelope', 'Messages', 'Chat privately with your connections') ?>
                       <?= mega_item(url('mentorship'), 'fa-solid fa-chalkboard-user', 'Mentorship', 'Find a mentor or become one') ?>
                       <?= mega_item(url('notifications'), 'fa-solid fa-bell', 'Notifications', 'Stay on top of your activity') ?>
@@ -159,8 +159,8 @@ if ($authUser && $authUser['program']) {
                   <div>
                     <?= mega_col_heading('More') ?>
                     <div class="space-y-1">
-                      <?= mega_item(url('news'), 'fa-solid fa-newspaper', 'News & Blog', 'Alumni stories and school updates') ?>
-                      <?= mega_item(url('spotlight'), 'fa-solid fa-star', 'Alumni Spotlight', 'Celebrating standout alumni achievements') ?>
+                      <?= mega_item(url('news'), 'fa-solid fa-newspaper', 'News & Blog', term_plural() . ' stories and school updates') ?>
+                      <?= mega_item(url('spotlight'), 'fa-solid fa-star', term_plural() . ' Spotlight', 'Celebrating standout ' . term_plural_lc() . ' achievements') ?>
                       <?php if ($authUser && $authUser['role'] === 'admin'): ?>
                         <?= mega_item(url('admin/dashboard'), 'fa-solid fa-gauge', 'Admin Panel', 'Manage the portal') ?>
                       <?php endif; ?>
@@ -174,14 +174,14 @@ if ($authUser && $authUser['program']) {
                     <div class="w-11 h-11 rounded-full bg-[var(--menu-accent-100)] text-[var(--menu-accent-600)] flex items-center justify-center text-lg flex-shrink-0"><i class="fa-solid fa-globe"></i></div>
                     <div>
                       <p class="text-sm font-extrabold text-primary-navy">Grow Your Network. Build Your Future.</p>
-                      <p class="text-xs text-slate-500">Connect with thousands of alumni making an impact worldwide.</p>
+                      <p class="text-xs text-slate-500">Connect with thousands of <?= e(term_plural_lc()) ?> making an impact worldwide.</p>
                     </div>
                   </div>
                   <div class="flex items-center gap-3">
                     <div class="w-9 h-9 rounded-full bg-white flex items-center justify-center text-[var(--menu-accent-600)] flex-shrink-0"><i class="fa-solid fa-user-group"></i></div>
                     <div>
                       <p class="text-sm font-extrabold text-primary-navy"><?= e(Setting::get('metric_alumni', '0')) ?></p>
-                      <p class="text-[0.65rem] text-slate-500">Active Alumni</p>
+                      <p class="text-[0.65rem] text-slate-500">Active <?= e(term_plural()) ?></p>
                     </div>
                   </div>
                   <div class="flex items-center gap-3">
@@ -226,7 +226,7 @@ if ($authUser && $authUser['program']) {
                         <?= mega_item(url('jobs') . '?tab=forme', 'fa-solid fa-compass', 'Jobs for Me', 'Opportunities matched to your interests') ?>
                       <?php endif; ?>
                       <?= mega_item(url('jobs') . '?tab=search', 'fa-solid fa-magnifying-glass', 'Advanced Search', 'Find jobs that match your skills') ?>
-                      <?= mega_item(url('jobs') . '?tab=companies', 'fa-solid fa-building', 'Companies Hiring', 'Explore companies hiring our alumni') ?>
+                      <?= mega_item(url('jobs') . '?tab=companies', 'fa-solid fa-building', 'Companies Hiring', 'Explore companies hiring our ' . term_plural_lc()) ?>
                       <?= mega_item(url('jobs') . '?tab=saved', 'fa-solid fa-bookmark', 'Saved Jobs', 'View and manage your saved jobs') ?>
                       <?= mega_item(url('jobs') . '?tab=alerts', 'fa-regular fa-bell', 'Job Alerts', 'Create alerts and never miss an opportunity') ?>
                     </div>
@@ -237,10 +237,10 @@ if ($authUser && $authUser['program']) {
                     <div>
                       <?= mega_col_heading('Post & Manage') ?>
                       <div class="space-y-1">
-                        <?= mega_item(url('admin/jobs/create'), 'fa-solid fa-square-plus', 'Post a Job', 'Share opportunities with our alumni') ?>
+                        <?= mega_item(url('admin/jobs/create'), 'fa-solid fa-square-plus', 'Post a Job', 'Share opportunities with our ' . term_plural_lc()) ?>
                         <?= mega_item(url('admin/jobs'), 'fa-solid fa-list-check', 'Manage Jobs', 'Edit, close or manage your job posts') ?>
                         <?= mega_item(url('admin/jobs'), 'fa-solid fa-user-group', 'Applications', 'View and manage applications') ?>
-                        <?= mega_item(url('directory'), 'fa-solid fa-address-book', 'Talent Search', 'Search our alumni talent pool') ?>
+                        <?= mega_item(url('directory'), 'fa-solid fa-address-book', 'Talent Search', 'Search our ' . term_plural_lc() . ' talent pool') ?>
                       </div>
                     </div>
                   <?php elseif (\App\Core\Auth::isRecruiter()): ?>
@@ -256,18 +256,18 @@ if ($authUser && $authUser['program']) {
                     <div>
                       <?= mega_col_heading('Post & Manage') ?>
                       <div class="space-y-1">
-                        <?= mega_item(url('jobs/post'), 'fa-solid fa-square-plus', 'Post a Job', 'Share opportunities with our alumni') ?>
+                        <?= mega_item(url('jobs/post'), 'fa-solid fa-square-plus', 'Post a Job', 'Share opportunities with our ' . term_plural_lc()) ?>
                         <?= mega_item(url('jobs/mine'), 'fa-solid fa-list-check', 'My Job Posts', 'Edit, close or manage your job posts') ?>
-                        <?= mega_item(url('directory'), 'fa-solid fa-address-book', 'Talent Search', 'Search our alumni talent pool') ?>
-                        <?= mega_item(url('jobs') . '?tab=companies', 'fa-solid fa-building', 'Companies Hiring', 'Explore companies hiring our alumni') ?>
+                        <?= mega_item(url('directory'), 'fa-solid fa-address-book', 'Talent Search', 'Search our ' . term_plural_lc() . ' talent pool') ?>
+                        <?= mega_item(url('jobs') . '?tab=companies', 'fa-solid fa-building', 'Companies Hiring', 'Explore companies hiring our ' . term_plural_lc()) ?>
                       </div>
                     </div>
                   <?php else: ?>
                     <div>
                       <?= mega_col_heading('Network') ?>
                       <div class="space-y-1">
-                        <?= mega_item(url('login'), 'fa-solid fa-square-plus', 'Post a Job', 'Share opportunities with our alumni') ?>
-                        <?= mega_item(url('jobs') . '?tab=companies', 'fa-solid fa-building', 'Companies Hiring', 'Explore companies hiring our alumni') ?>
+                        <?= mega_item(url('login'), 'fa-solid fa-square-plus', 'Post a Job', 'Share opportunities with our ' . term_plural_lc()) ?>
+                        <?= mega_item(url('jobs') . '?tab=companies', 'fa-solid fa-building', 'Companies Hiring', 'Explore companies hiring our ' . term_plural_lc()) ?>
                       </div>
                     </div>
                   <?php endif; ?>
@@ -313,16 +313,16 @@ if ($authUser && $authUser['program']) {
                   <div class="flex items-center gap-3 flex-1 min-w-[220px]">
                     <div class="w-11 h-11 rounded-full bg-[var(--menu-accent-100)] text-[var(--menu-accent-600)] flex items-center justify-center text-lg flex-shrink-0"><i class="fa-solid fa-user-group"></i></div>
                     <div>
-                      <p class="text-sm font-extrabold text-primary-navy">Hire Alumni. Build Leaders.</p>
-                      <p class="text-xs text-slate-500">Our alumni are making an impact in top organizations worldwide.</p>
-                      <a href="<?= e(url('jobs') . '?tab=companies') ?>" class="section-link">Learn more about hiring alumni &rarr;</a>
+                      <p class="text-sm font-extrabold text-primary-navy">Hire <?= e(term_plural()) ?>. Build Leaders.</p>
+                      <p class="text-xs text-slate-500">Our <?= e(term_plural_lc()) ?> are making an impact in top organizations worldwide.</p>
+                      <a href="<?= e(url('jobs') . '?tab=companies') ?>" class="section-link">Learn more about hiring <?= e(term_plural_lc()) ?> &rarr;</a>
                     </div>
                   </div>
                   <div class="flex items-center gap-3">
                     <div class="w-9 h-9 rounded-full bg-white flex items-center justify-center text-[var(--menu-accent-600)] flex-shrink-0"><i class="fa-solid fa-user-group"></i></div>
                     <div>
                       <p class="text-sm font-extrabold text-primary-navy"><?= e(Setting::get('metric_alumni', '0')) ?></p>
-                      <p class="text-[0.65rem] text-slate-500">Active Alumni</p>
+                      <p class="text-[0.65rem] text-slate-500">Active <?= e(term_plural()) ?></p>
                     </div>
                   </div>
                   <div class="flex items-center gap-3">
@@ -384,10 +384,10 @@ if ($authUser && $authUser['program']) {
                     <div>
                       <?= mega_col_heading('Host & Manage') ?>
                       <div class="space-y-1">
-                        <?= mega_item(url('admin/events/create'), 'fa-solid fa-square-plus', 'Create Event', 'Organize an alumni event') ?>
+                        <?= mega_item(url('admin/events/create'), 'fa-solid fa-square-plus', 'Create Event', 'Organize an ' . term_plural_lc() . ' event') ?>
                         <?= mega_item(url('admin/events'), 'fa-regular fa-calendar', 'Manage Events', 'Edit, update or cancel your events') ?>
                         <?= mega_item(url('admin/events'), 'fa-solid fa-user-group', 'Attendee List', 'View and manage attendees') ?>
-                        <?= mega_item(url('admin/events'), 'fa-solid fa-bullhorn', 'Promote Event', 'Share with the alumni community') ?>
+                        <?= mega_item(url('admin/events'), 'fa-solid fa-bullhorn', 'Promote Event', 'Share with the ' . term_plural_lc() . ' community') ?>
                         <?= mega_item(url('admin/events'), 'fa-solid fa-chart-column', 'Event Reports', 'Track engagement & attendance') ?>
                       </div>
                     </div>
@@ -396,8 +396,8 @@ if ($authUser && $authUser['program']) {
                       <?= mega_col_heading('Get Involved') ?>
                       <div class="space-y-1">
                         <?= mega_item(url('mentorship/become'), 'fa-solid fa-chalkboard-user', 'Become a Mentor', 'Give back through the mentorship program') ?>
-                        <?= mega_item(url('give'), 'fa-solid fa-hand-holding-heart', 'Support Alumni Events', 'Help fund future alumni gatherings') ?>
-                        <?= mega_item(url('knowledge'), 'fa-solid fa-book-open', 'Knowledge Hub', 'Explore alumni insights and research') ?>
+                        <?= mega_item(url('give'), 'fa-solid fa-hand-holding-heart', 'Support ' . term_plural() . ' Events', 'Help fund future ' . term_plural_lc() . ' gatherings') ?>
+                        <?= mega_item(url('knowledge'), 'fa-solid fa-book-open', 'Knowledge Hub', 'Explore ' . term_plural_lc() . ' insights and research') ?>
                       </div>
                     </div>
                   <?php endif; ?>
@@ -435,7 +435,7 @@ if ($authUser && $authUser['program']) {
                     <div class="w-11 h-11 rounded-full bg-[var(--menu-accent-100)] text-[var(--menu-accent-600)] flex items-center justify-center text-lg flex-shrink-0"><i class="fa-solid fa-user-group"></i></div>
                     <div>
                       <p class="text-sm font-extrabold text-primary-navy">Connect. Learn. Grow.</p>
-                      <p class="text-xs text-slate-500">Join alumni events to expand your network and gain valuable insights.</p>
+                      <p class="text-xs text-slate-500">Join <?= e(term_plural_lc()) ?> events to expand your network and gain valuable insights.</p>
                     </div>
                   </div>
                   <div class="flex items-center gap-3">
@@ -449,7 +449,7 @@ if ($authUser && $authUser['program']) {
                     <div class="w-9 h-9 rounded-full bg-white flex items-center justify-center text-[var(--menu-accent-600)] flex-shrink-0"><i class="fa-solid fa-user-group"></i></div>
                     <div>
                       <p class="text-sm font-extrabold text-primary-navy"><?= e(Setting::get('metric_alumni', '0')) ?></p>
-                      <p class="text-[0.65rem] text-slate-500">Active Alumni</p>
+                      <p class="text-[0.65rem] text-slate-500">Active <?= e(term_plural()) ?></p>
                     </div>
                   </div>
                   <div class="flex items-center gap-3">
@@ -577,7 +577,7 @@ if ($authUser && $authUser['program']) {
                   <div>
                     <?= mega_col_heading('Explore Benefits') ?>
                     <div class="space-y-1">
-                      <?= mega_item(url('benefits'), 'fa-solid fa-gem', 'All Benefits', 'Browse all exclusive alumni benefits') ?>
+                      <?= mega_item(url('benefits'), 'fa-solid fa-gem', 'All Benefits', 'Browse all exclusive ' . term_plural_lc() . ' benefits') ?>
                       <?= mega_item(url('benefits'), 'fa-solid fa-percent', 'Discounts & Offers', 'Enjoy savings from our partner organizations') ?>
                       <?= mega_item(url('benefits'), 'fa-solid fa-book-open-reader', 'Executive Education', 'Access discounted programs and courses') ?>
                       <?= mega_item(url('benefits'), 'fa-solid fa-building-columns', 'Library & Resources', 'Access books, journals and research databases') ?>
@@ -592,18 +592,18 @@ if ($authUser && $authUser['program']) {
                     <div class="space-y-1">
                       <?= mega_item(url('benefits'), 'fa-solid fa-graduation-cap', 'Continuing Education', 'Lifelong learning opportunities and certifications') ?>
                       <?= mega_item(url('events') . '?view=webinars', 'fa-solid fa-display', 'Webinars & Workshops', 'Free and discounted events and workshops') ?>
-                      <?= mega_item(url('mentorship'), 'fa-regular fa-user', 'Mentorship Programs', 'Give and receive guidance from experienced alumni') ?>
+                      <?= mega_item(url('mentorship'), 'fa-regular fa-user', 'Mentorship Programs', 'Give and receive guidance from experienced ' . term_plural_lc()) ?>
                       <?= mega_item(url('resources'), 'fa-solid fa-arrow-trend-up', 'Career Development', 'Tools and resources to accelerate your career') ?>
-                      <?= mega_item(url('events'), 'fa-regular fa-file-lines', 'Case Competitions', 'Participate in exclusive alumni competitions') ?>
+                      <?= mega_item(url('events'), 'fa-regular fa-file-lines', 'Case Competitions', 'Participate in exclusive ' . term_plural_lc() . ' competitions') ?>
                     </div>
                   </div>
 
                   <div>
                     <?= mega_col_heading('Connections & Access') ?>
                     <div class="space-y-1">
-                      <?= mega_item(url('events'), 'fa-solid fa-user-group', 'Networking Events', 'Exclusive invites to alumni networking events') ?>
-                      <?= mega_item(url('map'), 'fa-solid fa-earth-africa', 'Global Alumni Access', 'Connect with alumni worldwide') ?>
-                      <?= mega_item(url('directory'), 'fa-regular fa-star', 'Alumni Directory Access', 'Full access to the alumni directory') ?>
+                      <?= mega_item(url('events'), 'fa-solid fa-user-group', 'Networking Events', 'Exclusive invites to ' . term_plural_lc() . ' networking events') ?>
+                      <?= mega_item(url('map'), 'fa-solid fa-earth-africa', 'Global ' . term_plural() . ' Access', 'Connect with ' . term_plural_lc() . ' worldwide') ?>
+                      <?= mega_item(url('directory'), 'fa-regular fa-star', term_plural() . ' Directory Access', 'Full access to the ' . term_plural_lc() . ' directory') ?>
                       <?= mega_item(url('knowledge'), 'fa-solid fa-microphone', 'Speaking Opportunities', 'Share your expertise and inspire others') ?>
                       <?= mega_item(url('businesses'), 'fa-solid fa-handshake', 'Business Referrals', 'Connect and grow through trusted referrals') ?>
                     </div>
@@ -645,8 +645,8 @@ if ($authUser && $authUser['program']) {
                       <div class="flex items-start gap-2.5">
                         <div class="w-9 h-9 rounded-full bg-[var(--menu-accent-100)] text-[var(--menu-accent-600)] flex items-center justify-center flex-shrink-0"><i class="fa-solid fa-headset"></i></div>
                         <div>
-                          <p class="text-xs text-slate-500 leading-relaxed">Our team is here to help you make the most of your alumni benefits.</p>
-                          <a href="<?= e(url('benefits')) ?>" class="text-xs font-semibold text-[var(--menu-accent-600)] hover:underline">Contact Alumni Support &rarr;</a>
+                          <p class="text-xs text-slate-500 leading-relaxed">Our team is here to help you make the most of your <?= e(term_plural_lc()) ?> benefits.</p>
+                          <a href="<?= e(url('benefits')) ?>" class="text-xs font-semibold text-[var(--menu-accent-600)] hover:underline">Contact <?= e(term_plural()) ?> Support &rarr;</a>
                         </div>
                       </div>
                     </div>
@@ -658,7 +658,7 @@ if ($authUser && $authUser['program']) {
                   <div class="flex items-center gap-3">
                     <div class="w-11 h-11 rounded-full bg-[var(--menu-accent-100)] text-[var(--menu-accent-600)] flex items-center justify-center text-lg flex-shrink-0"><i class="fa-regular fa-star"></i></div>
                     <div>
-                      <p class="text-sm font-extrabold text-primary-navy">Your alumni status comes with exclusive privileges.</p>
+                      <p class="text-sm font-extrabold text-primary-navy">Your <?= e(term_plural_lc()) ?> status comes with exclusive privileges.</p>
                       <p class="text-xs text-slate-500">Explore, connect and grow with benefits designed just for you.</p>
                     </div>
                   </div>
@@ -820,7 +820,7 @@ if ($authUser && $authUser['program']) {
                     <a href="<?= e(url('admin/dashboard')) ?>" class="block px-4 py-2 text-xs text-slate-700 hover:bg-slate-50 hover:text-gold">Admin Panel</a>
                   <?php endif; ?>
                   <?php if (in_array($authUser['role'], ['admin', 'editor'], true)): ?>
-                    <a href="<?= e(url('admin/register-alumni')) ?>" class="block px-4 py-2 text-xs text-slate-700 hover:bg-slate-50 hover:text-gold">Register Alumni</a>
+                    <a href="<?= e(url('admin/register-alumni')) ?>" class="block px-4 py-2 text-xs text-slate-700 hover:bg-slate-50 hover:text-gold">Register <?= e(term_plural()) ?></a>
                   <?php endif; ?>
                   <form method="POST" action="<?= e(url('logout')) ?>">
                     <?= csrf_field() ?>
@@ -931,21 +931,21 @@ if ($authUser && $authUser['program']) {
           <div class="border-t border-white/10"></div>
         <?php endif; ?>
 
-        <?php if (!\App\Core\Auth::isRecruiter()): $mobileAccordion('network', 'directory', 'fa-solid fa-users', 'Alumni Network', 'Connect, collaborate and engage with fellow alumni around the world.', array_filter([
-          ['href' => url('directory'), 'icon' => 'fa-solid fa-magnifying-glass', 'label' => 'Search Alumni', 'desc' => 'Find and connect with fellow alumni'],
-          $authUser ? ['href' => url('directory?view=saved'), 'icon' => 'fa-solid fa-bookmark', 'label' => 'Saved Alumni', 'desc' => 'Browse your saved fellow alumni'] : null,
-          ['href' => url('directory?view=country'), 'icon' => 'fa-solid fa-location-dot', 'label' => 'Alumni Map', 'desc' => 'Explore where alumni are located worldwide'],
-          ['href' => url('directory?view=cohort'), 'icon' => 'fa-solid fa-graduation-cap', 'label' => 'Find by Cohort', 'desc' => 'Browse alumni by programme or class year'],
-          ['href' => url('businesses'), 'icon' => 'fa-solid fa-store', 'label' => 'Alumni Businesses', 'desc' => 'Discover businesses run by alumni'],
+        <?php if (!\App\Core\Auth::isRecruiter()): $mobileAccordion('network', 'directory', 'fa-solid fa-users', term_plural() . ' Network', 'Connect, collaborate and engage with fellow ' . term_plural_lc() . ' around the world.', array_filter([
+          ['href' => url('directory'), 'icon' => 'fa-solid fa-magnifying-glass', 'label' => 'Search ' . term_plural(), 'desc' => 'Find and connect with fellow ' . term_plural_lc()],
+          $authUser ? ['href' => url('directory?view=saved'), 'icon' => 'fa-solid fa-bookmark', 'label' => 'Saved ' . term_plural(), 'desc' => 'Browse your saved fellow ' . term_plural_lc()] : null,
+          ['href' => url('directory?view=country'), 'icon' => 'fa-solid fa-location-dot', 'label' => term_plural() . ' Map', 'desc' => 'Explore where ' . term_plural_lc() . ' are located worldwide'],
+          ['href' => url('directory?view=cohort'), 'icon' => 'fa-solid fa-graduation-cap', 'label' => 'Find by Cohort', 'desc' => 'Browse ' . term_plural_lc() . ' by programme or class year'],
+          ['href' => url('businesses'), 'icon' => 'fa-solid fa-store', 'label' => term_plural() . ' Businesses', 'desc' => 'Discover businesses run by ' . term_plural_lc()],
         ])); endif; ?>
 
         <?php if ($authUser && !\App\Core\Auth::isRecruiter()): $mobileAccordion('connections', 'connections', 'fa-solid fa-user-group', 'Connections', 'Grow your professional network.', array_filter([
-          \App\Core\Auth::isAdvisor() ? ['href' => url('advisor/my-alumni'), 'icon' => 'fa-solid fa-user-tie', 'label' => 'My Assigned Alumni', 'desc' => 'Alumni you are advising'] : null,
+          \App\Core\Auth::isAdvisor() ? ['href' => url('advisor/my-alumni'), 'icon' => 'fa-solid fa-user-tie', 'label' => 'My Assigned ' . term_plural(), 'desc' => term_plural() . ' you are advising'] : null,
           ['href' => url('connections'), 'icon' => 'fa-solid fa-user-group', 'label' => 'My Connections', 'desc' => 'Keep in touch with your connections'],
           ['href' => url('connections#requests'), 'icon' => 'fa-solid fa-user-plus', 'label' => 'Connection Requests', 'desc' => 'Manage incoming and outgoing requests'],
-          ['href' => url('connections#suggested'), 'icon' => 'fa-solid fa-star', 'label' => 'Suggested Connections', 'desc' => 'Alumni you may want to connect with'],
-          ['href' => url('connections#following'), 'icon' => 'fa-regular fa-eye', 'label' => 'Following', 'desc' => 'Alumni you are following'],
-          ['href' => url('feed'), 'icon' => 'fa-solid fa-rss', 'label' => 'Community Feed', 'desc' => 'Posts and updates from alumni'],
+          ['href' => url('connections#suggested'), 'icon' => 'fa-solid fa-star', 'label' => 'Suggested Connections', 'desc' => term_plural() . ' you may want to connect with'],
+          ['href' => url('connections#following'), 'icon' => 'fa-regular fa-eye', 'label' => 'Following', 'desc' => term_plural() . ' you are following'],
+          ['href' => url('feed'), 'icon' => 'fa-solid fa-rss', 'label' => 'Community Feed', 'desc' => 'Posts and updates from ' . term_plural_lc()],
           ['href' => url('messages'), 'icon' => 'fa-solid fa-envelope', 'label' => 'Messages', 'desc' => 'Your private conversations'],
           ['href' => url('mentorship'), 'icon' => 'fa-solid fa-chalkboard-user', 'label' => 'Mentorship', 'desc' => 'Find or become a mentor'],
           ['href' => url('notifications'), 'icon' => 'fa-solid fa-bell', 'label' => 'Notifications', 'desc' => 'Your latest alerts and updates'],
@@ -955,34 +955,34 @@ if ($authUser && $authUser['program']) {
           $isAdmin = $authUser && $authUser['role'] === 'admin';
           $isRecruiter = \App\Core\Auth::isRecruiter();
           $mobileAccordion('careers', 'jobs', 'fa-solid fa-briefcase', 'Careers', 'Jobs, resources and opportunities.', array_filter([
-            $isRecruiter ? null : ['href' => url('jobs'), 'icon' => 'fa-solid fa-briefcase', 'label' => 'Job Board', 'desc' => 'Browse open roles from alumni and partners'],
+            $isRecruiter ? null : ['href' => url('jobs'), 'icon' => 'fa-solid fa-briefcase', 'label' => 'Job Board', 'desc' => 'Browse open roles from ' . term_plural_lc() . ' and partners'],
             $isRecruiter ? null : ['href' => url('jobs') . '?tab=search', 'icon' => 'fa-solid fa-magnifying-glass', 'label' => 'Advanced Search', 'desc' => 'Filter jobs by type, location and more'],
             $isRecruiter ? null : ['href' => url('jobs') . '?tab=companies', 'icon' => 'fa-solid fa-building', 'label' => 'Companies Hiring', 'desc' => 'See which companies are hiring'],
             ($authUser && !$isRecruiter) ? ['href' => url('jobs') . '?tab=saved', 'icon' => 'fa-solid fa-bookmark', 'label' => 'Saved Jobs', 'desc' => "Jobs you've bookmarked"] : null,
             ($authUser && !$isRecruiter) ? ['href' => url('jobs') . '?tab=alerts', 'icon' => 'fa-regular fa-bell', 'label' => 'Job Alerts', 'desc' => 'Get notified about new matching jobs'] : null,
             ['href' => url('resources'), 'icon' => 'fa-solid fa-file-lines', 'label' => 'Career Resources', 'desc' => 'Guides, templates and career tools'],
-            $isAdmin ? ['href' => url('admin/jobs/create'), 'icon' => 'fa-solid fa-square-plus', 'label' => 'Post a Job', 'desc' => 'Add a new job listing'] : ($authUser ? ['href' => url('jobs/post'), 'icon' => 'fa-solid fa-square-plus', 'label' => 'Post a Job', 'desc' => 'Share an opportunity with alumni'] : null),
+            $isAdmin ? ['href' => url('admin/jobs/create'), 'icon' => 'fa-solid fa-square-plus', 'label' => 'Post a Job', 'desc' => 'Add a new job listing'] : ($authUser ? ['href' => url('jobs/post'), 'icon' => 'fa-solid fa-square-plus', 'label' => 'Post a Job', 'desc' => 'Share an opportunity with ' . term_plural_lc()] : null),
             $isAdmin ? ['href' => url('admin/jobs'), 'icon' => 'fa-solid fa-list-check', 'label' => 'Manage Jobs', 'desc' => 'Review and manage job listings'] : ($authUser ? ['href' => url('jobs/mine'), 'icon' => 'fa-solid fa-list-check', 'label' => 'My Job Posts', 'desc' => "Jobs you've posted"] : null),
           ]));
 
           $mobileAccordion('events', 'events', 'fa-solid fa-calendar-days', 'Events', 'Upcoming events and your registrations.', array_filter([
-            ['href' => url('events'), 'icon' => 'fa-solid fa-calendar-days', 'label' => 'All Events', 'desc' => 'Browse upcoming alumni events'],
+            ['href' => url('events'), 'icon' => 'fa-solid fa-calendar-days', 'label' => 'All Events', 'desc' => 'Browse upcoming ' . term_plural_lc() . ' events'],
             $authUser ? ['href' => url('events/mine'), 'icon' => 'fa-solid fa-ticket', 'label' => 'My Events', 'desc' => 'Your registrations, saved events and history'] : null,
-            $isAdmin ? ['href' => url('admin/events/create'), 'icon' => 'fa-solid fa-square-plus', 'label' => 'Create Event', 'desc' => 'Add a new alumni event'] : null,
+            $isAdmin ? ['href' => url('admin/events/create'), 'icon' => 'fa-solid fa-square-plus', 'label' => 'Create Event', 'desc' => 'Add a new ' . term_plural_lc() . ' event'] : null,
             $isAdmin ? ['href' => url('admin/events'), 'icon' => 'fa-solid fa-list-check', 'label' => 'Manage Events', 'desc' => 'Review and manage all events'] : null,
           ]));
 
           $mobileAccordion('knowledge', 'knowledge', 'fa-solid fa-book-open', 'Knowledge', 'Articles, research and insights.', array_filter([
             ['href' => url('knowledge'), 'icon' => 'fa-solid fa-book-open', 'label' => 'All Articles', 'desc' => 'Browse the knowledge hub'],
-            ['href' => url('knowledge?category=research'), 'icon' => 'fa-regular fa-file-lines', 'label' => 'Research & Publications', 'desc' => 'Alumni research and publications'],
+            ['href' => url('knowledge?category=research'), 'icon' => 'fa-regular fa-file-lines', 'label' => 'Research & Publications', 'desc' => term_plural() . ' research and publications'],
             ['href' => url('resources'), 'icon' => 'fa-solid fa-download', 'label' => 'Resource Library', 'desc' => 'Downloadable guides and templates'],
             $authUser ? ['href' => url('knowledge/submit'), 'icon' => 'fa-solid fa-pen-to-square', 'label' => 'Write an Article', 'desc' => 'Share your expertise'] : null,
           ]));
 
-          $mobileAccordion('more', '', 'fa-solid fa-ellipsis', 'More', 'News & Blog, Alumni Spotlight, Give Back.', array_filter([
+          $mobileAccordion('more', '', 'fa-solid fa-ellipsis', 'More', 'News & Blog, ' . term_plural() . ' Spotlight, Give Back.', array_filter([
             ['href' => url('news'), 'icon' => 'fa-solid fa-newspaper', 'label' => 'News & Blog', 'desc' => 'Latest news from the school'],
-            ['href' => url('spotlight'), 'icon' => 'fa-solid fa-star', 'label' => 'Alumni Spotlight', 'desc' => 'Celebrating alumni achievements'],
-            ['href' => url('give'), 'icon' => 'fa-solid fa-hand-holding-heart', 'label' => 'Give Back', 'desc' => 'Support scholarships and alumni causes'],
+            ['href' => url('spotlight'), 'icon' => 'fa-solid fa-star', 'label' => term_plural() . ' Spotlight', 'desc' => 'Celebrating ' . term_plural_lc() . ' achievements'],
+            ['href' => url('give'), 'icon' => 'fa-solid fa-hand-holding-heart', 'label' => 'Give Back', 'desc' => 'Support scholarships and ' . term_plural_lc() . ' causes'],
             ['href' => url('resources'), 'icon' => 'fa-solid fa-file-lines', 'label' => 'Career Resources', 'desc' => 'Guides, templates and career tools'],
             $isRecruiter ? null : ['href' => url('mentorship'), 'icon' => 'fa-solid fa-chalkboard-user', 'label' => 'Mentorship', 'desc' => 'Find or become a mentor'],
             $isRecruiter ? null : ['href' => url('connections'), 'icon' => 'fa-solid fa-user-group', 'label' => 'My Connections', 'desc' => 'Keep in touch with your connections'],
@@ -1000,7 +1000,7 @@ if ($authUser && $authUser['program']) {
           <?php if ($isAdmin || $authUser['role'] === 'editor'): ?>
             <a href="<?= e(url('admin/register-alumni')) ?>" class="flex items-center gap-3 py-3">
               <i class="fa-solid fa-user-plus text-[var(--menu-item-text)] opacity-70 w-5 text-center flex-shrink-0"></i>
-              <span class="text-sm font-semibold text-[var(--menu-item-text)] opacity-90">Register Alumni</span>
+              <span class="text-sm font-semibold text-[var(--menu-item-text)] opacity-90"><?= e(term_plural()) ?></span>
             </a>
             <div class="border-t border-white/10"></div>
           <?php endif; ?>
@@ -1019,7 +1019,7 @@ if ($authUser && $authUser['program']) {
           <div class="w-10 h-10 rounded-full bg-white/10 text-gold flex items-center justify-center flex-shrink-0"><i class="fa-solid fa-user-group"></i></div>
           <div class="min-w-0">
             <p class="text-xs font-extrabold text-[var(--menu-item-text)] leading-tight">Grow Your Network. Build Your Future.</p>
-            <p class="text-[0.68rem] text-[var(--menu-item-text)] opacity-50 mt-0.5">Connect with alumni making an impact worldwide.</p>
+            <p class="text-[0.68rem] text-[var(--menu-item-text)] opacity-50 mt-0.5">Connect with <?= e(term_plural_lc()) ?> making an impact worldwide.</p>
           </div>
         </div>
         <a href="<?= e(url('directory')) ?>" class="btn-gold !px-4 !py-2.5 text-xs flex items-center gap-1.5 flex-shrink-0 whitespace-nowrap">View Directory <i class="fa-solid fa-arrow-right"></i></a>
@@ -1076,7 +1076,7 @@ if ($authUser && $authUser['program']) {
         <div class="w-11 h-11 rounded-full bg-white/10 flex items-center justify-center text-lg flex-shrink-0"><i class="fa-solid fa-users"></i></div>
         <div>
           <h3 class="text-lg font-extrabold"><?= e($footerSettings['metric_alumni'] ?? '') ?></h3>
-          <p class="text-[0.7rem] text-slate-400">Alumni Worldwide</p>
+          <p class="text-[0.7rem] text-slate-400"><?= e(term_plural()) ?> Worldwide</p>
         </div>
       </div>
       <div class="flex items-center gap-3 md:border-r md:border-white/10">
@@ -1097,7 +1097,7 @@ if ($authUser && $authUser['program']) {
         <div class="w-11 h-11 rounded-full bg-white/10 flex items-center justify-center text-lg flex-shrink-0"><i class="fa-solid fa-link"></i></div>
         <div>
           <h3 class="text-lg font-extrabold"><?= e($footerSettings['metric_connections'] ?? '') ?></h3>
-          <p class="text-[0.7rem] text-slate-400">Alumni Connections Made</p>
+          <p class="text-[0.7rem] text-slate-400"><?= e(term_plural()) ?> Connections Made</p>
         </div>
       </div>
     </div>

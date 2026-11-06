@@ -1,5 +1,5 @@
 <h1 class="text-xl font-extrabold text-primary-navy mb-1">Welcome Back</h1>
-<p class="text-sm text-slate-500 mb-6">Log in to your RBSN Alumni account.</p>
+<p class="text-sm text-slate-500 mb-6">Log in to your RBSN <?= e(term_plural()) ?> account.</p>
 
 <?php require dirname(__DIR__) . '/partials/errors.php'; ?>
 

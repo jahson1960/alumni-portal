@@ -18,7 +18,7 @@ class BenefitController extends Controller
         }
 
         $this->view('benefits.index', [
-            'title' => 'Alumni Benefits',
+            'title' => term_plural() . ' Benefits',
             'activeNav' => 'benefits',
             'grouped' => $grouped,
         ]);

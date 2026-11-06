@@ -39,7 +39,7 @@ class BusinessController extends Controller
         $savedIds = $viewerLoggedIn ? SavedBusiness::savedIdsFor((int) Auth::id()) : [];
 
         $this->view('businesses.index', [
-            'title' => 'Alumni Businesses',
+            'title' => term_plural() . ' Businesses',
             'activeNav' => 'businesses',
             'businesses' => Business::directory($filters, $sort, $perPage, ($page - 1) * $perPage),
             'categories' => Business::distinctValues('category'),

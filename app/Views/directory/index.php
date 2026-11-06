@@ -10,17 +10,17 @@ $qs = function (array $overrides) use ($filters, $sort, $perPage, $view) {
 
   <div class="flex flex-wrap items-start justify-between gap-4 mb-6">
     <div>
-      <h1 class="text-2xl font-extrabold text-primary-navy">Alumni Directory</h1>
+      <h1 class="text-2xl font-extrabold text-primary-navy"><?= e(term_plural()) ?> Directory</h1>
       <div class="w-10 h-1 bg-gold rounded-full my-2"></div>
-      <p class="text-sm text-slate-500">Connect, collaborate, and grow with our global alumni community.</p>
+      <p class="text-sm text-slate-500">Connect, collaborate, and grow with our global <?= e(term_plural_lc()) ?> community.</p>
     </div>
     <div class="flex flex-wrap items-center gap-3">
-      <a href="<?= e(url('directory')) ?>" class="btn bg-white border border-slate-200 !text-slate-700 hover:bg-slate-50 !px-4 !py-2.5 text-xs"><i class="bi bi-people"></i> Browse all alumni</a>
+      <a href="<?= e(url('directory')) ?>" class="btn bg-white border border-slate-200 !text-slate-700 hover:bg-slate-50 !px-4 !py-2.5 text-xs"><i class="bi bi-people"></i> Browse all <?= e(term_plural_lc()) ?></a>
       <div class="card !border-gold/40 px-4 py-2.5 flex items-center gap-3">
         <div class="w-9 h-9 rounded-full bg-gold/10 text-gold flex items-center justify-center flex-shrink-0"><i class="bi bi-people-fill"></i></div>
         <div>
           <p class="text-lg font-extrabold text-primary-navy leading-none"><?= number_format($total) ?></p>
-          <p class="text-[0.65rem] text-slate-500">Alumni found</p>
+          <p class="text-[0.65rem] text-slate-500"><?= e(term_plural()) ?> found</p>
         </div>
       </div>
     </div>
@@ -138,7 +138,7 @@ $qs = function (array $overrides) use ($filters, $sort, $perPage, $view) {
     <div>
       <div class="flex flex-wrap items-center justify-between gap-3 mb-4 border-b border-slate-200">
         <div class="flex items-center gap-5 overflow-x-auto overflow-y-hidden min-w-0">
-          <a href="<?= e(url('directory') . $qs(['view' => 'all', 'sort' => null, 'page' => null])) ?>" class="text-sm font-semibold pb-2.5 border-b-2 -mb-px whitespace-nowrap <?= $view === 'all' ? 'text-gold border-gold' : 'text-slate-500 border-transparent hover:text-primary-navy' ?>">All Alumni</a>
+          <a href="<?= e(url('directory') . $qs(['view' => 'all', 'sort' => null, 'page' => null])) ?>" class="text-sm font-semibold pb-2.5 border-b-2 -mb-px whitespace-nowrap <?= $view === 'all' ? 'text-gold border-gold' : 'text-slate-500 border-transparent hover:text-primary-navy' ?>">All <?= e(term_plural()) ?></a>
           <a href="<?= e(url('directory') . $qs(['view' => 'programme', 'sort' => null, 'page' => null, 'program' => null])) ?>" class="text-sm font-semibold pb-2.5 border-b-2 -mb-px whitespace-nowrap <?= $view === 'programme' ? 'text-gold border-gold' : 'text-slate-500 border-transparent hover:text-primary-navy' ?>">By Programme</a>
           <a href="<?= e(url('directory') . $qs(['view' => 'country', 'sort' => null, 'page' => null, 'country' => null])) ?>" class="text-sm font-semibold pb-2.5 border-b-2 -mb-px whitespace-nowrap <?= $view === 'country' ? 'text-gold border-gold' : 'text-slate-500 border-transparent hover:text-primary-navy' ?>">By Country</a>
           <a href="<?= e(url('directory') . $qs(['view' => 'cohort', 'sort' => null, 'page' => null, 'program' => null, 'graduation_year' => null])) ?>" class="text-sm font-semibold pb-2.5 border-b-2 -mb-px whitespace-nowrap <?= $view === 'cohort' ? 'text-gold border-gold' : 'text-slate-500 border-transparent hover:text-primary-navy' ?>">By Cohort</a>
@@ -158,8 +158,8 @@ $qs = function (array $overrides) use ($filters, $sort, $perPage, $view) {
                 <option value="name_asc" <?= $sort === 'name_asc' ? 'selected' : '' ?>>Name (A–Z)</option>
                 <option value="name_desc" <?= $sort === 'name_desc' ? 'selected' : '' ?>>Name (Z–A)</option>
               <?php else: ?>
-                <option value="most" <?= $sort === 'most' ? 'selected' : '' ?>>Most Alumni</option>
-                <option value="fewest" <?= $sort === 'fewest' ? 'selected' : '' ?>>Fewest Alumni</option>
+                <option value="most" <?= $sort === 'most' ? 'selected' : '' ?>>Most <?= e(term_plural()) ?></option>
+                <option value="fewest" <?= $sort === 'fewest' ? 'selected' : '' ?>>Fewest <?= e(term_plural()) ?></option>
                 <option value="name_asc" <?= $sort === 'name_asc' ? 'selected' : '' ?>>Name (A–Z)</option>
               <?php endif; ?>
             </select>
@@ -267,21 +267,21 @@ $qs = function (array $overrides) use ($filters, $sort, $perPage, $view) {
         <div id="directory-results" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
           <?php foreach ($alumni as $person): $renderCard($person); ?><?php endforeach; ?>
           <?php if (empty($alumni)): ?>
-            <p class="text-sm text-slate-400 col-span-full"><?= $view === 'saved' ? "You haven't saved any alumni yet. Use the bookmark icon on a profile card to save it here." : 'No alumni found matching those filters.' ?></p>
+            <p class="text-sm text-slate-400 col-span-full"><?= $view === 'saved' ? "You haven't saved any " . term_plural_lc() . " yet. Use the bookmark icon on a profile card to save it here." : 'No ' . term_plural_lc() . ' found matching those filters.' ?></p>
           <?php endif; ?>
         </div>
         <?php $renderPagination(); ?>
 
       <?php elseif ($view === 'programme'): ?>
-        <h3 class="text-sm font-bold text-primary-navy mb-4">Browse alumni by programme</h3>
+        <h3 class="text-sm font-bold text-primary-navy mb-4">Browse <?= e(term_plural_lc()) ?> by programme</h3>
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
           <?php foreach ($groups as $group): ?>
             <div class="card p-5">
               <div class="w-11 h-11 rounded-full bg-gold/10 text-gold flex items-center justify-center text-lg mb-3"><i class="bi bi-mortarboard"></i></div>
               <h4 class="text-sm font-bold text-primary-navy mb-0.5"><?= e($group['label']) ?></h4>
-              <p class="text-xs font-semibold text-gold mb-2"><?= $group['count'] ?> alumni</p>
+              <p class="text-xs font-semibold text-gold mb-2"><?= $group['count'] ?> <?= e(term_plural_lc()) ?></p>
               <p class="text-xs text-slate-500 mb-3 leading-relaxed"><?= e(programme_description($group['label'])) ?></p>
-              <a href="<?= e(url('directory?view=programme&program=' . urlencode($group['label']))) ?>" class="text-xs font-semibold text-gold hover:underline">View Alumni &rarr;</a>
+              <a href="<?= e(url('directory?view=programme&program=' . urlencode($group['label']))) ?>" class="text-xs font-semibold text-gold hover:underline">View <?= e(term_plural()) ?> &rarr;</a>
             </div>
           <?php endforeach; ?>
           <?php if (empty($groups)): ?>
@@ -291,7 +291,7 @@ $qs = function (array $overrides) use ($filters, $sort, $perPage, $view) {
         <?php $renderPagination(); ?>
 
       <?php elseif ($view === 'country'): ?>
-        <h3 class="text-sm font-bold text-primary-navy mb-4">Browse alumni by country</h3>
+        <h3 class="text-sm font-bold text-primary-navy mb-4">Browse <?= e(term_plural_lc()) ?> by country</h3>
         <div class="grid grid-cols-1 lg:grid-cols-[1fr_1fr] gap-6">
           <div class="card p-3">
             <div id="world-map" style="height: 340px;"></div>
@@ -302,7 +302,7 @@ $qs = function (array $overrides) use ($filters, $sort, $perPage, $view) {
                 <span class="flex-shrink-0 flex items-center justify-center w-6 h-[18px]"><?= $iso ? country_flag_html($iso) : '<span class="text-xl leading-none">🌍</span>' ?></span>
                 <div class="min-w-0">
                   <p class="text-sm font-bold text-primary-navy truncate"><?= e($group['label']) ?></p>
-                  <p class="text-xs text-slate-500"><?= $group['count'] ?> alumni</p>
+                  <p class="text-xs text-slate-500"><?= $group['count'] ?> <?= e(term_plural_lc()) ?></p>
                 </div>
               </a>
             <?php endforeach; ?>
@@ -355,22 +355,22 @@ $qs = function (array $overrides) use ($filters, $sort, $perPage, $view) {
               },
               onRegionTooltipShow: function (event, tooltip, code) {
                 var name = names[code] || tooltip.text();
-                tooltip.text(values[code] ? (name + ': ' + values[code] + ' alumni') : name);
+                tooltip.text(values[code] ? (name + ': ' + values[code] + ' ' + <?= json_encode(term_plural_lc()) ?>) : name);
               }
             });
           })();
         </script>
 
       <?php else: ?>
-        <h3 class="text-sm font-bold text-primary-navy mb-4">Browse alumni by cohort</h3>
+        <h3 class="text-sm font-bold text-primary-navy mb-4">Browse <?= e(term_plural_lc()) ?> by cohort</h3>
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
           <?php foreach ($groups as $group): ?>
             <div class="card p-5">
               <div class="w-11 h-11 rounded-full bg-gold/10 text-gold flex items-center justify-center text-lg mb-3"><i class="bi bi-people"></i></div>
               <h4 class="text-sm font-bold text-primary-navy mb-0.5"><?= e($group['program']) ?></h4>
               <p class="text-xs text-slate-500 mb-2">Class of <?= e($group['year']) ?></p>
-              <p class="text-xs font-semibold text-gold mb-3"><?= $group['count'] ?> alumni</p>
-              <a href="<?= e(url('directory?view=cohort&program=' . urlencode($group['program']) . '&graduation_year=' . urlencode($group['year']))) ?>" class="text-xs font-semibold text-gold hover:underline">View Alumni &rarr;</a>
+              <p class="text-xs font-semibold text-gold mb-3"><?= $group['count'] ?> <?= e(term_plural_lc()) ?></p>
+              <a href="<?= e(url('directory?view=cohort&program=' . urlencode($group['program']) . '&graduation_year=' . urlencode($group['year']))) ?>" class="text-xs font-semibold text-gold hover:underline">View <?= e(term_plural()) ?> &rarr;</a>
             </div>
           <?php endforeach; ?>
           <?php if (empty($groups)): ?>
