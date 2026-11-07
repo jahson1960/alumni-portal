@@ -17,6 +17,12 @@
     <p class="text-xs text-slate-400 mt-1">Used as-is to create the <?= e(term_singular_lc()) ?>'s account — they won't be asked to enter it again at sign-up.</p>
   </div>
 
+  <div>
+    <label class="form-label" for="email">Email <span class="text-slate-400 font-normal">(optional)</span></label>
+    <input type="email" id="email" name="email" class="form-input" value="<?= e($row['email'] ?? '') ?>">
+    <p class="text-xs text-slate-400 mt-1">Only needed if you want to use the "Register" button to create this <?= e(term_singular_lc()) ?>'s account directly from the roster, instead of them self-registering.</p>
+  </div>
+
   <div class="grid grid-cols-2 gap-4">
     <div>
       <label class="form-label" for="graduation_year">Graduation Year</label>

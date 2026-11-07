@@ -875,6 +875,56 @@ function credential_email_body(string $firstName, string $email, string $tempPas
         . '<p style="color:#b45309;">For your security, you will be asked to set your own password the first time you log in.</p>';
 }
 
+/**
+ * Creates a new alumni account from a roster entry - shared by the admin-assisted single
+ * registration form and the roster-driven single/bulk "Register" actions. Generates a temporary
+ * password, creates the user, marks the roster entry claimed, optionally syncs job category
+ * interests, and queues the credential email. Returns the new user id.
+ */
+function register_from_roster(array $rosterEntry, string $email, array $jobCategoryIds = []): int
+{
+    $name = trim((string) $rosterEntry['full_name']);
+    [$firstName, $otherNames] = split_full_name($name);
+    $tempPassword = generate_temp_password();
+
+    $id = \App\Models\User::create([
+        'role' => 'alumni',
+        'name' => $name,
+        'first_name' => $firstName,
+        'other_names' => $otherNames !== '' ? $otherNames : null,
+        'email' => $email,
+        'password_hash' => password_hash($tempPassword, PASSWORD_DEFAULT),
+        'must_change_password' => 1,
+        'graduation_year' => $rosterEntry['graduation_year'],
+        'program' => $rosterEntry['program'],
+        'matric_number' => $rosterEntry['matric_number'],
+        'cohort' => $rosterEntry['cohort'],
+        'status' => 'active',
+    ]);
+
+    \App\Models\AlumniRoster::markClaimed((int) $rosterEntry['id'], $id);
+    if ($jobCategoryIds) {
+        \App\Models\Category::syncUserJobCategories($id, $jobCategoryIds);
+    }
+
+    \App\Models\EmailQueue::enqueue($email, $name, 'Your Rome Business School Nigeria ' . portal_name() . ' Account', render_email(
+        'Your ' . portal_name() . ' Account',
+        credential_email_body($firstName, $email, $tempPassword, 'An account has been created for you on the Rome Business School Nigeria ' . portal_name() . '.'),
+        'Log In Now',
+        'login'
+    ));
+
+    return $id;
+}
+
+/** Body for the self-service "forgot password" email - a link-based reset, not a shown password. */
+function password_reset_email_body(string $firstName): string
+{
+    return '<p>Hi ' . e($firstName) . ',</p>'
+        . '<p>We received a request to reset your password. Click the button below to choose a new one.</p>'
+        . '<p style="color:#64748b; font-size:13px;">This link will expire in 60 minutes. If you did not request this, you can safely ignore this email &mdash; your password will not be changed.</p>';
+}
+
 /** Font Awesome icon for a Career Resource's format (Guide/Template/Report/Video/PPTX). */
 function resource_type_icon(?string $type): string
 {

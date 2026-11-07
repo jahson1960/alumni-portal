@@ -10,7 +10,10 @@
     <input type="email" id="email" name="email" class="form-input" value="<?= old('email') ?>" required>
   </div>
   <div>
-    <label class="form-label" for="password">Password</label>
+    <div class="flex items-center justify-between">
+      <label class="form-label" for="password">Password</label>
+      <a href="<?= e(url('forgot-password')) ?>" class="text-xs text-gold hover:underline">Forgot password?</a>
+    </div>
     <div class="relative">
       <input type="password" id="password" name="password" class="form-input !pr-10" required>
       <button type="button" class="password-toggle absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600" data-target="password" tabindex="-1"><i class="fa-regular fa-eye"></i></button>

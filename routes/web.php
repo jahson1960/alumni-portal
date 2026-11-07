@@ -18,6 +18,10 @@ $router->post('/login', 'AuthController@login');
 $router->post('/logout', 'AuthController@logout');
 $router->get('/change-password', 'ChangePasswordController@show');
 $router->post('/change-password', 'ChangePasswordController@update');
+$router->get('/forgot-password', 'ForgotPasswordController@show');
+$router->post('/forgot-password', 'ForgotPasswordController@send');
+$router->get('/reset-password/{token}', 'ForgotPasswordController@showReset');
+$router->post('/reset-password/{token}', 'ForgotPasswordController@update');
 
 // Profile (self-service)
 $router->get('/profile/edit', 'ProfileController@edit');
@@ -344,10 +348,18 @@ $router->post('/admin/alumni/{id}/job-categories', 'Admin\\AlumniController@upda
 $router->post('/admin/alumni/{id}/advisors', 'Admin\\AlumniController@updateAdvisors');
 
 $router->get('/admin/alumni-roster', 'Admin\\AlumniRosterController@index');
+// These literal single-segment routes must be registered before the "/{id}" wildcard route
+// below, or a request to e.g. "/admin/alumni-roster/import" would match "{id}" = "import" first
+// (the router takes the first match in registration order).
+$router->get('/admin/alumni-roster/import', 'Admin\\AlumniRosterController@import');
+$router->get('/admin/alumni-roster/import/sample', 'Admin\\AlumniRosterController@importSample');
+$router->post('/admin/alumni-roster/import', 'Admin\\AlumniRosterController@importStore');
+$router->post('/admin/alumni-roster/register-filtered', 'Admin\\AlumniRosterController@registerFiltered');
 $router->get('/admin/alumni-roster/create', 'Admin\\AlumniRosterController@create');
 $router->post('/admin/alumni-roster', 'Admin\\AlumniRosterController@store');
 $router->get('/admin/alumni-roster/{id}/edit', 'Admin\\AlumniRosterController@edit');
 $router->post('/admin/alumni-roster/{id}', 'Admin\\AlumniRosterController@update');
+$router->post('/admin/alumni-roster/{id}/register', 'Admin\\AlumniRosterController@register');
 $router->post('/admin/alumni-roster/{id}/delete', 'Admin\\AlumniRosterController@destroy');
 
 // Register Alumni — the one admin-area capability editors are granted, alongside admins.

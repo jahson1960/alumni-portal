@@ -78,6 +78,7 @@ CREATE TABLE alumni_roster (
   id INT AUTO_INCREMENT PRIMARY KEY,
   matric_number VARCHAR(50) NOT NULL UNIQUE,
   full_name VARCHAR(150) NULL,
+  email VARCHAR(255) NULL,
   graduation_year INT NOT NULL,
   cohort VARCHAR(150) NOT NULL,
   program VARCHAR(150) NULL,
@@ -1187,4 +1188,21 @@ CREATE TABLE advisor_notes (
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   CONSTRAINT fk_advisor_notes_advisor FOREIGN KEY (advisor_id) REFERENCES users(id) ON DELETE CASCADE,
   CONSTRAINT fk_advisor_notes_alumni FOREIGN KEY (alumni_id) REFERENCES users(id) ON DELETE CASCADE
+) ENGINE=InnoDB;
+
+-- ---------------------------------------------------------------------
+-- password_resets  (self-service "forgot password" tokens - token_hash
+-- stores a sha256 of the random token emailed to the user, never the
+-- plain token itself, so a DB leak alone can't be used to reset accounts)
+-- ---------------------------------------------------------------------
+CREATE TABLE password_resets (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  user_id INT NOT NULL,
+  token_hash VARCHAR(64) NOT NULL,
+  expires_at DATETIME NOT NULL,
+  used_at DATETIME NULL,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  CONSTRAINT fk_password_resets_user FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+  INDEX idx_password_resets_token (token_hash),
+  INDEX idx_password_resets_user (user_id)
 ) ENGINE=InnoDB;

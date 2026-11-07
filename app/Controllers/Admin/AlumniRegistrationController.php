@@ -7,7 +7,6 @@ use App\Core\Auth;
 use App\Core\Controller;
 use App\Models\AlumniRoster;
 use App\Models\Category;
-use App\Models\EmailQueue;
 use App\Models\User;
 
 /**
@@ -76,36 +75,10 @@ class AlumniRegistrationController extends Controller
             $this->redirect('admin/register-alumni');
         }
 
-        $name = trim((string) $rosterEntry['full_name']);
-        [$firstName, $otherNames] = split_full_name($name);
-        $tempPassword = generate_temp_password();
+        $rosterEntry['matric_number'] = $matricNumber;
+        register_from_roster($rosterEntry, $email, $jobCategoryIds);
 
-        $id = User::create([
-            'role' => 'alumni',
-            'name' => $name,
-            'first_name' => $firstName,
-            'other_names' => $otherNames !== '' ? $otherNames : null,
-            'email' => $email,
-            'password_hash' => password_hash($tempPassword, PASSWORD_DEFAULT),
-            'must_change_password' => 1,
-            'graduation_year' => $rosterEntry['graduation_year'],
-            'program' => $rosterEntry['program'],
-            'matric_number' => $matricNumber,
-            'cohort' => $rosterEntry['cohort'],
-            'status' => 'active',
-        ]);
-
-        AlumniRoster::markClaimed((int) $rosterEntry['id'], $id);
-        Category::syncUserJobCategories($id, $jobCategoryIds);
-
-        EmailQueue::enqueue($email, $name, 'Your Rome Business School Nigeria ' . portal_name() . ' Account', render_email(
-            'Your ' . portal_name() . ' Account',
-            credential_email_body($firstName, $email, $tempPassword, 'An account has been created for you on the Rome Business School Nigeria ' . portal_name() . '.'),
-            'Log In Now',
-            'login'
-        ));
-
-        $_SESSION['_registered_alumni'] = ['name' => $name, 'email' => $email];
+        $_SESSION['_registered_alumni'] = ['name' => trim((string) $rosterEntry['full_name']), 'email' => $email];
         $this->redirect('admin/register-alumni/success');
     }
 
