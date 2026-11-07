@@ -6,7 +6,6 @@ use App\Controllers\ErrorController;
 use App\Core\Auth;
 use App\Core\Controller;
 use App\Models\AlumniRoster;
-use App\Models\Category;
 use App\Models\User;
 
 /**
@@ -33,7 +32,6 @@ class AlumniRegistrationController extends Controller
         $this->view('admin.alumni_registration.create', [
             'title' => 'Register ' . term_plural(),
             'activeNav' => 'register_alumni',
-            'allCategories' => Category::forType('job'),
         ], 'admin');
     }
 
@@ -43,7 +41,6 @@ class AlumniRegistrationController extends Controller
 
         $email = trim((string) $this->input('email', ''));
         $matricNumber = trim((string) $this->input('matric_number', ''));
-        $jobCategoryIds = array_map('intval', (array) $this->input('job_categories', []));
 
         $errors = [];
         if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
@@ -65,9 +62,6 @@ class AlumniRegistrationController extends Controller
                 $errors[] = 'An account has already been created for this matric number.';
             }
         }
-        if (!$jobCategoryIds) {
-            $errors[] = 'Please select at least one job category.';
-        }
 
         if ($errors) {
             $_SESSION['_errors'] = $errors;
@@ -76,7 +70,7 @@ class AlumniRegistrationController extends Controller
         }
 
         $rosterEntry['matric_number'] = $matricNumber;
-        register_from_roster($rosterEntry, $email, $jobCategoryIds);
+        register_from_roster($rosterEntry, $email);
 
         $_SESSION['_registered_alumni'] = ['name' => trim((string) $rosterEntry['full_name']), 'email' => $email];
         $this->redirect('admin/register-alumni/success');

@@ -18,6 +18,8 @@ $router->post('/login', 'AuthController@login');
 $router->post('/logout', 'AuthController@logout');
 $router->get('/change-password', 'ChangePasswordController@show');
 $router->post('/change-password', 'ChangePasswordController@update');
+$router->get('/select-job-categories', 'SelectJobCategoriesController@show');
+$router->post('/select-job-categories', 'SelectJobCategoriesController@update');
 $router->get('/forgot-password', 'ForgotPasswordController@show');
 $router->post('/forgot-password', 'ForgotPasswordController@send');
 $router->get('/reset-password/{token}', 'ForgotPasswordController@showReset');

@@ -26,6 +26,7 @@ CREATE TABLE users (
   email VARCHAR(150) NOT NULL UNIQUE,
   password_hash VARCHAR(255) NOT NULL,
   must_change_password TINYINT(1) NOT NULL DEFAULT 0,
+  must_select_job_categories TINYINT(1) NOT NULL DEFAULT 0,
   avatar VARCHAR(255) NULL,
   headline VARCHAR(200) NULL,
   company VARCHAR(150) NULL,

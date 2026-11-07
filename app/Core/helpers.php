@@ -878,10 +878,15 @@ function credential_email_body(string $firstName, string $email, string $tempPas
 /**
  * Creates a new alumni account from a roster entry - shared by the admin-assisted single
  * registration form and the roster-driven single/bulk "Register" actions. Generates a temporary
- * password, creates the user, marks the roster entry claimed, optionally syncs job category
- * interests, and queues the credential email. Returns the new user id.
+ * password, creates the user, marks the roster entry claimed, and queues the credential email.
+ * Job category interests are deliberately NOT collected here - an admin registering someone
+ * (one at a time or in bulk) can't reasonably know what they're interested in, so every
+ * admin-created account is flagged must_select_job_categories and picks them itself right after
+ * its forced password change (see the onboarding wall in index.php). A self-registered account
+ * never goes through this function - it collects categories directly on the sign-up form instead.
+ * Returns the new user id.
  */
-function register_from_roster(array $rosterEntry, string $email, array $jobCategoryIds = []): int
+function register_from_roster(array $rosterEntry, string $email): int
 {
     $name = trim((string) $rosterEntry['full_name']);
     [$firstName, $otherNames] = split_full_name($name);
@@ -895,6 +900,7 @@ function register_from_roster(array $rosterEntry, string $email, array $jobCateg
         'email' => $email,
         'password_hash' => password_hash($tempPassword, PASSWORD_DEFAULT),
         'must_change_password' => 1,
+        'must_select_job_categories' => 1,
         'matriculation_year' => $rosterEntry['matriculation_year'] ?? null,
         'graduation_year' => $rosterEntry['graduation_year'],
         'program' => $rosterEntry['program'],
@@ -904,9 +910,6 @@ function register_from_roster(array $rosterEntry, string $email, array $jobCateg
     ]);
 
     \App\Models\AlumniRoster::markClaimed((int) $rosterEntry['id'], $id);
-    if ($jobCategoryIds) {
-        \App\Models\Category::syncUserJobCategories($id, $jobCategoryIds);
-    }
 
     \App\Models\EmailQueue::enqueue($email, $name, 'Your Rome Business School Nigeria ' . portal_name() . ' Account', render_email(
         'Your ' . portal_name() . ' Account',
@@ -916,6 +919,34 @@ function register_from_roster(array $rosterEntry, string $email, array $jobCateg
     ));
 
     return $id;
+}
+
+/**
+ * The path a logged-in visitor must be bounced to before they can go anywhere else, or null if
+ * they're free to proceed - checked on every request in index.php. must_change_password and
+ * must_select_job_categories are each a hard wall (unlike, say, profile setup afterward, which is
+ * a normal unrestricted page): neither can be skipped by navigating straight to another URL, only
+ * by actually completing that step. A handful of paths are always exempt so the wall doesn't trap
+ * someone on the very pages that let them complete it (or log out of a stuck account).
+ */
+function onboarding_wall_redirect(string $path): ?string
+{
+    static $exempt = ['change-password', 'select-job-categories', 'logout', 'admin/logout', 'analytics/track', 'analytics/duration'];
+    if (in_array(trim($path, '/'), $exempt, true)) {
+        return null;
+    }
+
+    $user = \App\Core\Auth::user();
+    if (!$user) {
+        return null;
+    }
+    if (!empty($user['must_change_password'])) {
+        return 'change-password';
+    }
+    if (!empty($user['must_select_job_categories'])) {
+        return 'select-job-categories';
+    }
+    return null;
 }
 
 /** Body for the self-service "forgot password" email - a link-based reset, not a shown password. */

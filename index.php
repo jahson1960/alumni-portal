@@ -55,5 +55,13 @@ if ($path === '') {
     $path = '/';
 }
 
+if (isset($_SESSION['user_id'])) {
+    $onboardingRedirect = onboarding_wall_redirect($path);
+    if ($onboardingRedirect !== null) {
+        header('Location: ' . url($onboardingRedirect));
+        exit;
+    }
+}
+
 $router = require ROOT_PATH . '/routes/web.php';
 $router->dispatch($_SERVER['REQUEST_METHOD'], $path);

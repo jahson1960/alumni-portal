@@ -20,16 +20,9 @@
     <?php require dirname(dirname(__DIR__)) . '/partials/roster_lookup_preview.php'; ?>
   </div>
 
-  <div>
-    <label class="form-label">Job Categories <span class="text-red-500">*</span></label>
-    <p class="text-xs text-slate-400 mb-2">Used to match this <?= e(term_singular_lc()) ?> with relevant opportunities on "Jobs for Me". They can change this any time from their profile.</p>
-    <?php $selectedIds = []; $scrollable = true; $allowCreate = \App\Core\Auth::isAdmin(); ?>
-    <?php require dirname(dirname(__DIR__)) . '/partials/job_category_picker.php'; ?>
-  </div>
-
   <div class="bg-sky-50 border border-sky-100 rounded-lg p-3 text-xs text-sky-800 flex items-start gap-2">
     <i class="fa-solid fa-circle-info mt-0.5"></i>
-    <p>A temporary password is generated automatically and emailed to the <?= e(term_singular_lc()) ?>. They can change it any time from their profile.</p>
+    <p>A temporary password is generated automatically and emailed to the <?= e(term_singular_lc()) ?>. After changing it on first login, they'll be asked to choose their job category interests before continuing.</p>
   </div>
 
   <button type="submit" class="btn-gold">Register <?= e(term_plural()) ?></button>
