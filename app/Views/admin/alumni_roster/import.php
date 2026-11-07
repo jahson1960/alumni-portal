@@ -5,7 +5,7 @@
 <div class="card p-6 max-w-2xl space-y-4">
   <div>
     <h3 class="text-sm font-bold text-primary-navy mb-1">Import <?= e(term_plural()) ?> Roster</h3>
-    <p class="text-xs text-slate-500">Upload a .csv or .xlsx file with one row per <?= e(term_singular_lc()) ?>. The first row must be column headers — <strong>Matric Number</strong>, <strong>Full Name</strong>, <strong>Graduation Year</strong>, and <strong>Cohort</strong> are required; <strong>Email</strong> and <strong>Program</strong> are optional (an email lets you register that row with one click afterward). A matric number already on the roster is updated from the file unless it's already been claimed by a registered account — claimed rows are always left untouched.</p>
+    <p class="text-xs text-slate-500">Upload a .csv or .xlsx file with one row per <?= e(term_singular_lc()) ?>. The first row must be column headers — <strong>Matric Number</strong>, <strong>Full Name</strong>, and <strong>Cohort</strong> are required, plus at least one of <strong>Matriculation Year</strong> or <strong>Graduation Year</strong> (use Matriculation Year for someone who hasn't graduated yet). <strong>Email</strong> and <strong>Program</strong> are optional (an email lets you register that row with one click afterward). A matric number already on the roster is updated from the file unless it's already been claimed by a registered account — claimed rows are always left untouched.</p>
   </div>
 
   <a href="<?= e(url('admin/alumni-roster/import/sample')) ?>" class="text-xs text-gold hover:underline inline-flex items-center gap-1"><i class="fa-solid fa-download"></i> Download a sample template</a>

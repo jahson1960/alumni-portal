@@ -35,6 +35,7 @@ class RosterLookupController extends Controller
             'name' => $entry['full_name'],
             'program' => $entry['program'],
             'cohort' => $entry['cohort'],
+            'matriculation_year' => $entry['matriculation_year'] ?? null,
             'graduation_year' => $entry['graduation_year'],
         ]);
     }

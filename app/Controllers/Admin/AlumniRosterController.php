@@ -20,8 +20,15 @@ class AlumniRosterController extends AdminController
         'studentname' => 'full_name',
         'email' => 'email',
         'emailaddress' => 'email',
+        'matriculationyear' => 'matriculation_year',
+        'matricyear' => 'matriculation_year',
+        'yearofmatriculation' => 'matriculation_year',
+        'enrollmentyear' => 'matriculation_year',
+        'enrolmentyear' => 'matriculation_year',
+        'intakeyear' => 'matriculation_year',
         'graduationyear' => 'graduation_year',
         'gradyear' => 'graduation_year',
+        'yearofgraduation' => 'graduation_year',
         'year' => 'graduation_year',
         'cohort' => 'cohort',
         'program' => 'program',
@@ -35,6 +42,7 @@ class AlumniRosterController extends AdminController
             'cohort' => trim((string) $this->input('cohort', '')),
             'program' => trim((string) $this->input('program', '')),
             'graduation_year' => trim((string) $this->input('graduation_year', '')),
+            'matriculation_year' => trim((string) $this->input('matriculation_year', '')),
         ];
         $activeFilters = array_filter($filters);
 
@@ -49,6 +57,7 @@ class AlumniRosterController extends AdminController
             'cohorts' => AlumniRoster::distinctCohorts(),
             'programs' => AlumniRoster::distinctPrograms(),
             'graduationYears' => AlumniRoster::distinctGraduationYears(),
+            'matriculationYears' => AlumniRoster::distinctMatriculationYears(),
             ...$p,
         ]);
     }
@@ -104,6 +113,7 @@ class AlumniRosterController extends AdminController
         $matricNumber = trim((string) $this->input('matric_number', ''));
         $fullName = trim((string) $this->input('full_name', ''));
         $email = trim((string) $this->input('email', ''));
+        $matriculationYear = trim((string) $this->input('matriculation_year', ''));
         $graduationYear = trim((string) $this->input('graduation_year', ''));
         $cohort = trim((string) $this->input('cohort', ''));
         $program = trim((string) $this->input('program', ''));
@@ -122,8 +132,14 @@ class AlumniRosterController extends AdminController
         if ($email !== '' && !filter_var($email, FILTER_VALIDATE_EMAIL)) {
             $errors[] = 'That email address does not look valid.';
         }
-        if ($graduationYear === '' || !ctype_digit($graduationYear)) {
-            $errors[] = 'A valid graduation year is required.';
+        if ($matriculationYear !== '' && !ctype_digit($matriculationYear)) {
+            $errors[] = 'Matriculation year must be a valid year.';
+        }
+        if ($graduationYear !== '' && !ctype_digit($graduationYear)) {
+            $errors[] = 'Graduation year must be a valid year.';
+        }
+        if ($matriculationYear === '' && $graduationYear === '') {
+            $errors[] = 'Enter a matriculation year, a graduation year, or both — e.g. a matriculation year for someone who has not yet graduated.';
         }
         if ($cohort === '') {
             $errors[] = 'A cohort is required.';
@@ -145,7 +161,8 @@ class AlumniRosterController extends AdminController
             'matric_number' => $matricNumber,
             'full_name' => $fullName,
             'email' => $email !== '' ? $email : null,
-            'graduation_year' => (int) $graduationYear,
+            'matriculation_year' => $matriculationYear !== '' ? (int) $matriculationYear : null,
+            'graduation_year' => $graduationYear !== '' ? (int) $graduationYear : null,
             'cohort' => $cohort,
             'program' => $program !== '' ? $program : null,
         ];
@@ -174,8 +191,8 @@ class AlumniRosterController extends AdminController
         header('Content-Type: text/csv');
         header('Content-Disposition: attachment; filename="roster-template.csv"');
         $out = fopen('php://output', 'w');
-        fputcsv($out, ['Matric Number', 'Full Name', 'Email', 'Graduation Year', 'Cohort', 'Program']);
-        fputcsv($out, ['RBS/2019/001', 'Jane Doe', 'jane.doe@example.com', '2019', 'MBA 2019', 'MBA']);
+        fputcsv($out, ['Matric Number', 'Full Name', 'Email', 'Matriculation Year', 'Graduation Year', 'Cohort', 'Program']);
+        fputcsv($out, ['RBS/2019/001', 'Jane Doe', 'jane.doe@example.com', '2019', '2023', 'MBA 2019', 'MBA']);
         fclose($out);
         exit;
     }
@@ -213,12 +230,15 @@ class AlumniRosterController extends AdminController
 
             $matricNumber = trim((string) ($mapped['matric_number'] ?? ''));
             $fullName = trim((string) ($mapped['full_name'] ?? ''));
+            $matriculationYear = trim((string) ($mapped['matriculation_year'] ?? ''));
             $graduationYear = trim((string) ($mapped['graduation_year'] ?? ''));
             $cohort = trim((string) ($mapped['cohort'] ?? ''));
             $email = trim((string) ($mapped['email'] ?? ''));
             $program = trim((string) ($mapped['program'] ?? ''));
 
-            if ($matricNumber === '' || $fullName === '' || $cohort === '' || !ctype_digit($graduationYear)) {
+            $hasValidMatricYear = $matriculationYear !== '' && ctype_digit($matriculationYear);
+            $hasValidGradYear = $graduationYear !== '' && ctype_digit($graduationYear);
+            if ($matricNumber === '' || $fullName === '' || $cohort === '' || (!$hasValidMatricYear && !$hasValidGradYear)) {
                 $skippedInvalid++;
                 continue;
             }
@@ -230,7 +250,8 @@ class AlumniRosterController extends AdminController
                 'matric_number' => $matricNumber,
                 'full_name' => $fullName,
                 'email' => $email !== '' ? $email : null,
-                'graduation_year' => (int) $graduationYear,
+                'matriculation_year' => $hasValidMatricYear ? (int) $matriculationYear : null,
+                'graduation_year' => $hasValidGradYear ? (int) $graduationYear : null,
                 'cohort' => $cohort,
                 'program' => $program !== '' ? $program : null,
             ];

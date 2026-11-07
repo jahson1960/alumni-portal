@@ -25,13 +25,20 @@
 
   <div class="grid grid-cols-2 gap-4">
     <div>
-      <label class="form-label" for="graduation_year">Graduation Year</label>
-      <input type="number" id="graduation_year" name="graduation_year" class="form-input" min="1990" max="2100" value="<?= e($row['graduation_year'] ?? '') ?>" required>
+      <label class="form-label" for="matriculation_year">Matriculation Year <span class="text-slate-400 font-normal">(optional)</span></label>
+      <input type="number" id="matriculation_year" name="matriculation_year" class="form-input" min="1990" max="2100" value="<?= e($row['matriculation_year'] ?? '') ?>">
+      <p class="text-xs text-slate-400 mt-1">The year they enrolled — use this for someone who hasn't graduated yet.</p>
     </div>
     <div>
-      <label class="form-label" for="cohort">Cohort</label>
-      <input type="text" id="cohort" name="cohort" class="form-input" placeholder="e.g. MBA 2019" value="<?= e($row['cohort'] ?? '') ?>" required>
+      <label class="form-label" for="graduation_year">Graduation Year <span class="text-slate-400 font-normal">(optional)</span></label>
+      <input type="number" id="graduation_year" name="graduation_year" class="form-input" min="1990" max="2100" value="<?= e($row['graduation_year'] ?? '') ?>">
     </div>
+  </div>
+  <p class="text-xs text-slate-400">At least one of Matriculation Year or Graduation Year is required.</p>
+
+  <div>
+    <label class="form-label" for="cohort">Cohort</label>
+    <input type="text" id="cohort" name="cohort" class="form-input" placeholder="e.g. MBA 2019" value="<?= e($row['cohort'] ?? '') ?>" required>
   </div>
 
   <div>

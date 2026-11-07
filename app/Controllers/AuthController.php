@@ -74,6 +74,7 @@ class AuthController extends Controller
             'other_names' => $otherNames !== '' ? $otherNames : null,
             'email' => $email,
             'password_hash' => password_hash($password, PASSWORD_DEFAULT),
+            'matriculation_year' => $rosterEntry['matriculation_year'] ?? null,
             'graduation_year' => $rosterEntry['graduation_year'],
             'program' => $rosterEntry['program'],
             'matric_number' => $matricNumber,

@@ -14,6 +14,7 @@
         <th>Name</th>
         <th>Email</th>
         <th>Matric No.</th>
+        <th>Matric. Year</th>
         <th>Cohort</th>
         <th>Company</th>
         <th>Status</th>
@@ -30,6 +31,7 @@
           </td>
           <td class="text-slate-500"><?= e($alum['email']) ?></td>
           <td class="text-slate-500"><?= e($alum['matric_number'] ?: '—') ?></td>
+          <td class="text-slate-500"><?= e($alum['matriculation_year'] ?: '—') ?></td>
           <td class="text-slate-500"><?= e($alum['cohort'] ?: '—') ?></td>
           <td class="text-slate-500"><?= e($alum['company']) ?></td>
           <td><span class="<?= $alum['status'] === 'active' ? 'badge-blue' : 'badge-gold' ?>"><?= e($alum['status']) ?></span></td>
@@ -57,7 +59,7 @@
         </tr>
       <?php endforeach; ?>
       <?php if (empty($alumni)): ?>
-        <tr><td colspan="7" class="text-center text-slate-400 py-6">No <?= e(term_plural_lc()) ?> accounts yet.</td></tr>
+        <tr><td colspan="8" class="text-center text-slate-400 py-6">No <?= e(term_plural_lc()) ?> accounts yet.</td></tr>
       <?php endif; ?>
     </tbody>
   </table>

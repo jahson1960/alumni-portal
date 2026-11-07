@@ -92,6 +92,10 @@ class AlumniRoster extends Model
             $where[] = 'graduation_year = :graduation_year';
             $params['graduation_year'] = $filters['graduation_year'];
         }
+        if (!empty($filters['matriculation_year'])) {
+            $where[] = 'matriculation_year = :matriculation_year';
+            $params['matriculation_year'] = $filters['matriculation_year'];
+        }
         return ['where' => $where ? 'WHERE ' . implode(' AND ', $where) : '', 'params' => $params];
     }
 
@@ -135,6 +139,11 @@ class AlumniRoster extends Model
 
     public static function distinctGraduationYears(): array
     {
-        return static::db()->query('SELECT DISTINCT graduation_year FROM alumni_roster ORDER BY graduation_year DESC')->fetchAll(\PDO::FETCH_COLUMN);
+        return static::db()->query('SELECT DISTINCT graduation_year FROM alumni_roster WHERE graduation_year IS NOT NULL ORDER BY graduation_year DESC')->fetchAll(\PDO::FETCH_COLUMN);
+    }
+
+    public static function distinctMatriculationYears(): array
+    {
+        return static::db()->query('SELECT DISTINCT matriculation_year FROM alumni_roster WHERE matriculation_year IS NOT NULL ORDER BY matriculation_year DESC')->fetchAll(\PDO::FETCH_COLUMN);
     }
 }

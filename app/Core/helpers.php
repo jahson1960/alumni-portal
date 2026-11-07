@@ -895,6 +895,7 @@ function register_from_roster(array $rosterEntry, string $email, array $jobCateg
         'email' => $email,
         'password_hash' => password_hash($tempPassword, PASSWORD_DEFAULT),
         'must_change_password' => 1,
+        'matriculation_year' => $rosterEntry['matriculation_year'] ?? null,
         'graduation_year' => $rosterEntry['graduation_year'],
         'program' => $rosterEntry['program'],
         'matric_number' => $rosterEntry['matric_number'],

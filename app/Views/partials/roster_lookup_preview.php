@@ -32,6 +32,7 @@
       if (data.program) bits.push(data.program);
       if (data.cohort) bits.push(data.cohort);
       if (data.graduation_year) bits.push('Class of ' + data.graduation_year);
+      else if (data.matriculation_year) bits.push('Matriculated ' + data.matriculation_year);
       result.className = 'mt-2 text-xs rounded-lg p-2.5 border bg-emerald-50 border-emerald-100 text-emerald-700';
       result.innerHTML = '<i class="fa-solid fa-circle-check"></i> Welcome, ' + bits.map(escapeHtml).join(' &middot; ') + '.';
     }
