@@ -613,9 +613,20 @@ $industryOptions = \App\Models\User::distinctFilterValues('industry');
     document.querySelectorAll('.jump-tab').forEach(function (link) {
       link.addEventListener('click', function (e) {
         e.preventDefault();
-        activate(link.dataset.tab);
-        history.replaceState(null, '', '#' + link.dataset.tab);
-        window.scrollTo({ top: 0, behavior: 'smooth' });
+        var tab = link.dataset.tab;
+        activate(tab);
+        history.replaceState(null, '', '#' + tab);
+
+        // On desktop the content column starts right at the top, beside the sticky side
+        // columns, so scrolling to the page top reveals it. Below the lg: breakpoint the
+        // layout stacks into one column (nav, then content, then this widget last) - the page
+        // top there is the nav block, not the content, so scroll straight to the panel instead.
+        if (window.innerWidth < 1024) {
+          var panel = document.querySelector('.profile-tab-panel[data-tab="' + tab + '"]');
+          if (panel) panel.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        } else {
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
       });
     });
 
