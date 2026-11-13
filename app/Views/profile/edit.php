@@ -605,8 +605,18 @@ $industryOptions = \App\Models\User::distinctFilterValues('industry');
 
     navLinks.forEach(function (btn) {
       btn.addEventListener('click', function () {
-        activate(btn.dataset.tab);
-        history.replaceState(null, '', '#' + btn.dataset.tab);
+        var tab = btn.dataset.tab;
+        activate(tab);
+        history.replaceState(null, '', '#' + tab);
+
+        // On desktop this nav sits sticky beside the content column, which is already
+        // visible, so there's nothing to do. Below the lg: breakpoint the layout stacks into
+        // one column with the nav above the content, so clicking a tab doesn't bring its
+        // panel into view on its own - scroll straight to it.
+        if (window.innerWidth < 1024) {
+          var panel = document.querySelector('.profile-tab-panel[data-tab="' + tab + '"]');
+          if (panel) panel.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
       });
     });
 
