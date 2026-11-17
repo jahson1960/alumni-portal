@@ -25,6 +25,7 @@ class StaffController extends AdminController
             'title' => 'Staff',
             'activeNav' => 'staff_list',
             'staff' => User::paginateStaff($p['perPage'], $p['offset']),
+            'roleLabels' => self::ROLE_LABELS,
             ...$p,
         ]);
     }
@@ -121,6 +122,38 @@ class StaffController extends AdminController
         $this->requireCsrf();
         User::update((int) $id, ['status' => 'active']);
         $this->flash('success', 'Staff account activated.');
+        $this->redirect('admin/staff');
+    }
+
+    /** Reassigns a staff member among the four staff roles (Admin/Editor/Recruiter/Advisor). */
+    public function changeRole(string $id): void
+    {
+        $this->requireCsrf();
+
+        $role = $this->input('role', '');
+        if (!in_array($role, self::ROLES, true)) {
+            $this->flash('error', 'Please choose a valid role.');
+            $this->redirect('admin/staff');
+        }
+
+        $target = User::find((int) $id);
+        if (!$target || !in_array($target['role'], self::ROLES, true)) {
+            $this->flash('error', 'Staff account not found.');
+            $this->redirect('admin/staff');
+        }
+
+        if ((int) $id === (int) Auth::id()) {
+            $this->flash('error', "You can't change your own role.");
+            $this->redirect('admin/staff');
+        }
+
+        if ($target['role'] === 'admin' && $role !== 'admin' && $target['status'] === 'active' && count(User::adminIds()) <= 1) {
+            $this->flash('error', 'Cannot change the role of the last remaining admin account.');
+            $this->redirect('admin/staff');
+        }
+
+        User::update((int) $id, ['role' => $role]);
+        $this->flash('success', $target['name'] . "'s role has been changed to " . self::ROLE_LABELS[$role] . '.');
         $this->redirect('admin/staff');
     }
 

@@ -375,6 +375,7 @@ $router->post('/admin/staff/{id}/suspend', 'Admin\\StaffController@suspend');
 $router->post('/admin/staff/{id}/activate', 'Admin\\StaffController@activate');
 $router->post('/admin/staff/{id}/delete', 'Admin\\StaffController@destroy');
 $router->post('/admin/staff/{id}/reset-password', 'Admin\\StaffController@resetPassword');
+$router->post('/admin/staff/{id}/change-role', 'Admin\\StaffController@changeRole');
 $router->get('/admin/create-staff', 'Admin\\StaffController@create');
 $router->post('/admin/create-staff', 'Admin\\StaffController@store');
 $router->get('/admin/create-staff/success', 'Admin\\StaffController@success');

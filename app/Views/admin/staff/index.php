@@ -27,7 +27,21 @@
             </div>
           </td>
           <td class="text-slate-500"><?= e($member['email']) ?></td>
-          <td><span class="badge bg-indigo-100 text-indigo-700"><?= e(ucfirst($member['role'])) ?></span></td>
+          <td>
+            <?php if ((int) $member['id'] === (int) \App\Core\Auth::id()): ?>
+              <span class="badge bg-indigo-100 text-indigo-700" title="You cannot change your own role"><?= e($roleLabels[$member['role']] ?? ucfirst($member['role'])) ?></span>
+            <?php else: ?>
+              <form method="POST" action="<?= e(url('admin/staff/' . $member['id'] . '/change-role')) ?>" class="inline"
+                    onsubmit="return confirm(<?= e(json_encode('Change ' . $member['name'] . "'s role to ")) ?> + this.role.options[this.role.selectedIndex].text + '?');">
+                <?= csrf_field() ?>
+                <select name="role" class="form-input !py-1 !text-xs !w-auto" onchange="this.form.requestSubmit()">
+                  <?php foreach ($roleLabels as $value => $label): ?>
+                    <option value="<?= e($value) ?>" <?= $member['role'] === $value ? 'selected' : '' ?>><?= e($label) ?></option>
+                  <?php endforeach; ?>
+                </select>
+              </form>
+            <?php endif; ?>
+          </td>
           <td><span class="<?= $member['status'] === 'active' ? 'badge-blue' : 'badge-gold' ?>"><?= e($member['status']) ?></span></td>
           <td class="text-right whitespace-nowrap">
             <form method="POST" action="<?= e(url('admin/staff/' . $member['id'] . '/reset-password')) ?>" class="inline" onsubmit="return confirm('Reset this account&#39;s password? A new temporary password will be generated and emailed to them.');">
