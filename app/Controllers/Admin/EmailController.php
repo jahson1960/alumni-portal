@@ -134,6 +134,36 @@ class EmailController extends AdminController
         $this->redirect('admin/emails?tab=connection');
     }
 
+    /**
+     * Sends a real email right now, synchronously (not through the queue), using whatever SMTP
+     * settings are currently saved - the fastest way to confirm the connection actually works
+     * end to end (connects, authenticates, sends), rather than just that the fields look valid.
+     */
+    public function testConnection(): void
+    {
+        $this->requireCsrf();
+
+        $to = trim((string) $this->input('test_email', ''));
+        if (!filter_var($to, FILTER_VALIDATE_EMAIL)) {
+            $this->flash('error', 'Enter a valid email address to send the test to.');
+            $this->redirect('admin/emails?tab=connection');
+        }
+
+        $result = Mailer::send($to, null, 'SMTP Test Email - ' . portal_name(), render_email(
+            'SMTP Test Email',
+            '<p>This is a test email sent from Admin &gt; Emails &gt; SMTP Connection to confirm your mail server settings are working.</p>'
+            . '<p style="color:#64748b; font-size:13px;">Sent ' . e(date('Y-m-d H:i:s')) . '.</p>'
+        ));
+
+        if ($result === true) {
+            $this->flash('success', "Test email sent successfully to {$to}. Check its inbox (and spam folder) to confirm delivery.");
+        } else {
+            $this->flash('error', 'Test email failed: ' . $result);
+        }
+
+        $this->redirect('admin/emails?tab=connection');
+    }
+
     public function retry(string $id): void
     {
         $this->requireCsrf();

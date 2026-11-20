@@ -47,3 +47,16 @@
 
   <button type="submit" class="btn-gold !px-6 !py-2.5 text-sm mt-6">Save SMTP Connection</button>
 </form>
+
+<div class="card p-6 max-w-2xl mt-6">
+  <h3 class="section-title text-xs mb-1">Test This Connection</h3>
+  <p class="text-xs text-slate-400 mb-4">Sends a real email right now using whatever SMTP settings are currently saved above (not any unsaved edits still in the form) — the fastest way to confirm the connection actually works end to end, rather than just that the fields look valid.</p>
+  <form method="POST" action="<?= e(url('admin/emails/test-connection')) ?>" class="flex flex-wrap items-end gap-3">
+    <?= csrf_field() ?>
+    <div class="flex-1 min-w-[220px]">
+      <label class="form-label" for="test_email">Send test email to</label>
+      <input type="email" id="test_email" name="test_email" class="form-input" value="<?= e(\App\Core\Auth::user()['email'] ?? '') ?>" required>
+    </div>
+    <button type="submit" class="btn bg-white border border-slate-200 !text-slate-700 hover:bg-slate-50 !px-4 !py-2.5 text-sm">Send Test Email</button>
+  </form>
+</div>
